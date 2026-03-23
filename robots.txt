@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://bible2.kingdom2025.com/sitemap.xml
