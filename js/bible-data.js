@@ -1,11 +1,15 @@
 /**
- * HolyWord - bible-data.js v6
- * 10개 언어 완전 지원
- * API1: api.getbible.net (한국어/일본어/프랑스어/독일어/아랍어/러시아어)
- * API2: bible-api.com (영어/스페인어/포르투갈어/중국어)
+ * HolyWord - bible-data.js v7 (최종)
+ * 11개 언어/번역본 완전 지원
+ *
+ * API A: api.getbible.net/v2/{translation}/{bookNum}/{chapter}.json
+ *   → 한국어, 중국어, 일본어, 프랑스어, 독일어, 아랍어, 러시아어
+ *
+ * API B: bible-api.com/{bookEn}+{chapter}?translation={code}
+ *   → 영어(KJV), 영어(WEB≈NIV현대영어), 스페인어, 포르투갈어
  */
 
-// ===== 성경 66권 전체 =====
+// ===== 성경 66권 =====
 const BIBLE_BOOKS = {
   ot:[
     {id:'GEN',name:'창세기',chapters:50},{id:'EXO',name:'출애굽기',chapters:40},
@@ -47,82 +51,62 @@ const BIBLE_BOOKS = {
   ]
 };
 
-// ===== 10개 언어 API 설정 =====
+// ===== 언어/번역본 설정 (11종) =====
+// api: 'getbible' → api.getbible.net
+// api: 'bibleapi' → bible-api.com
 const LANG_CONFIG = {
   ko: {
-    api: 'getbible',
-    translation: 'korean',     // api.getbible.net/v2/korean/
-    name: '개역한글',
-    flag: '🇰🇷',
-    rtl: false
+    api:'getbible', code:'korean',
+    label:'🇰🇷 한국어', sub:'개역한글', rtl:false
   },
   en: {
-    api: 'bibleapi',
-    translation: 'kjv',        // bible-api.com?translation=kjv
-    name: 'King James',
-    flag: '🇺🇸',
-    rtl: false
+    api:'bibleapi', code:'kjv',
+    label:'🇺🇸 English', sub:'KJV', rtl:false
+  },
+  en_web: {
+    api:'bibleapi', code:'web',
+    label:'🇺🇸 English', sub:'WEB (현대영어)', rtl:false
   },
   zh: {
-    api: 'getbible',
-    translation: 'chinese_union_simplified',  // api.getbible.net
-    name: '中文和合本',
-    flag: '🇨🇳',
-    rtl: false
+    api:'getbible', code:'chinese_union_simplified',
+    label:'🇨🇳 中文', sub:'和合本(简体)', rtl:false
+  },
+  zh_t: {
+    api:'getbible', code:'chinese_union_traditional',
+    label:'🇹🇼 中文', sub:'和合本(繁體)', rtl:false
   },
   es: {
-    api: 'bibleapi',
-    translation: 'rv-valera',  // bible-api.com
-    name: 'Reina-Valera',
-    flag: '🇪🇸',
-    rtl: false
+    api:'bibleapi', code:'rv-valera',
+    label:'🇪🇸 Español', sub:'Reina-Valera', rtl:false
   },
   ja: {
-    api: 'getbible',
-    translation: 'japanese_colloquial',  // api.getbible.net
-    name: '口語訳',
-    flag: '🇯🇵',
-    rtl: false
+    api:'getbible', code:'japanese_colloquial',
+    label:'🇯🇵 日本語', sub:'口語訳', rtl:false
   },
   pt: {
-    api: 'bibleapi',
-    translation: 'almeida',    // bible-api.com
-    name: 'Almeida',
-    flag: '🇧🇷',
-    rtl: false
+    api:'bibleapi', code:'almeida',
+    label:'🇧🇷 Português', sub:'Almeida', rtl:false
   },
   fr: {
-    api: 'getbible',
-    translation: 'french_ls1910',  // api.getbible.net
-    name: 'Louis Segond',
-    flag: '🇫🇷',
-    rtl: false
+    api:'getbible', code:'french_ls1910',
+    label:'🇫🇷 Français', sub:'Louis Segond', rtl:false
   },
   de: {
-    api: 'getbible',
-    translation: 'german_luther1912',  // api.getbible.net
-    name: 'Luther 1912',
-    flag: '🇩🇪',
-    rtl: false
+    api:'getbible', code:'german_luther1912',
+    label:'🇩🇪 Deutsch', sub:'Luther 1912', rtl:false
   },
   ar: {
-    api: 'getbible',
-    translation: 'arabic_svd',  // api.getbible.net
-    name: 'عربي',
-    flag: '🇸🇦',
-    rtl: true
+    api:'getbible', code:'arabic_svd',
+    label:'🇸🇦 العربية', sub:'Van Dyke', rtl:true
   },
   ru: {
-    api: 'getbible',
-    translation: 'russian_synodal',  // api.getbible.net
-    name: 'Синодальный',
-    flag: '🇷🇺',
-    rtl: false
+    api:'getbible', code:'russian_synodal',
+    label:'🇷🇺 Русский', sub:'Синодальный', rtl:false
   }
 };
 
-// ===== 책 이름 → 번호 매핑 (getbible.net용) =====
-const BOOK_NUM_MAP = {
+// ===== 책 번호 매핑 (getbible.net용, 1~66) =====
+const BOOK_NUM = {
   '창세기':1,'출애굽기':2,'레위기':3,'민수기':4,'신명기':5,
   '여호수아':6,'사사기':7,'룻기':8,'사무엘상':9,'사무엘하':10,
   '열왕기상':11,'열왕기하':12,'역대상':13,'역대하':14,'에스라':15,
@@ -139,8 +123,8 @@ const BOOK_NUM_MAP = {
   '요한일서':62,'요한이서':63,'요한삼서':64,'유다서':65,'요한계시록':66
 };
 
-// ===== 책 이름 → API 영어명 (bible-api.com용) =====
-const BOOK_EN_MAP = {
+// ===== 책 영어명 매핑 (bible-api.com용) =====
+const BOOK_EN = {
   '창세기':'genesis','출애굽기':'exodus','레위기':'leviticus','민수기':'numbers',
   '신명기':'deuteronomy','여호수아':'joshua','사사기':'judges','룻기':'ruth',
   '사무엘상':'1+samuel','사무엘하':'2+samuel','열왕기상':'1+kings','열왕기하':'2+kings',
@@ -219,79 +203,78 @@ const TOPIC_VERSES = {
 // ===== 캐시 =====
 const verseCache = new Map();
 
-// ===== getbible.net API 호출 =====
-async function fetchFromGetBible(translation, bookNum, chapter) {
-  const url = `https://api.getbible.net/v2/${translation}/${bookNum}/${chapter}.json`;
+// ===== API A: api.getbible.net 호출 =====
+async function _getbible(code, bookNum, chapter) {
+  const url = `https://api.getbible.net/v2/${code}/${bookNum}/${chapter}.json`;
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`getbible HTTP ${res.status}`);
+  if (!res.ok) throw new Error(`getbible ${res.status}`);
   const data = await res.json();
-  // getbible.net 응답 구조: { verses: { "1": { verse: 1, text: "..." }, ... } }
-  const verses = data.verses;
-  if (!verses) throw new Error('구절 없음');
-  return Object.values(verses).map(v => ({
-    number: v.verse,
-    text: v.text.replace(/\r?\n/g,' ').trim()
-  }));
+  // 응답 구조: data.verses = {"1":{verse:1,text:"..."},"2":{...}}
+  const vmap = data.verses;
+  if (!vmap || typeof vmap !== 'object') throw new Error('verses 없음');
+  return Object.values(vmap)
+    .sort((a,b) => a.verse - b.verse)
+    .map(v => ({ number: v.verse, text: (v.text||'').replace(/\r?\n/g,' ').trim() }));
 }
 
-// ===== bible-api.com API 호출 =====
-async function fetchFromBibleAPI(translation, bookEn, chapter) {
-  const url = `https://bible-api.com/${bookEn}+${chapter}?translation=${translation}`;
+// ===== API B: bible-api.com 호출 =====
+async function _bibleapi(code, bookEn, chapter) {
+  const url = `https://bible-api.com/${bookEn}+${chapter}?translation=${code}`;
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`bibleapi HTTP ${res.status}`);
+  if (!res.ok) throw new Error(`bibleapi ${res.status}`);
   const data = await res.json();
-  if (!data.verses || data.verses.length === 0) throw new Error('구절 없음');
+  if (!data.verses || !data.verses.length) throw new Error('verses 없음');
   return data.verses.map(v => ({
     number: v.verse,
-    text: v.text.replace(/\r?\n/g,' ').trim()
+    text: (v.text||'').replace(/\r?\n/g,' ').trim()
   }));
 }
 
-// ===== 메인 함수: 성경 챕터 가져오기 =====
+// ===== 메인: 성경 챕터 가져오기 =====
 async function fetchBibleChapter(bookName, chapter, lang = 'ko') {
-  const cacheKey = `${lang}_${bookName}_${chapter}`;
-  if (verseCache.has(cacheKey)) return verseCache.get(cacheKey);
+  const key = `${lang}_${bookName}_${chapter}`;
+  if (verseCache.has(key)) return verseCache.get(key);
 
-  const config = LANG_CONFIG[lang] || LANG_CONFIG.en;
+  const cfg = LANG_CONFIG[lang] || LANG_CONFIG.en;
   let verses = null;
 
   try {
-    if (config.api === 'getbible') {
-      // getbible.net 사용 (한국어/중국어/일본어/프랑스어/독일어/아랍어/러시아어)
-      const bookNum = BOOK_NUM_MAP[bookName];
-      if (!bookNum) throw new Error('책 번호 없음');
-      verses = await fetchFromGetBible(config.translation, bookNum, chapter);
-
+    if (cfg.api === 'getbible') {
+      const num = BOOK_NUM[bookName];
+      if (!num) throw new Error(`책번호 없음: ${bookName}`);
+      verses = await _getbible(cfg.code, num, chapter);
     } else {
-      // bible-api.com 사용 (영어/스페인어/포르투갈어)
-      const bookEn = BOOK_EN_MAP[bookName];
-      if (!bookEn) throw new Error('책 이름 없음');
-      verses = await fetchFromBibleAPI(config.translation, bookEn, chapter);
+      const en = BOOK_EN[bookName];
+      if (!en) throw new Error(`영어명 없음: ${bookName}`);
+      verses = await _bibleapi(cfg.code, en, chapter);
     }
   } catch(e1) {
-    console.warn(`[${lang}] 1차 실패:`, e1.message, '→ KJV 폴백');
-    // 모든 언어 KJV 폴백
+    console.warn(`[${lang}/${cfg.code}] 1차 실패:`, e1.message);
+    // 폴백: getbible KJV
     try {
-      const bookEn = BOOK_EN_MAP[bookName];
-      if (bookEn) verses = await fetchFromBibleAPI('kjv', bookEn, chapter);
+      const num = BOOK_NUM[bookName];
+      verses = await _getbible('kjv', num, chapter);
     } catch(e2) {
-      console.error('KJV 폴백도 실패:', e2.message);
+      // 최후 폴백: bible-api.com KJV
+      try {
+        const en = BOOK_EN[bookName];
+        verses = await _bibleapi('kjv', en, chapter);
+      } catch(e3) {
+        verses = [{number:1, text:`${bookName} ${chapter}장을 불러올 수 없습니다. 인터넷 연결을 확인하세요.`}];
+      }
     }
   }
 
-  if (!verses || verses.length === 0) {
-    verses = [{number:1, text:`${bookName} ${chapter}장을 불러올 수 없습니다. 인터넷 연결을 확인해주세요.`}];
-  }
-
-  verseCache.set(cacheKey, verses);
+  verseCache.set(key, verses);
   return verses;
 }
 
 // ===== 전역 노출 =====
+window.verseCache = verseCache; // 캐시 (app.js에서 접근)
 window.BIBLE_BOOKS = BIBLE_BOOKS;
 window.DAILY_VERSES = DAILY_VERSES;
 window.TOPIC_VERSES = TOPIC_VERSES;
 window.LANG_CONFIG = LANG_CONFIG;
+window.BOOK_NUM = BOOK_NUM;
+window.BOOK_EN = BOOK_EN;
 window.fetchBibleChapter = fetchBibleChapter;
-window.BOOK_EN_MAP = BOOK_EN_MAP;
-window.BOOK_NUM_MAP = BOOK_NUM_MAP;

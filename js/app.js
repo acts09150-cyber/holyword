@@ -1,6 +1,6 @@
 /**
- * HolyWord - app.js v6
- * 초기화 순서 버그 수정 + 완전한 다국어 지원
+ * HolyWord - app.js v7 (최종)
+ * 다국어 완전 지원 + NIV(WEB) 추가
  */
 
 const App = {
@@ -13,87 +13,86 @@ const App = {
   selectedVerse: null,
 };
 
-// ===== 초기화 (순서 중요!) =====
+// ===== 초기화 (순서 엄수: URL파싱 → 오늘말씀 → 챕터로드) =====
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. URL 파라미터 먼저 파싱 (lang 포함)
-  parseURLParams();
-  // 2. 오늘의 말씀
-  initDailyVerse();
-  // 3. 성경 본문 로드 (lang이 이미 설정된 상태)
-  loadChapter();
-  // 4. 키보드 단축키
-  initKeyboardNav();
-  // 5. 전면광고
-  setTimeout(showInterstitialAd, 60000);
+  parseURL();          // 1. URL에서 lang/book/ch 파싱 (loadChapter 전!)
+  initDailyVerse();    // 2. 오늘의 말씀
+  loadChapter();       // 3. 성경 본문 (lang 이미 설정됨)
+  initKeys();          // 4. 키보드 단축키
+  setTimeout(showInterstitial, 60000); // 5. 1분 후 전면광고
 });
 
-// ===== URL 파라미터 파싱 (loadChapter 이전에 실행) =====
-function parseURLParams() {
-  const params = new URLSearchParams(window.location.search);
+// ===== URL 파라미터 파싱 (loadChapter 전에 반드시 실행) =====
+function parseURL() {
+  const p = new URLSearchParams(window.location.search);
 
-  // 언어 설정
-  const lang = params.get('lang');
+  // 언어
+  const lang = p.get('lang');
   if (lang && window.LANG_CONFIG?.[lang]) {
     App.currentLang = lang;
-    applyLangUI(lang, false); // loadChapter 없이 UI만 적용
+    _applyLangUI(lang); // UI만 적용 (loadChapter 호출 안 함)
   }
 
-  // 책/챕터 설정
-  if (params.get('book')) {
-    App.currentBook = decodeURIComponent(params.get('book'));
-    const allBooks = [...(window.BIBLE_BOOKS?.ot||[]), ...(window.BIBLE_BOOKS?.nt||[])];
-    const bookInfo = allBooks.find(b => b.name === App.currentBook);
-    if (bookInfo) App.totalChapters = bookInfo.chapters;
+  // 책
+  const book = p.get('book');
+  if (book) {
+    App.currentBook = decodeURIComponent(book);
+    const all = [...(window.BIBLE_BOOKS?.ot||[]), ...(window.BIBLE_BOOKS?.nt||[])];
+    const info = all.find(b => b.name === App.currentBook);
+    if (info) App.totalChapters = info.chapters;
   }
-  if (params.get('ch')) App.currentChapter = parseInt(params.get('ch')) || 1;
+
+  // 챕터
+  const ch = p.get('ch');
+  if (ch) App.currentChapter = parseInt(ch) || 1;
 }
 
-// ===== 언어 UI만 적용 (API 호출 없이) =====
-function applyLangUI(lang, triggerLoad = true) {
-  const config = window.LANG_CONFIG?.[lang];
-  if (!config) return;
+// ===== 언어 UI 적용 (API 호출 없음) =====
+function _applyLangUI(lang) {
+  const cfg = window.LANG_CONFIG?.[lang];
+  if (!cfg) return;
 
+  // 플래그/이름 업데이트
+  const parts = cfg.label.split(' ');
+  const flag = parts[0];
+  const name = parts.slice(1).join(' ');
   const flagEl = document.getElementById('currentLangFlag');
   const nameEl = document.getElementById('currentLangName');
-  if (flagEl) flagEl.textContent = config.flag || '';
-  if (nameEl) nameEl.textContent = config.name || lang;
+  if (flagEl) flagEl.textContent = flag;
+  if (nameEl) nameEl.textContent = name;
 
-  // RTL 처리 (아랍어)
-  const bibleText = document.getElementById('bibleText');
-  if (bibleText) {
-    bibleText.style.direction = config.rtl ? 'rtl' : 'ltr';
-    bibleText.style.textAlign = config.rtl ? 'right' : 'left';
+  // RTL (아랍어)
+  const bt = document.getElementById('bibleText');
+  if (bt) {
+    bt.style.direction = cfg.rtl ? 'rtl' : 'ltr';
+    bt.style.textAlign = cfg.rtl ? 'right' : 'left';
   }
 
   document.getElementById('langDropdown')?.classList.remove('open');
-
-  if (triggerLoad) loadChapter();
 }
 
 // ===== 오늘의 말씀 =====
 function initDailyVerse() {
-  if (!window.DAILY_VERSES) return;
-  const idx = new Date().getDate() % DAILY_VERSES.length;
-  const v = DAILY_VERSES[idx];
+  if (!window.DAILY_VERSES?.length) return;
+  const v = DAILY_VERSES[new Date().getDate() % DAILY_VERSES.length];
   const el = document.getElementById('dailyVerseText');
   const ref = document.getElementById('dailyVerseRef');
   if (el) el.textContent = `"${v.text}"`;
   if (ref) ref.textContent = v.ref;
-  window._dailyVerse = v;
+  window._dv = v;
 }
 
-// ===== 성경 챕터 로드 =====
+// ===== 챕터 로드 =====
 async function loadChapter() {
   showLoading();
   updateUI();
-
   try {
     const verses = await fetchBibleChapter(App.currentBook, App.currentChapter, App.currentLang);
     renderVerses(verses);
     updateURL();
-    scrollToTop();
+    window.scrollTo({top:0, behavior:'smooth'});
   } catch(e) {
-    console.error('loadChapter 오류:', e);
+    console.error(e);
     showError();
   }
 }
@@ -107,8 +106,8 @@ function showError() {
   const c = document.getElementById('bibleText');
   if (c) c.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#9E855A;">
     <div style="font-size:32px;margin-bottom:16px;">📖</div>
-    <p>말씀을 불러올 수 없습니다</p>
-    <button onclick="loadChapter()" style="margin-top:16px;padding:8px 20px;background:#C9A84C;color:#1A1208;border:none;border-radius:6px;cursor:pointer;">다시 시도</button>
+    <p style="margin-bottom:12px;">말씀을 불러올 수 없습니다</p>
+    <button onclick="loadChapter()" style="padding:8px 20px;background:#C9A84C;color:#1A1208;border:none;border-radius:6px;cursor:pointer;font-size:13px;">다시 시도</button>
   </div>`;
 }
 
@@ -119,69 +118,62 @@ function renderVerses(verses) {
   c.innerHTML = '';
 
   verses.forEach((v, idx) => {
-    const div = document.createElement('div');
-    div.className = 'verse-row' + (App.highlightedVerses.has(v.number) ? ' highlighted' : '');
-    div.dataset.verse = v.number;
-    div.innerHTML = `<span class="v-num">${v.number}</span><span class="v-text">${v.text}</span>`;
-    div.addEventListener('click', () => selectVerse(v.number, v.text));
-    c.appendChild(div);
+    const d = document.createElement('div');
+    d.className = 'verse-row' + (App.highlightedVerses.has(v.number) ? ' highlighted' : '');
+    d.dataset.verse = v.number;
+    d.innerHTML = `<span class="v-num">${v.number}</span><span class="v-text">${v.text}</span>`;
+    d.addEventListener('click', () => selectVerse(v.number, v.text));
+    c.appendChild(d);
 
-    // 본문 중간 광고 (15절 후)
+    // 15절 후 중간 광고
     if (idx === 14 && verses.length > 20) {
-      const adDiv = document.createElement('div');
-      adDiv.style.cssText = 'margin:28px 0;text-align:center;';
-      adDiv.innerHTML = `<ins class="adsbygoogle" style="display:block"
-           data-ad-client="ca-pub-8675368228460145"
-           data-ad-slot="2240680444"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>`;
-      c.appendChild(adDiv);
-      try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+      const ad = document.createElement('div');
+      ad.style.cssText = 'margin:28px 0;text-align:center;';
+      ad.innerHTML = `<ins class="adsbygoogle" style="display:block"
+        data-ad-client="ca-pub-8675368228460145"
+        data-ad-slot="2240680444"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>`;
+      c.appendChild(ad);
+      try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
     }
   });
 }
 
-// ===== 구절 선택 팝업 =====
+// ===== 구절 선택 =====
 function selectVerse(num, text) {
-  App.selectedVerse = { num, text, ref: `${App.currentBook} ${App.currentChapter}:${num}` };
-  const row = document.querySelector(`[data-verse="${num}"]`);
-  if (row) row.classList.toggle('highlighted');
-  if (App.highlightedVerses.has(num)) App.highlightedVerses.delete(num);
-  else App.highlightedVerses.add(num);
-
-  const popup = document.getElementById('versePopup');
-  const popupVerse = document.getElementById('popupVerse');
-  if (popup && popupVerse) {
-    popupVerse.innerHTML = `<strong style="color:#C9A84C;font-size:11px;">${App.currentBook} ${App.currentChapter}:${num}</strong><br><br>"${text}"`;
-    popup.classList.add('show');
-    setTimeout(() => popup.classList.remove('show'), 5000);
+  App.selectedVerse = {num, text, ref:`${App.currentBook} ${App.currentChapter}:${num}`};
+  document.querySelector(`[data-verse="${num}"]`)?.classList.toggle('highlighted');
+  App.highlightedVerses.has(num) ? App.highlightedVerses.delete(num) : App.highlightedVerses.add(num);
+  const pp = document.getElementById('versePopup');
+  const pv = document.getElementById('popupVerse');
+  if (pp && pv) {
+    pv.innerHTML = `<strong style="color:#C9A84C;font-size:11px;">${App.currentBook} ${App.currentChapter}:${num}</strong><br><br>"${text}"`;
+    pp.classList.add('show');
+    setTimeout(() => pp.classList.remove('show'), 5000);
   }
 }
-
 function closePopup() { document.getElementById('versePopup')?.classList.remove('show'); }
-
 function copySelectedVerse() {
   if (!App.selectedVerse) return;
-  navigator.clipboard.writeText(`"${App.selectedVerse.text}" — ${App.selectedVerse.ref}\n(HolyWord)`).then(() => showToast('구절이 복사되었습니다 ✓'));
+  navigator.clipboard.writeText(`"${App.selectedVerse.text}" — ${App.selectedVerse.ref}\n(bible2.kingdom2025.com)`).then(() => toast('복사되었습니다 ✓'));
   closePopup();
 }
-
 function shareSelectedVerse() {
   if (!App.selectedVerse) return;
-  if (navigator.share) navigator.share({ title:'HolyWord', text:`"${App.selectedVerse.text}" — ${App.selectedVerse.ref}`, url:window.location.href });
-  else { navigator.clipboard.writeText(`"${App.selectedVerse.text}" — ${App.selectedVerse.ref}`); showToast('복사되었습니다 ✓'); }
+  if (navigator.share) navigator.share({title:'HolyWord',text:`"${App.selectedVerse.text}" — ${App.selectedVerse.ref}`,url:location.href});
+  else { navigator.clipboard.writeText(`"${App.selectedVerse.text}" — ${App.selectedVerse.ref}`); toast('복사되었습니다 ✓'); }
   closePopup();
 }
 
-// ===== 챕터 네비게이션 =====
+// ===== 챕터 네비 =====
 function prevChapter() {
   if (App.currentChapter > 1) { App.currentChapter--; loadChapter(); }
-  else showToast('첫 번째 장입니다');
+  else toast('첫 번째 장입니다');
 }
-
 function nextChapter() {
   if (App.currentChapter < App.totalChapters) { App.currentChapter++; loadChapter(); }
-  else showToast('마지막 장입니다');
+  else toast('마지막 장입니다');
 }
 
 // ===== 책 선택 =====
@@ -198,33 +190,27 @@ function selectBook(btn) {
 
 // ===== UI 업데이트 =====
 function updateUI() {
-  const allBooks = [...(window.BIBLE_BOOKS?.ot||[]), ...(window.BIBLE_BOOKS?.nt||[])];
-  const bookInfo = allBooks.find(b => b.name === App.currentBook);
-  if (bookInfo) App.totalChapters = bookInfo.chapters;
+  const all = [...(window.BIBLE_BOOKS?.ot||[]), ...(window.BIBLE_BOOKS?.nt||[])];
+  const info = all.find(b => b.name === App.currentBook);
+  if (info) App.totalChapters = info.chapters;
 
-  const bookName = document.getElementById('chapterBookName');
-  const chNum = document.getElementById('chapterNumber');
-  const bcBook = document.getElementById('bcBook');
-  const bcCh = document.getElementById('bcChapter');
-  const navInfo = document.getElementById('navBookInfo');
-
-  if (bookName) bookName.textContent = App.currentBook;
-  if (chNum) chNum.textContent = `제 ${App.currentChapter} 장`;
-  if (bcBook) bcBook.textContent = App.currentBook;
-  if (bcCh) bcCh.textContent = `${App.currentChapter}장`;
-  if (navInfo) navInfo.textContent = `${App.currentBook} ${App.currentChapter}장`;
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  set('chapterBookName', App.currentBook);
+  set('chapterNumber', `제 ${App.currentChapter} 장`);
+  set('bcBook', App.currentBook);
+  set('bcChapter', `${App.currentChapter}장`);
+  set('navBookInfo', `${App.currentBook} ${App.currentChapter}장`);
 
   renderChapterGrid();
 
   const pct = Math.round(App.currentChapter / App.totalChapters * 100);
   const fill = document.getElementById('progressMini');
-  const text = document.getElementById('progressText');
+  const txt = document.getElementById('progressText');
   if (fill) fill.style.width = pct + '%';
-  if (text) text.textContent = `${App.currentChapter} / ${App.totalChapters}장`;
+  if (txt) txt.textContent = `${App.currentChapter} / ${App.totalChapters}장`;
 
-  const config = window.LANG_CONFIG?.[App.currentLang];
-  const langLabel = config ? `(${config.name})` : '';
-  document.title = `${App.currentBook} ${App.currentChapter}장 ${langLabel} | HolyWord 성경`;
+  const cfg = window.LANG_CONFIG?.[App.currentLang];
+  document.title = `${App.currentBook} ${App.currentChapter}장 (${cfg?.sub||''}) | HolyWord`;
 }
 
 function renderChapterGrid() {
@@ -247,20 +233,23 @@ function renderChapterGrid() {
   }
 }
 
-// ===== 언어 전환 (버튼 클릭) =====
-function setLang(lang, flag, name) {
+// ===== 언어 전환 (버튼 클릭 시) =====
+function setLang(lang) {
   if (App.currentLang === lang) {
     document.getElementById('langDropdown')?.classList.remove('open');
     return;
   }
   App.currentLang = lang;
   App.highlightedVerses.clear();
-  applyLangUI(lang, true); // UI 적용 + loadChapter 호출
+  verseCache?.clear(); // 캐시 초기화
+  _applyLangUI(lang);
 
-  const config = window.LANG_CONFIG?.[lang];
-  showToast(`${config?.flag || ''} ${config?.name || name} 성경으로 변경되었습니다`);
+  const cfg = window.LANG_CONFIG?.[lang];
+  toast(`${cfg?.label || lang} (${cfg?.sub || ''}) 성경으로 변경`);
 
-  const url = new URL(window.location);
+  loadChapter(); // 새 언어로 다시 로드
+
+  const url = new URL(location);
   url.searchParams.set('lang', lang);
   history.pushState({}, '', url);
 }
@@ -269,59 +258,54 @@ function toggleLangMenu() {
   document.getElementById('langDropdown')?.classList.toggle('open');
 }
 
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.lang-picker')) {
-    document.getElementById('langDropdown')?.classList.remove('open');
-  }
+document.addEventListener('click', e => {
+  if (!e.target.closest('.lang-picker')) document.getElementById('langDropdown')?.classList.remove('open');
 });
 
 // ===== 폰트 크기 =====
-function changeFontSize(delta) {
-  App.fontSize = Math.max(14, Math.min(26, App.fontSize + delta));
+function changeFontSize(d) {
+  App.fontSize = Math.max(14, Math.min(26, App.fontSize + d));
   const c = document.getElementById('bibleText');
   if (c) c.style.fontSize = App.fontSize + 'px';
-  showToast(`글자 크기: ${App.fontSize}px`);
+  toast(`글자 크기: ${App.fontSize}px`);
 }
 
 // ===== 공유 =====
-function shareToKakao() { showToast('카카오 SDK 연동 후 사용 가능합니다'); }
+function shareToKakao() { toast('카카오 SDK 연동 후 사용 가능합니다'); }
 function copyVerse() {
-  const v = window._dailyVerse;
-  if (!v) return;
-  navigator.clipboard.writeText(`"${v.text}" — ${v.ref}\n\nhttps://bible2.kingdom2025.com`);
-  showToast('복사되었습니다 ✓');
+  if (!window._dv) return;
+  navigator.clipboard.writeText(`"${window._dv.text}" — ${window._dv.ref}\n\nhttps://bible2.kingdom2025.com`);
+  toast('복사되었습니다 ✓');
 }
-function createImageCard() { showToast('이미지 카드 기능 준비 중입니다'); }
+function createImageCard() { toast('이미지 카드 기능 준비 중'); }
 function shareToTwitter() {
-  const v = App.selectedVerse || window._dailyVerse;
+  const v = App.selectedVerse || window._dv;
   if (!v) return;
-  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('"'+(v.text||v)+'" — '+(v.ref||'')+'\n\n#성경 #HolyWord')}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('"'+(v.text||v)+'" — '+(v.ref||'')+'\n\n#성경 #HolyWord')}&url=${encodeURIComponent(location.href)}`, '_blank');
 }
 function shareDailyVerse() {
-  if (navigator.share) navigator.share({ title:'오늘의 말씀', text:`"${window._dailyVerse?.text}" — ${window._dailyVerse?.ref}`, url:window.location.href });
+  if (navigator.share && window._dv) navigator.share({title:'오늘의 말씀',text:`"${window._dv.text}" — ${window._dv.ref}`,url:location.href});
   else copyVerse();
 }
-
-// ===== 뉴스레터 =====
 function subscribeNewsletter() {
-  const input = document.querySelector('.email-input');
-  if (!input?.value.includes('@')) { showToast('올바른 이메일을 입력해주세요'); return; }
-  showToast('구독 완료! 매일 아침 말씀을 보내드립니다 ✓');
-  input.value = '';
+  const i = document.querySelector('.email-input');
+  if (!i?.value.includes('@')) { toast('올바른 이메일을 입력해주세요'); return; }
+  toast('구독 완료! 매일 아침 말씀을 보내드립니다 ✓');
+  i.value = '';
 }
 
-// ===== 책 검색 =====
-function filterBooks(query) {
-  const q = query.toLowerCase();
-  document.querySelectorAll('.book-item').forEach(btn => {
-    btn.style.display = (btn.dataset.book||'').includes(q) || !q ? 'block' : 'none';
+// ===== 검색 =====
+function filterBooks(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('.book-item').forEach(b => {
+    b.style.display = (b.dataset.book||'').includes(q) || !q ? 'block' : 'none';
   });
-  document.querySelectorAll('.book-category, .testament-header').forEach(el => {
+  document.querySelectorAll('.book-category,.testament-header').forEach(el => {
     el.style.display = q ? 'none' : '';
   });
 }
 
-// ===== 모바일 네비 =====
+// ===== 모바일 =====
 function toggleMobileNav() {
   document.getElementById('sidebarLeft')?.classList.toggle('open');
   document.getElementById('mobileOverlay')?.classList.toggle('show');
@@ -329,55 +313,46 @@ function toggleMobileNav() {
 
 // ===== URL 업데이트 =====
 function updateURL() {
-  const url = new URL(window.location);
+  const url = new URL(location);
   url.searchParams.set('book', App.currentBook);
   url.searchParams.set('ch', App.currentChapter);
   url.searchParams.set('lang', App.currentLang);
   history.pushState({}, '', url);
 }
 
-function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-
-// ===== 전면광고 (1분 후) =====
-function showInterstitialAd() {
-  if (document.getElementById('iOverlay')) return;
-  const overlay = document.createElement('div');
-  overlay.id = 'iOverlay';
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:flex;align-items:center;justify-content:center;';
-  overlay.innerHTML = `
-    <div style="background:#1A1208;border:1px solid #C9A84C;border-radius:16px;padding:24px;max-width:520px;width:92%;text-align:center;">
-      <div style="font-size:10px;color:#9E855A;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;">광고</div>
-      <ins class="adsbygoogle" style="display:block;min-height:280px;"
-           data-ad-client="ca-pub-8675368228460145"
-           data-ad-slot="7174010171"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});<\/script>
-      <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-size:12px;color:#9E855A;" id="iCnt">5초 후 닫기 가능</span>
-        <button id="iBtn" onclick="closeInter()" style="background:#C9A84C;color:#1A1208;border:none;padding:8px 22px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;opacity:0.35;pointer-events:none;">닫기 ✕</button>
-      </div>
-    </div>`;
-  document.body.appendChild(overlay);
-  try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
-
-  let n = 5;
-  const t = setInterval(() => {
+// ===== 전면광고 =====
+function showInterstitial() {
+  if (document.getElementById('iOv')) return;
+  const ov = document.createElement('div');
+  ov.id = 'iOv';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:flex;align-items:center;justify-content:center;';
+  ov.innerHTML = `<div style="background:#1A1208;border:1px solid #C9A84C;border-radius:16px;padding:24px;max-width:520px;width:92%;text-align:center;">
+    <div style="font-size:10px;color:#9E855A;letter-spacing:2px;margin-bottom:14px;">광고</div>
+    <ins class="adsbygoogle" style="display:block;min-height:280px;"
+         data-ad-client="ca-pub-8675368228460145" data-ad-slot="7174010171"
+         data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});<\/script>
+    <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:12px;color:#9E855A;" id="iCnt">5초 후 닫기 가능</span>
+      <button id="iBtn" onclick="closeInter()" style="background:#C9A84C;color:#1A1208;border:none;padding:8px 22px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;opacity:.35;pointer-events:none;">닫기 ✕</button>
+    </div></div>`;
+  document.body.appendChild(ov);
+  try { (adsbygoogle=window.adsbygoogle||[]).push({}); } catch(e) {}
+  let n=5;
+  const t = setInterval(()=>{
     n--;
-    const c = document.getElementById('iCnt');
-    const b = document.getElementById('iBtn');
-    if (c) c.textContent = n > 0 ? `${n}초 후 닫기 가능` : '닫기 가능';
-    if (n <= 0) { clearInterval(t); if (b) { b.style.opacity='1'; b.style.pointerEvents='auto'; } }
-  }, 1000);
+    const c=document.getElementById('iCnt'),b=document.getElementById('iBtn');
+    if(c) c.textContent=n>0?`${n}초 후 닫기 가능`:'닫기 가능';
+    if(n<=0){clearInterval(t);if(b){b.style.opacity='1';b.style.pointerEvents='auto';}}
+  },1000);
 }
-
 function closeInter() {
-  document.getElementById('iOverlay')?.remove();
-  setTimeout(showInterstitialAd, 30 * 60 * 1000);
+  document.getElementById('iOv')?.remove();
+  setTimeout(showInterstitial, 30*60*1000);
 }
 
 // ===== 토스트 =====
-function showToast(msg) {
+function toast(msg) {
   const t = document.getElementById('toast');
   if (!t) return;
   t.textContent = msg;
@@ -386,16 +361,15 @@ function showToast(msg) {
 }
 
 // ===== 키보드 =====
-function initKeyboardNav() {
-  document.addEventListener('keydown', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (e.key === 'ArrowRight') nextChapter();
-    if (e.key === 'ArrowLeft') prevChapter();
-    if (e.key === '+') changeFontSize(1);
-    if (e.key === '-') changeFontSize(-1);
-    if (e.key === 'Escape') { closePopup(); closeInter(); }
+function initKeys() {
+  document.addEventListener('keydown', e => {
+    if (['INPUT','TEXTAREA'].includes(e.target.tagName)) return;
+    if (e.key==='ArrowRight') nextChapter();
+    if (e.key==='ArrowLeft') prevChapter();
+    if (e.key==='+') changeFontSize(1);
+    if (e.key==='-') changeFontSize(-1);
+    if (e.key==='Escape') { closePopup(); closeInter(); }
   });
 }
 
-// ===== 뒤로가기 지원 =====
-window.addEventListener('popstate', () => { parseURLParams(); loadChapter(); });
+window.addEventListener('popstate', () => { parseURL(); loadChapter(); });
