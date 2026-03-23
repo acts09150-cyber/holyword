@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AI 대표기도문 작성 - 예배 모범 순서에 따른 감동적인 대표기도문을 AI가 자동으로 작성해드립니다.">
+<meta name="keywords" content="대표기도,기도문작성,예배기도,대표기도문,교회기도">
+<title>AI 대표기도 작성 | HolyWord</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8675368228460145" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+*{box-sizing:border-box;}
+
+.page-wrap{display:grid;grid-template-columns:160px 1fr 160px;max-width:1400px;margin:0 auto;min-height:80vh;}
+.side-ad{padding:20px 8px;position:sticky;top:70px;height:fit-content;text-align:center;}
+.prayer-main{padding:32px 24px 60px;}
+
+/* 히어로 */
+.prayer-hero{
+  background:#1A1208;
+  border-bottom:1px solid rgba(201,168,76,0.4);
+  padding:44px 32px;
+  text-align:center;
+}
+.prayer-hero h1{
+  font-family:'Playfair Display',serif;
+  color:#C9A84C;
+  font-size:32px;
+  margin-bottom:10px;
+  font-weight:700;
+}
+.prayer-hero p{color:rgba(255,255,255,0.55);font-size:14px;line-height:1.6;}
+
+/* 순서 안내 */
+.prayer-order{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+.order-step{
+  background:rgba(201,168,76,0.12);
+  border:1px solid rgba(201,168,76,0.3);
+  color:#C9A84C;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:12px;
+  font-family:'Noto Sans KR',sans-serif;
+}
+.order-arrow{color:rgba(201,168,76,0.4);font-size:14px;align-self:center;}
+
+/* 질문 카드 */
+.question-section{
+  background:white;
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:16px;
+  padding:32px;
+  margin-bottom:24px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.05);
+}
+.q-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:24px;
+  padding-bottom:16px;
+  border-bottom:1px solid rgba(201,168,76,0.15);
+}
+.q-icon{
+  width:44px;height:44px;
+  background:#1A1208;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+  flex-shrink:0;
+}
+.q-title{
+  font-family:'Playfair Display',serif;
+  font-size:18px;
+  color:#2D1F08;
+  font-weight:700;
+}
+.q-desc{font-size:12px;color:#9E855A;margin-top:3px;font-family:'Noto Sans KR',sans-serif;}
+
+/* 질문 항목 */
+.q-item{margin-bottom:20px;}
+.q-label{
+  display:block;
+  font-size:14px;
+  font-weight:500;
+  color:#2D1F08;
+  margin-bottom:8px;
+  font-family:'Noto Sans KR',sans-serif;
+}
+.q-label span{color:#C9A84C;font-weight:700;margin-right:4px;}
+.q-input, .q-select, .q-textarea{
+  width:100%;
+  background:#FBF7F0;
+  border:1px solid rgba(201,168,76,0.25);
+  border-radius:8px;
+  color:#2D1F08;
+  padding:11px 14px;
+  font-size:14px;
+  font-family:'Noto Sans KR',sans-serif;
+  outline:none;
+  transition:border-color 0.2s;
+}
+.q-input:focus, .q-select:focus, .q-textarea:focus{border-color:#C9A84C;background:white;}
+.q-textarea{resize:vertical;min-height:80px;line-height:1.6;}
+.q-select option{background:white;color:#2D1F08;}
+
+/* 태그 선택 */
+.tag-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.tag-btn{
+  background:#F5EFE5;
+  border:1px solid rgba(201,168,76,0.25);
+  color:#6B5735;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:12px;
+  cursor:pointer;
+  transition:all 0.15s;
+  font-family:'Noto Sans KR',sans-serif;
+}
+.tag-btn:hover{background:rgba(201,168,76,0.15);border-color:#C9A84C;}
+.tag-btn.selected{background:#C9A84C;color:#1A1208;border-color:#C9A84C;font-weight:600;}
+
+/* 생성 버튼 */
+.generate-btn{
+  width:100%;
+  background:#1A1208;
+  color:#C9A84C;
+  border:2px solid #C9A84C;
+  padding:16px;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  font-family:'Noto Sans KR',sans-serif;
+  transition:all 0.2s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:24px;
+}
+.generate-btn:hover{background:#C9A84C;color:#1A1208;}
+.generate-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.generate-btn .btn-icon{font-size:20px;}
+
+/* 로딩 */
+.loading-wrap{
+  text-align:center;
+  padding:48px 24px;
+  display:none;
+}
+.loading-wrap.show{display:block;}
+.loading-cross{
+  font-size:48px;
+  animation:pulse 1.5s ease-in-out infinite;
+  display:block;
+  margin-bottom:16px;
+}
+@keyframes pulse{0%,100%{opacity:0.4;transform:scale(0.95);}50%{opacity:1;transform:scale(1.05);}}
+.loading-text{color:#9E855A;font-size:14px;font-family:'Noto Sans KR',sans-serif;}
+.loading-steps{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+.loading-step{
+  background:#F5EFE5;
+  border-radius:20px;
+  padding:6px 14px;
+  font-size:11px;
+  color:#9E855A;
+  font-family:'Noto Sans KR',sans-serif;
+  transition:all 0.3s;
+}
+.loading-step.active{background:#C9A84C;color:#1A1208;font-weight:700;}
+
+/* 기도문 결과 */
+.prayer-result{
+  display:none;
+  background:white;
+  border:1px solid rgba(201,168,76,0.3);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 24px rgba(0,0,0,0.08);
+}
+.prayer-result.show{display:block;}
+
+.result-header{
+  background:#1A1208;
+  padding:20px 28px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.result-title{
+  font-family:'Playfair Display',serif;
+  color:#C9A84C;
+  font-size:18px;
+  font-weight:700;
+}
+.result-subtitle{color:rgba(255,255,255,0.5);font-size:12px;margin-top:3px;font-family:'Noto Sans KR',sans-serif;}
+.result-actions{display:flex;gap:8px;}
+.result-btn{
+  background:rgba(201,168,76,0.15);
+  border:1px solid rgba(201,168,76,0.4);
+  color:#C9A84C;
+  padding:7px 16px;
+  border-radius:8px;
+  font-size:12px;
+  cursor:pointer;
+  font-family:'Noto Sans KR',sans-serif;
+  transition:all 0.2s;
+}
+.result-btn:hover{background:#C9A84C;color:#1A1208;}
+
+.prayer-text{
+  padding:32px;
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:15px;
+  line-height:2;
+  color:#2D1F08;
+  white-space:pre-wrap;
+}
+
+/* 섹션 구분 */
+.prayer-section-tag{
+  display:inline-block;
+  background:#C9A84C;
+  color:#1A1208;
+  font-size:11px;
+  font-weight:700;
+  padding:3px 12px;
+  border-radius:10px;
+  margin-bottom:8px;
+  font-family:'Noto Sans KR',sans-serif;
+}
+
+.prayer-body{padding:28px 32px;}
+.prayer-para{
+  margin-bottom:28px;
+  padding-bottom:28px;
+  border-bottom:1px solid rgba(201,168,76,0.1);
+}
+.prayer-para:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.para-tag{
+  font-size:11px;
+  font-weight:700;
+  color:#C9A84C;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  margin-bottom:10px;
+  font-family:'Noto Sans KR',sans-serif;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.para-text{
+  font-family:'Playfair Display',serif;
+  font-size:16px;
+  line-height:1.9;
+  color:#2D1F08;
+  font-style:italic;
+}
+
+.prayer-amen{
+  text-align:center;
+  padding:20px;
+  background:#FBF7F0;
+  border-top:1px solid rgba(201,168,76,0.15);
+}
+.amen-text{
+  font-family:'Playfair Display',serif;
+  font-size:20px;
+  color:#C9A84C;
+  font-weight:700;
+}
+
+/* 중간 광고 */
+.mid-ad{margin:28px 0;text-align:center;}
+
+/* toast */
+.toast{position:fixed;bottom:-80px;left:50%;transform:translateX(-50%);background:#1A1208;color:#C9A84C;padding:10px 22px;border-radius:24px;font-size:13px;border:1px solid rgba(201,168,76,0.4);transition:bottom 0.3s;z-index:9999;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;}
+.toast.show{bottom:30px;}
+
+/* 반응형 */
+@media(max-width:1100px){.page-wrap{grid-template-columns:130px 1fr 130px;}}
+@media(max-width:860px){.page-wrap{grid-template-columns:1fr;}.side-ad{display:none;}.prayer-main{padding:20px 16px 40px;}}
+@media(max-width:560px){.prayer-order{gap:4px;}.order-step{font-size:10px;padding:4px 10px;}.result-header{flex-direction:column;gap:12px;align-items:flex-start;}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">
+      <span class="logo-cross">✦</span>
+      <span class="logo-text">HolyWord</span>
+      <span class="logo-sub">다국어 성경</span>
+    </a>
+    <nav class="header-nav">
+      <a href="../index.html" class="nav-link">성경 읽기</a>
+      <a href="topics.html" class="nav-link">주제별 구절</a>
+      <a href="daily.html" class="nav-link">오늘의 말씀</a>
+      <a href="search.html" class="nav-link">구절 검색</a>
+      <a href="prayer.html" class="nav-link active">대표기도 작성</a>
+    </nav>
+  </div>
+</header>
+
+<!-- 상단 광고 -->
+<div style="text-align:center;padding:8px 0;background:#F9F5EE;border-bottom:1px solid rgba(201,168,76,0.15);">
+  <ins class="adsbygoogle" style="display:block"
+       data-ad-client="ca-pub-8675368228460145"
+       data-ad-slot="2926108557"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- 히어로 -->
+<div class="prayer-hero">
+  <h1>✦ AI 대표기도문 작성</h1>
+  <p>3가지 질문에 답하시면 예배 모범에 따른 감동적인 대표기도문을 AI가 작성해드립니다</p>
+  <div class="prayer-order">
+    <span class="order-step">🙏 감사</span>
+    <span class="order-arrow">→</span>
+    <span class="order-step">✝️ 회개</span>
+    <span class="order-arrow">→</span>
+    <span class="order-step">⛪ 교회사명</span>
+    <span class="order-arrow">→</span>
+    <span class="order-step">📖 말씀</span>
+    <span class="order-arrow">→</span>
+    <span class="order-step">🕊️ 은혜와 성령</span>
+  </div>
+</div>
+
+<!-- 3단 레이아웃 -->
+<div class="page-wrap">
+
+  <!-- 좌측 광고 -->
+  <aside class="side-ad">
+    <ins class="adsbygoogle"
+         style="display:block;width:150px;min-height:500px;"
+         data-ad-client="ca-pub-8675368228460145"
+         data-ad-slot="7174010171"
+         data-ad-format="auto"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </aside>
+
+  <!-- 메인 -->
+  <main class="prayer-main">
+
+    <!-- 질문 카드 -->
+    <div class="question-section" id="questionSection">
+      <div class="q-header">
+        <div class="q-icon">📝</div>
+        <div>
+          <div class="q-title">3가지 질문에 답해주세요</div>
+          <div class="q-desc">답변할수록 더 맞춤화된 기도문이 작성됩니다</div>
+        </div>
+      </div>
+
+      <!-- Q1: 예배 상황 -->
+      <div class="q-item">
+        <label class="q-label"><span>Q1</span> 오늘 예배의 상황을 알려주세요</label>
+        <select class="q-select" id="q1Situation">
+          <option value="">선택해주세요</option>
+          <option value="주일 오전 예배">주일 오전 예배</option>
+          <option value="주일 오후 예배">주일 오후 예배</option>
+          <option value="수요 예배">수요 예배</option>
+          <option value="새벽 기도회">새벽 기도회</option>
+          <option value="금요 기도회">금요 기도회</option>
+          <option value="특별 새벽 기도회">특별 새벽 기도회</option>
+          <option value="부흥회">부흥회</option>
+          <option value="청년 예배">청년 예배</option>
+          <option value="어린이 예배">어린이 예배</option>
+          <option value="구역 예배">구역 예배</option>
+        </select>
+        <div class="tag-group" style="margin-top:10px;">
+          <span class="tag-btn" onclick="toggleTag(this,'q1Tags','신년주일')">🎊 신년주일</span>
+          <span class="tag-btn" onclick="toggleTag(this,'q1Tags','사순절')">✝️ 사순절</span>
+          <span class="tag-btn" onclick="toggleTag(this,'q1Tags','부활절')">🌸 부활절</span>
+          <span class="tag-btn" onclick="toggleTag(this,'q1Tags','성령강림절')">🕊️ 성령강림절</span>
+          <span class="tag-btn" onclick="toggleTag(this,'q1Tags','추수감사절')">🌾 추수감사절</span>
+          <span class="tag-btn" onclick="toggleTag(this,'q1Tags','대강절')">⭐ 대강절</span>
+          <span class="tag-btn" onclick="toggleTag(this,'q1Tags','성탄절')">🎄 성탄절</span>
+          <span class="tag-btn" onclick="toggleTag(this,'q1Tags','송년주일')">🕯️ 송년주일</span>
+        </div>
+        <input type="hidden" id="q1Tags" value="">
+      </div>
+
+      <!-- Q2: 교회/공동체 기도제목 -->
+      <div class="q-item">
+        <label class="q-label"><span>Q2</span> 교회와 공동체의 특별한 기도제목이 있나요?</label>
+        <textarea class="q-textarea" id="q2Prayer"
+          placeholder="예) 새 성전 건축을 위해 기도하고 있습니다 / 다음 달 전도 축제가 있습니다 / 아픈 성도들의 치유를 위해 / 교역자 사역을 위해 ..."></textarea>
+        <div class="tag-group" style="margin-top:8px;">
+          <span class="tag-btn" onclick="addTagText(this,'q2Prayer','성도들의 건강과 치유')">💊 치유</span>
+          <span class="tag-btn" onclick="addTagText(this,'q2Prayer','전도와 선교')">🌍 전도/선교</span>
+          <span class="tag-btn" onclick="addTagText(this,'q2Prayer','성전 건축')">⛪ 성전건축</span>
+          <span class="tag-btn" onclick="addTagText(this,'q2Prayer','다음세대와 청년')">👦 다음세대</span>
+          <span class="tag-btn" onclick="addTagText(this,'q2Prayer','교역자와 사역자')">🙏 교역자</span>
+          <span class="tag-btn" onclick="addTagText(this,'q2Prayer','나라와 민족을 위해')">🇰🇷 나라/민족</span>
+          <span class="tag-btn" onclick="addTagText(this,'q2Prayer','가정의 회복과 축복')">🏠 가정</span>
+          <span class="tag-btn" onclick="addTagText(this,'q2Prayer','경제적 어려움 중에 있는 성도')">💼 경제적 어려움</span>
+        </div>
+      </div>
+
+      <!-- Q3: 설교 주제/본문 -->
+      <div class="q-item">
+        <label class="q-label"><span>Q3</span> 오늘 설교 주제 또는 성경 본문을 알려주세요</label>
+        <input type="text" class="q-input" id="q3Sermon"
+          placeholder="예) 요한복음 15:5 '나는 포도나무요 너희는 가지라' / 믿음으로 나아가는 삶 / 하나님의 사랑">
+        <div class="tag-group" style="margin-top:8px;">
+          <span class="tag-btn" onclick="setInput('q3Sermon','하나님의 사랑과 은혜')">❤️ 하나님의 사랑</span>
+          <span class="tag-btn" onclick="setInput('q3Sermon','믿음으로 살아가는 삶')">⭐ 믿음의 삶</span>
+          <span class="tag-btn" onclick="setInput('q3Sermon','성령의 역사와 능력')">🕊️ 성령</span>
+          <span class="tag-btn" onclick="setInput('q3Sermon','기도의 능력')">🙌 기도</span>
+          <span class="tag-btn" onclick="setInput('q3Sermon','감사와 찬양')">🙏 감사/찬양</span>
+          <span class="tag-btn" onclick="setInput('q3Sermon','말씀에 순종하는 삶')">📖 말씀 순종</span>
+          <span class="tag-btn" onclick="setInput('q3Sermon','소망과 회복')">🌅 소망/회복</span>
+          <span class="tag-btn" onclick="setInput('q3Sermon','십자가와 부활')">✝️ 십자가/부활</span>
+        </div>
+      </div>
+
+      <!-- 생성 버튼 -->
+      <button class="generate-btn" id="generateBtn" onclick="generatePrayer()">
+        <span class="btn-icon">✦</span>
+        AI 대표기도문 작성하기
+      </button>
+    </div>
+
+    <!-- 로딩 -->
+    <div class="loading-wrap" id="loadingWrap">
+      <span class="loading-cross">✦</span>
+      <div class="loading-text">AI가 기도문을 작성하고 있습니다...</div>
+      <div class="loading-steps">
+        <span class="loading-step" id="ls1">감사 작성 중</span>
+        <span class="loading-step" id="ls2">회개 작성 중</span>
+        <span class="loading-step" id="ls3">교회사명 작성 중</span>
+        <span class="loading-step" id="ls4">말씀 작성 중</span>
+        <span class="loading-step" id="ls5">은혜와 성령 작성 중</span>
+      </div>
+    </div>
+
+    <!-- 중간 광고 -->
+    <div class="mid-ad">
+      <ins class="adsbygoogle" style="display:block"
+           data-ad-client="ca-pub-8675368228460145"
+           data-ad-slot="2240680444"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- 기도문 결과 -->
+    <div class="prayer-result" id="prayerResult">
+      <div class="result-header">
+        <div>
+          <div class="result-title">✦ 대표기도문</div>
+          <div class="result-subtitle" id="resultSubtitle"></div>
+        </div>
+        <div class="result-actions">
+          <button class="result-btn" onclick="copyPrayer()">📋 전체 복사</button>
+          <button class="result-btn" onclick="printPrayer()">🖨️ 인쇄</button>
+          <button class="result-btn" onclick="resetForm()">🔄 다시 작성</button>
+        </div>
+      </div>
+      <div class="prayer-body" id="prayerBody"></div>
+      <div class="prayer-amen">
+        <div class="amen-text">예수 그리스도의 이름으로 기도드립니다. 아멘.</div>
+      </div>
+    </div>
+
+    <!-- 하단 광고 (결과 아래) -->
+    <div class="mid-ad" id="bottomAdWrap" style="display:none;">
+      <ins class="adsbygoogle" style="display:block"
+           data-ad-client="ca-pub-8675368228460145"
+           data-ad-slot="4520193575"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+  </main>
+
+  <!-- 우측 광고 -->
+  <aside class="side-ad">
+    <ins class="adsbygoogle"
+         style="display:block;width:150px;min-height:500px;"
+         data-ad-client="ca-pub-8675368228460145"
+         data-ad-slot="2500534899"
+         data-ad-format="auto"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </aside>
+
+</div>
+
+<!-- 하단 광고 -->
+<div style="text-align:center;padding:12px 0;background:#F9F5EE;border-top:1px solid rgba(201,168,76,0.15);">
+  <ins class="adsbygoogle" style="display:block"
+       data-ad-client="ca-pub-8675368228460145"
+       data-ad-slot="4520193575"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">✦ HolyWord</div>
+      <p class="footer-desc">전 세계 언어로 성경을 무료로 읽을 수 있는 서비스입니다.</p>
+    </div>
+    <div class="footer-links-group">
+      <div class="footer-col">
+        <div class="footer-col-title">바로가기</div>
+        <a href="../index.html">성경 읽기</a>
+        <a href="topics.html">주제별 구절</a>
+        <a href="daily.html">오늘의 말씀</a>
+        <a href="search.html">구절 검색</a>
+        <a href="prayer.html">대표기도 작성</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 HolyWord · AI 대표기도문 작성 서비스</span></div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== 태그 토글 =====
+function toggleTag(el, hiddenId, value) {
+  el.classList.toggle('selected');
+  const hidden = document.getElementById(hiddenId);
+  let vals = hidden.value ? hidden.value.split(',') : [];
+  if (el.classList.contains('selected')) {
+    if (!vals.includes(value)) vals.push(value);
+  } else {
+    vals = vals.filter(v => v !== value);
+  }
+  hidden.value = vals.join(',');
+}
+
+function addTagText(el, inputId, text) {
+  el.classList.toggle('selected');
+  const input = document.getElementById(inputId);
+  if (el.classList.contains('selected')) {
+    input.value = input.value ? input.value + ', ' + text : text;
+  } else {
+    input.value = input.value.replace(', ' + text, '').replace(text + ', ', '').replace(text, '').trim();
+    if (input.value.endsWith(',')) input.value = input.value.slice(0, -1).trim();
+  }
+}
+
+function setInput(inputId, text) {
+  document.getElementById(inputId).value = text;
+}
+
+// ===== 기도문 생성 =====
+let generatedPrayer = '';
+
+async function generatePrayer() {
+  const situation = document.getElementById('q1Situation').value;
+  const specialTags = document.getElementById('q1Tags').value;
+  const prayerRequest = document.getElementById('q2Prayer').value.trim();
+  const sermon = document.getElementById('q3Sermon').value.trim();
+
+  if (!situation) { showToast('Q1: 예배 상황을 선택해주세요'); return; }
+
+  // UI 전환
+  document.getElementById('questionSection').style.display = 'none';
+  document.getElementById('prayerResult').classList.remove('show');
+  document.getElementById('loadingWrap').classList.add('show');
+
+  // 로딩 스텝 애니메이션
+  const steps = ['ls1','ls2','ls3','ls4','ls5'];
+  let stepIdx = 0;
+  const stepTimer = setInterval(() => {
+    steps.forEach((id, i) => {
+      document.getElementById(id).classList.toggle('active', i <= stepIdx);
+    });
+    stepIdx++;
+    if (stepIdx >= steps.length) clearInterval(stepTimer);
+  }, 800);
+
+  // 프롬프트 구성
+  const situation_full = situation + (specialTags ? ` (${specialTags})` : '');
+  const prompt = `당신은 한국 개신교회의 예배 대표기도문 전문 작성자입니다.
+
+다음 정보를 바탕으로 예배 모범 순서에 따른 감동적인 대표기도문을 작성해주세요.
+
+[예배 정보]
+- 예배 상황: ${situation_full}
+- 교회 기도제목: ${prayerRequest || '일반적인 교회와 성도를 위한 기도'}
+- 설교 주제/본문: ${sermon || '하나님의 말씀과 은혜'}
+
+[기도문 작성 순서 - 반드시 이 순서로]
+1. 감사 - 하나님께 드리는 감사와 찬양
+2. 회개 - 죄를 고백하고 용서를 구함
+3. 교회사명 - 교회와 공동체를 위한 기도
+4. 말씀 - 오늘 선포될 말씀과 설교자를 위한 기도
+5. 은혜와 성령 - 성령의 역사와 마무리 기도
+
+[작성 지침]
+- 각 섹션은 구분하되 자연스럽게 연결되도록 작성
+- 성도의 마음에 감동을 줄 수 있는 진심어린 표현 사용
+- 개역개정 성경 구절을 자연스럽게 포함
+- 각 섹션 앞에 반드시 이 형식으로 표시: [감사], [회개], [교회사명], [말씀], [은혜와 성령]
+- "예수 그리스도의 이름으로" 마무리는 제외 (별도 표시됨)
+- 전체 길이: 500-700자 내외
+- 경어체 사용 (하나님께 드리는 말투)
+
+이제 기도문을 작성해주세요:`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content?.[0]?.text || '';
+
+    clearInterval(stepTimer);
+    document.getElementById('loadingWrap').classList.remove('show');
+
+    if (text) {
+      generatedPrayer = text;
+      renderPrayer(text, situation_full, sermon);
+    } else {
+      throw new Error('응답 없음');
+    }
+  } catch (err) {
+    clearInterval(stepTimer);
+    document.getElementById('loadingWrap').classList.remove('show');
+    document.getElementById('questionSection').style.display = 'block';
+    showToast('기도문 생성에 실패했습니다. 다시 시도해주세요.');
+  }
+}
+
+function renderPrayer(text, situation, sermon) {
+  // 섹션 파싱
+  const sections = [
+    { key: '[감사]', label: '🙏 감사', color: '#C9A84C' },
+    { key: '[회개]', label: '✝️ 회개', color: '#C9A84C' },
+    { key: '[교회사명]', label: '⛪ 교회사명', color: '#C9A84C' },
+    { key: '[말씀]', label: '📖 말씀', color: '#C9A84C' },
+    { key: '[은혜와 성령]', label: '🕊️ 은혜와 성령', color: '#C9A84C' },
+  ];
+
+  let bodyHTML = '';
+  let remaining = text;
+
+  sections.forEach((sec, i) => {
+    const startIdx = remaining.indexOf(sec.key);
+    if (startIdx === -1) return;
+
+    const nextKey = sections[i + 1]?.key;
+    let endIdx = nextKey ? remaining.indexOf(nextKey) : -1;
+    let content = endIdx === -1
+      ? remaining.slice(startIdx + sec.key.length).trim()
+      : remaining.slice(startIdx + sec.key.length, endIdx).trim();
+
+    if (i === 0) remaining = remaining.slice(startIdx);
+
+    bodyHTML += `
+      <div class="prayer-para">
+        <div class="para-tag">${sec.label}</div>
+        <div class="para-text">${content.replace(/\n/g, '<br>')}</div>
+      </div>`;
+  });
+
+  // 파싱 실패 시 전체 텍스트 표시
+  if (!bodyHTML) {
+    bodyHTML = `<div class="para-text">${text.replace(/\n/g, '<br>')}</div>`;
+  }
+
+  document.getElementById('prayerBody').innerHTML = bodyHTML;
+  document.getElementById('resultSubtitle').textContent =
+    `${situation}${sermon ? ' · ' + sermon : ''}`;
+  document.getElementById('prayerResult').classList.add('show');
+
+  // 하단 광고 표시
+  const bottomAd = document.getElementById('bottomAdWrap');
+  bottomAd.style.display = 'block';
+  try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+
+  window.scrollTo({ top: document.getElementById('prayerResult').offsetTop - 80, behavior: 'smooth' });
+}
+
+function copyPrayer() {
+  if (!generatedPrayer) return;
+  const full = generatedPrayer + '\n\n— 예수 그리스도의 이름으로 기도드립니다. 아멘.\n\n출처: HolyWord (bible2.kingdom2025.com)';
+  navigator.clipboard.writeText(full);
+  showToast('기도문이 복사되었습니다 ✓');
+}
+
+function printPrayer() {
+  window.print();
+}
+
+function resetForm() {
+  document.getElementById('prayerResult').classList.remove('show');
+  document.getElementById('questionSection').style.display = 'block';
+  document.getElementById('bottomAdWrap').style.display = 'none';
+  // 폼 초기화
+  document.getElementById('q1Situation').value = '';
+  document.getElementById('q1Tags').value = '';
+  document.getElementById('q2Prayer').value = '';
+  document.getElementById('q3Sermon').value = '';
+  document.querySelectorAll('.tag-btn.selected').forEach(b => b.classList.remove('selected'));
+  generatedPrayer = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// 인쇄 스타일
+const printStyle = document.createElement('style');
+printStyle.textContent = `
+  @media print {
+    .site-header, .side-ad, .question-section, .loading-wrap,
+    .mid-ad, [style*="adsbygoogle"], .result-actions,
+    .prayer-hero, footer, .toast, nav { display: none !important; }
+    .page-wrap { grid-template-columns: 1fr !important; }
+    .prayer-result { box-shadow: none !important; border: 1px solid #ccc !important; }
+    .prayer-main { padding: 0 !important; }
+  }`;
+document.head.appendChild(printStyle);
+</script>
+</body>
+</html>
