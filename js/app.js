@@ -362,7 +362,7 @@ function showInterstitial() {
   label.style.cssText = 'font-size:10px;color:#9E855A;letter-spacing:2px;margin-bottom:14px;text-transform:uppercase;';
   label.textContent = '광고';
 
-  // AdSense ins 태그 (createElement로 동적 생성)
+  // AdSense ins 태그
   const ins = document.createElement('ins');
   ins.className = 'adsbygoogle';
   ins.style.cssText = 'display:block;min-height:250px;';
@@ -371,19 +371,30 @@ function showInterstitial() {
   ins.setAttribute('data-ad-format','auto');
   ins.setAttribute('data-full-width-responsive','true');
 
-  // 하단 카운트다운
+  // 하단 카운트다운 영역
   const footer = document.createElement('div');
   footer.style.cssText = 'margin-top:16px;display:flex;align-items:center;justify-content:space-between;';
 
   const countEl = document.createElement('span');
   countEl.id = 'iCnt';
-  countEl.style.cssText = 'font-size:12px;color:#9E855A;font-family:Noto Sans KR,sans-serif;';
+  countEl.style.fontSize = '12px';
+  countEl.style.color = '#9E855A';
   countEl.textContent = '5초 후 닫기 가능';
 
+  // 닫기 버튼 - 개별 속성으로 설정 (cssText 사용 안 함 → override 문제 방지)
   const closeBtn = document.createElement('button');
   closeBtn.id = 'iBtn';
   closeBtn.textContent = '닫기 ✕';
-  closeBtn.style.cssText = 'background:#C9A84C;color:#1A1208;border:none;padding:8px 22px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;opacity:0.35;pointer-events:none;font-family:Noto Sans KR,sans-serif;';
+  closeBtn.style.background = '#C9A84C';
+  closeBtn.style.color = '#1A1208';
+  closeBtn.style.border = 'none';
+  closeBtn.style.padding = '8px 22px';
+  closeBtn.style.borderRadius = '20px';
+  closeBtn.style.fontSize = '13px';
+  closeBtn.style.fontWeight = '700';
+  closeBtn.style.cursor = 'pointer';
+  closeBtn.style.opacity = '0.35';
+  closeBtn.style.pointerEvents = 'none';
   closeBtn.addEventListener('click', closeInter);
 
   footer.appendChild(countEl);
@@ -394,23 +405,34 @@ function showInterstitial() {
   ov.appendChild(box);
   document.body.appendChild(ov);
 
-  // AdSense 로드 (DOM 삽입 후)
+  // AdSense 로드
   try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
 
-  // 카운트다운 (DOM 완전 삽입 후 100ms 뒤 시작)
-  setTimeout(() => {
-    let n = 5;
-    const timer = setInterval(() => {
-      n--;
-      const cEl = document.getElementById('iCnt');
-      const bEl = document.getElementById('iBtn');
-      if (cEl) cEl.textContent = n > 0 ? `${n}초 후 닫기 가능` : '닫기 가능';
-      if (n <= 0) {
-        clearInterval(timer);
-        if (bEl) { bEl.style.opacity='1'; bEl.style.pointerEvents='auto'; }
-      }
-    }, 1000);
-  }, 100);
+  // 카운트다운: 5→4→3→2→1→0(닫기 가능)
+  // n=5부터 시작, 매 1초마다 감소
+  let n = 5;
+  const iTimer = setInterval(() => {
+    n--;
+    const cEl = document.getElementById('iCnt');
+    const bEl = document.getElementById('iBtn');
+
+    if (!cEl || !bEl) {
+      // 오버레이가 사라진 경우 타이머 정지
+      clearInterval(iTimer);
+      return;
+    }
+
+    if (n > 0) {
+      cEl.textContent = n + '초 후 닫기 가능';
+    } else {
+      // n === 0: 닫기 버튼 활성화
+      cEl.textContent = '닫기 가능';
+      clearInterval(iTimer);
+      bEl.style.opacity = '1';
+      bEl.style.pointerEvents = 'auto';
+      bEl.style.cursor = 'pointer';
+    }
+  }, 1000);
 }
 
 function closeInter() {
