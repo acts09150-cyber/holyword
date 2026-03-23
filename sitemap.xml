@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://bible2.kingdom2025.com/</loc>
+    <loc>https://holyword.kr/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://bible2.kingdom2025.com/pages/topics.html</loc>
+    <loc>https://holyword.kr/pages/topics.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://bible2.kingdom2025.com/pages/daily.html</loc>
+    <loc>https://holyword.kr/pages/daily.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://bible2.kingdom2025.com/pages/search.html</loc>
+    <loc>https://holyword.kr/pages/search.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bible2.kingdom2025.com/pages/prayer.html</loc>
+    <loc>https://holyword.kr/pages/prayer.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bible2.kingdom2025.com/pages/terms.html</loc>
+    <loc>https://holyword.kr/pages/terms.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://bible2.kingdom2025.com/pages/contact.html</loc>
+    <loc>https://holyword.kr/pages/contact.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>

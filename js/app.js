@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initDailyVerse();   // 2. 오늘의 말씀
   loadChapter();      // 3. 성경 본문
   initKeys();         // 4. 키보드
-  initInterstitial(); // 5. 전면광고 idle 감지
 });
 
 // ===== URL 파싱 (loadChapter 전에 실행) =====
@@ -326,121 +325,6 @@ function updateURL() {
   history.pushState({}, '', url);
 }
 
-// ===== 전면광고 (1분 무조작 → 단 1회만 송출) =====
-let _idleTimer = null;
-let _interDone = false;  // 한 번 보여줬으면 다시 안 보여줌
-
-function initInterstitial() {
-  _resetIdleTimer();
-  ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(ev => {
-    document.addEventListener(ev, _resetIdleTimer, {passive:true});
-  });
-}
-
-function _resetIdleTimer() {
-  if (_interDone) return;  // 이미 송출됐으면 타이머 리셋 안 함
-  clearTimeout(_idleTimer);
-  _idleTimer = setTimeout(() => {
-    if (!_interDone) showInterstitial();
-  }, 60000); // 1분
-}
-
-function showInterstitial() {
-  if (document.getElementById('iOv')) return;
-  _interDone = true;
-
-  // 오버레이
-  const ov = document.createElement('div');
-  ov.id = 'iOv';
-  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:flex;align-items:center;justify-content:center;';
-
-  // 박스
-  const box = document.createElement('div');
-  box.style.cssText = 'background:#1A1208;border:1px solid #C9A84C;border-radius:16px;padding:24px;max-width:520px;width:92%;text-align:center;';
-
-  // 광고 라벨
-  const label = document.createElement('div');
-  label.style.cssText = 'font-size:10px;color:#9E855A;letter-spacing:2px;margin-bottom:14px;text-transform:uppercase;';
-  label.textContent = '광고';
-
-  // AdSense ins 태그
-  const ins = document.createElement('ins');
-  ins.className = 'adsbygoogle';
-  ins.style.cssText = 'display:block;min-height:250px;';
-  ins.setAttribute('data-ad-client','ca-pub-8675368228460145');
-  ins.setAttribute('data-ad-slot','7174010171');
-  ins.setAttribute('data-ad-format','auto');
-  ins.setAttribute('data-full-width-responsive','true');
-
-  // 하단 카운트다운 영역
-  const footer = document.createElement('div');
-  footer.style.cssText = 'margin-top:16px;display:flex;align-items:center;justify-content:space-between;';
-
-  const countEl = document.createElement('span');
-  countEl.id = 'iCnt';
-  countEl.style.fontSize = '12px';
-  countEl.style.color = '#9E855A';
-  countEl.textContent = '5초 후 닫기 가능';
-
-  // 닫기 버튼 - 개별 속성으로 설정 (cssText 사용 안 함 → override 문제 방지)
-  const closeBtn = document.createElement('button');
-  closeBtn.id = 'iBtn';
-  closeBtn.textContent = '닫기 ✕';
-  closeBtn.style.background = '#C9A84C';
-  closeBtn.style.color = '#1A1208';
-  closeBtn.style.border = 'none';
-  closeBtn.style.padding = '8px 22px';
-  closeBtn.style.borderRadius = '20px';
-  closeBtn.style.fontSize = '13px';
-  closeBtn.style.fontWeight = '700';
-  closeBtn.style.cursor = 'pointer';
-  closeBtn.style.opacity = '0.35';
-  closeBtn.style.pointerEvents = 'none';
-  closeBtn.addEventListener('click', closeInter);
-
-  footer.appendChild(countEl);
-  footer.appendChild(closeBtn);
-  box.appendChild(label);
-  box.appendChild(ins);
-  box.appendChild(footer);
-  ov.appendChild(box);
-  document.body.appendChild(ov);
-
-  // AdSense 로드
-  try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
-
-  // 카운트다운: 5→4→3→2→1→0(닫기 가능)
-  // n=5부터 시작, 매 1초마다 감소
-  let n = 5;
-  const iTimer = setInterval(() => {
-    n--;
-    const cEl = document.getElementById('iCnt');
-    const bEl = document.getElementById('iBtn');
-
-    if (!cEl || !bEl) {
-      // 오버레이가 사라진 경우 타이머 정지
-      clearInterval(iTimer);
-      return;
-    }
-
-    if (n > 0) {
-      cEl.textContent = n + '초 후 닫기 가능';
-    } else {
-      // n === 0: 닫기 버튼 활성화
-      cEl.textContent = '닫기 가능';
-      clearInterval(iTimer);
-      bEl.style.opacity = '1';
-      bEl.style.pointerEvents = 'auto';
-      bEl.style.cursor = 'pointer';
-    }
-  }, 1000);
-}
-
-function closeInter() {
-  document.getElementById('iOv')?.remove();
-  _interDone = true;   // 이후 재송출 완전 차단
-  clearTimeout(_idleTimer);
-}
 
 // ===== 토스트 =====
 function toast(msg) {
@@ -459,7 +343,7 @@ function initKeys() {
     if (e.key==='ArrowLeft') prevChapter();
     if (e.key==='+') changeFontSize(1);
     if (e.key==='-') changeFontSize(-1);
-    if (e.key==='Escape') { closePopup(); closeInter(); }
+    if (e.key==='Escape') { closePopup(); }
   });
 }
 
