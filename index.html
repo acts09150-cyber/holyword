@@ -64,17 +64,13 @@
 <!-- ===== 상단 광고 배너 (Leaderboard 728x90) ===== -->
 <div class="ad-zone ad-leaderboard">
   <div class="ad-label">광고</div>
-<!--
-    📢 AdSense 상단 배너 광고 코드:
-    <ins class="adsbygoogle"
+      <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="ca-pub-8675368228460145"
          data-ad-slot="2926108557"
          data-ad-format="auto"
          data-full-width-responsive="true"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    -->
-</div>
 </div>
 
 <!-- ===== MAIN LAYOUT ===== -->
@@ -232,17 +228,13 @@
     <!-- 인아티클 광고 1 (본문 시작 전) - 최고 CTR -->
     <div class="ad-zone ad-in-article">
       <div class="ad-label">광고</div>
-<!--
-        📢 In-Article 광고 (본문 삽입형 — 평균 CTR 3~5배):
-        <ins class="adsbygoogle"
+          <ins class="adsbygoogle"
              style="display:block; text-align:center;"
-             data-ad-format="auto"
-             data-full-width-responsive="true"
+             data-ad-layout="in-article"
+             data-ad-format="fluid"
              data-ad-client="ca-pub-8675368228460145"
              data-ad-slot="2240680444"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        -->
-</div>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
     <!-- 성경 본문 -->
@@ -256,15 +248,11 @@
     <!-- 인아티클 광고 2 (본문 중간) -->
     <div class="ad-zone ad-in-article" id="midAd">
       <div class="ad-label">광고</div>
-<!--
-        📢 본문 중간 광고 (336×280 Rectangle — 높은 단가):
-        <ins class="adsbygoogle"
+          <ins class="adsbygoogle"
              style="display:inline-block;width:336px;height:280px"
              data-ad-client="ca-pub-8675368228460145"
              data-ad-slot="7174010171"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        -->
-</div>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
     <!-- 챕터 네비게이션 (하단) -->
@@ -305,15 +293,11 @@
     <!-- 사이드바 광고 1 (300×250 — 최고 단가) -->
     <div class="widget ad-zone">
       <div class="ad-label">광고</div>
-<!--
-        📢 사이드바 300×250 (Medium Rectangle — 웹 광고 최고 CTR):
-        <ins class="adsbygoogle"
+          <ins class="adsbygoogle"
              style="display:inline-block;width:300px;height:250px"
              data-ad-client="ca-pub-8675368228460145"
              data-ad-slot="7174010171"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        -->
-</div>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
     <!-- 구절 공유 -->
@@ -349,15 +333,11 @@
     <!-- 사이드바 광고 2 (300×250) -->
     <div class="widget ad-zone">
       <div class="ad-label">광고</div>
-<!--
-        📢 두 번째 사이드바 광고 (스크롤 후 노출 = 높은 viewability):
-        <ins class="adsbygoogle"
+          <ins class="adsbygoogle"
              style="display:inline-block;width:300px;height:250px"
              data-ad-client="ca-pub-8675368228460145"
              data-ad-slot="2500534899"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        -->
-</div>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
     <!-- 뉴스레터 구독 (이메일 마케팅) -->
@@ -375,17 +355,13 @@
 <!-- ===== 하단 광고 (Leaderboard) ===== -->
 <div class="ad-zone ad-leaderboard" style="margin-top:0;">
   <div class="ad-label">광고</div>
-<!--
-    📢 하단 배너 광고:
-    <ins class="adsbygoogle"
+      <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="ca-pub-8675368228460145"
          data-ad-slot="4520193575"
          data-ad-format="auto"
          data-full-width-responsive="true"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    -->
-</div>
 </div>
 
 <!-- ===== FOOTER ===== -->
@@ -450,5 +426,41 @@
 
 <script src="js/bible-data.js"></script>
 <script src="js/app.js"></script>
+
+<div id="iOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;align-items:center;justify-content:center;">
+  <div style="background:#1A1208;border:1px solid #C9A84C;border-radius:16px;padding:24px;max-width:520px;width:92%;text-align:center;">
+    <div style="font-size:10px;color:#9E855A;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;">광고</div>
+    <ins class="adsbygoogle" style="display:block;min-height:280px;"
+         data-ad-client="ca-pub-8675368228460145"
+         data-ad-slot="7174010171"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:12px;color:#9E855A;" id="iCnt">5초 후 닫기 가능</span>
+      <button id="iBtn" onclick="closeInter()" style="background:#C9A84C;color:#1A1208;border:none;padding:8px 22px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;opacity:0.35;pointer-events:none;">닫기 ✕</button>
+    </div>
+  </div>
+</div>
+<script>
+!function(){
+  var shown=false;
+  window.showInter=function(){
+    if(shown)return;shown=true;
+    document.getElementById('iOverlay').style.display='flex';
+    var n=5,t=setInterval(function(){
+      n--;
+      var c=document.getElementById('iCnt'),b=document.getElementById('iBtn');
+      if(c)c.textContent=n>0?n+'초 후 닫기 가능':'닫기 가능';
+      if(n<=0){clearInterval(t);if(b){b.style.opacity='1';b.style.pointerEvents='auto';}}
+    },1000);
+  };
+  window.closeInter=function(){
+    document.getElementById('iOverlay').style.display='none';
+    shown=false;setTimeout(window.showInter,30*60*1000);
+  };
+  setTimeout(window.showInter,60*1000);
+}();
+</script>
 </body>
 </html>
