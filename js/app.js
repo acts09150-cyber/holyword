@@ -122,18 +122,6 @@ function renderVerses(verses) {
     d.addEventListener('click', () => selectVerse(v.number, v.text));
     c.appendChild(d);
 
-    // 15절 후 중간 광고
-    if (idx === 14 && verses.length > 20) {
-      const ad = document.createElement('div');
-      ad.style.cssText = 'margin:28px 0;text-align:center;';
-      ad.innerHTML = `<ins class="adsbygoogle" style="display:block"
-        data-ad-client="ca-pub-8675368228460145"
-        data-ad-slot="2240680444"
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>`;
-      c.appendChild(ad);
-      try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
-    }
   });
 
   // 성경 본문 출처 표시
