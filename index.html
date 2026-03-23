@@ -1,68 +1,87 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="HolyWord - 무료 다국어 성경 읽기. 한국어 개역개정(KRV), 영어 KJV·NIV·NASB, 중국어 和合本, 러시아어 성경을 온라인으로 무료로 읽어보세요.">
-<meta name="keywords" content="성경읽기, 온라인성경, 무료성경, 개역개정, KRV, KJV, NIV, NASB, 한국어성경, 다국어성경, 대표기도, 성경구절검색, Bible, HolyWord">
-<meta property="og:title" content="HolyWord - 무료 다국어 성경">
-<meta property="og:description" content="한국어 개역개정, 영어 KJV·NIV·NASB, 중국어, 러시아어 성경을 무료로 읽어보세요. 주제별 구절, 오늘의 말씀, AI 대표기도문 작성 서비스 제공.">
+
+<!-- SEO: English-first for global audience -->
+<title>HolyWord Bible - Read KRV, KJV, NIV, NASB, Chinese, Russian Online Free</title>
+<meta name="description" content="Read the Bible online for free in Korean (KRV), English (KJV, NIV, NASB), Chinese (CUV), and Russian. Parallel Bible view, verse sharing, and AI prayer generator.">
+<meta name="keywords" content="Bible online free, KJV Bible, NIV Bible, Korean Bible KRV, Chinese Bible CUV, parallel Bible, read Bible online, scripture, holy bible, free bible study">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://holyword.kr">
+
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://holyword.kr">
-<meta property="og:site_name" content="HolyWord">
-<link rel="canonical" href="https://holyword.kr">
-<title>HolyWord - 무료 다국어 성경 읽기</title>
+<meta property="og:title" content="HolyWord - Free Online Parallel Bible Reader">
+<meta property="og:description" content="Read the Bible in Korean, English (KJV/NIV/NASB), Chinese & Russian. Parallel view, verse image sharing for Instagram & Pinterest.">
+<meta property="og:image" content="https://holyword.kr/og-image.jpg">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ko_KR">
+<meta property="og:site_name" content="HolyWord Bible">
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HolyWord - Free Parallel Bible Reader">
+<meta name="twitter:description" content="Read KJV, NIV, Korean KRV, Chinese CUV side by side. Share beautiful verse cards.">
 
+<!-- Pinterest -->
+<meta name="pinterest" content="nopin" id="pinterest-meta">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Sans+SC&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+<!-- AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8675368228460145" crossorigin="anonymous"></script>
 
 <link rel="stylesheet" href="css/style.css">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "HolyWord Bible",
+  "url": "https://holyword.kr",
+  "description": "Free online parallel Bible reader in Korean, English, Chinese and Russian",
+  "applicationCategory": "ReligiousApplication",
+  "operatingSystem": "Web",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+}
+</script>
 </head>
 <body>
 
-<!-- ===== SITE HEADER ===== -->
+<!-- ===== HEADER ===== -->
 <header class="site-header">
-  <div class="header-inner">
-    <a href="index.html" class="logo">
-      <span class="logo-cross">✦</span>
-      <span class="logo-text">HolyWord</span>
-      <span class="logo-sub">다국어 성경</span>
-    </a>
-
-    <nav class="header-nav">
-      <a href="index.html" class="nav-link active">성경 읽기</a>
-      <a href="pages/topics.html" class="nav-link">주제별 구절</a>
-      <a href="pages/daily.html" class="nav-link">오늘의 말씀</a>
-      <a href="pages/search.html" class="nav-link">구절 검색</a>
-      <a href="pages/prayer.html" class="nav-link" style="color:#C9A84C;">대표기도문 작성</a>
-    </nav>
-
-    <div class="lang-picker" id="langPicker">
-      <button class="lang-current" onclick="toggleLangMenu()">
-        <span id="currentLangFlag">🇰🇷</span>
-        <span id="currentLangName">한국어</span>
-        <span class="chevron">▾</span>
-      </button>
-      <div class="lang-dropdown" id="langDropdown">
-        <button onclick="setLang('KRV')">🇰🇷 한국어 <span style="float:right;opacity:0.5;font-size:10px;">개역개정 KRV</span></button>
-        <button onclick="setLang('KJV')">🇺🇸 English <span style="float:right;opacity:0.5;font-size:10px;">KJV</span></button>
-        <button onclick="setLang('NIV')">🇺🇸 English <span style="float:right;opacity:0.5;font-size:10px;">NIV</span></button>
-        <button onclick="setLang('NASB')">🇺🇸 English <span style="float:right;opacity:0.5;font-size:10px;">NASB</span></button>
-        <button onclick="setLang('CUV')">🇨🇳 中文 <span style="float:right;opacity:0.5;font-size:10px;">和合本 CUV</span></button>
-        <button onclick="setLang('SYNOD')">🇷🇺 Русский <span style="float:right;opacity:0.5;font-size:10px;">Синодальный</span></button>
-      </div>
-    </div>
-
-    <button class="hamburger" onclick="toggleMobileNav()" aria-label="메뉴">
-      <span></span><span></span><span></span>
+  <a href="index.html" class="logo">
+    <span class="logo-cross">✦</span>
+    <span class="logo-text">HolyWord</span>
+    <span class="logo-sub">Bible</span>
+  </a>
+  <nav class="header-nav">
+    <a href="index.html" class="nav-link active">📖 Bible Reader</a>
+    <a href="pages/topics.html" class="nav-link">🏷️ Topics</a>
+    <a href="pages/daily.html" class="nav-link">☀️ Daily Verse</a>
+    <a href="pages/search.html" class="nav-link">🔍 Search</a>
+    <a href="pages/prayer.html" class="nav-link">🙏 AI Prayer</a>
+  </nav>
+  <div class="lang-picker">
+    <button class="lang-current" onclick="toggleLangMenu()" aria-label="Select language">
+      <span id="uiLangFlag">🇺🇸</span>
+      <span id="uiLangName">English</span>
+      <span>▾</span>
     </button>
+    <div class="lang-dropdown" id="langDropdown">
+      <button onclick="setUiLang('en')">🇺🇸 English <span class="lang-badge">Interface</span></button>
+      <button onclick="setUiLang('ko')">🇰🇷 한국어 <span class="lang-badge">인터페이스</span></button>
+    </div>
   </div>
 </header>
 
-<!-- 상단 광고 -->
-<div style="text-align:center;padding:8px 0;background:#F9F5EE;border-bottom:1px solid rgba(201,168,76,0.15);">
+<!-- 상단 광고 (Leaderboard) -->
+<div class="ad-top-bar">
   <ins class="adsbygoogle"
        style="display:block"
        data-ad-client="ca-pub-8675368228460145"
@@ -72,346 +91,205 @@
   <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
 
+<!-- ===== CONTROLS BAR ===== -->
+<div class="controls-bar" id="controlsBar">
+  <div class="ctrl-group">
+    <span class="ctrl-label" data-i18n="book">Book</span>
+    <select class="ctrl-select" id="bookSelect" onchange="onBookChange()"></select>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label" data-i18n="chapter">Chapter</span>
+    <select class="ctrl-select" id="chapterSelect" onchange="onChapterChange()"></select>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label" data-i18n="left">Left Column</span>
+    <select class="ctrl-select" id="leftTrans" onchange="loadBoth()">
+      <option value="KJV">English – KJV</option>
+      <option value="NIV">English – NIV</option>
+      <option value="NASB">English – NASB</option>
+      <option value="KRV" selected>Korean – KRV (개역개정)</option>
+      <option value="CUV">Chinese – CUV (和合本)</option>
+      <option value="SYNOD">Russian – Synodal</option>
+      <option value="LXXE">Greek – LXX (Septuagint)</option>
+      <option value="TR">Greek – NT Textus Receptus</option>
+      <option value="WLC">Hebrew – WLC</option>
+    </select>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label" data-i18n="right">Right Column</span>
+    <select class="ctrl-select" id="rightTrans" onchange="loadBoth()">
+      <option value="KJV" selected>English – KJV</option>
+      <option value="NIV">English – NIV</option>
+      <option value="NASB">English – NASB</option>
+      <option value="KRV">Korean – KRV (개역개정)</option>
+      <option value="CUV">Chinese – CUV (和合本)</option>
+      <option value="SYNOD">Russian – Synodal</option>
+      <option value="LXXE">Greek – LXX (Septuagint)</option>
+      <option value="TR">Greek – NT Textus Receptus</option>
+      <option value="WLC">Hebrew – WLC</option>
+    </select>
+  </div>
+  <div class="ctrl-info" id="ctrlInfo">
+    <strong id="ctrlBookChap">Genesis · Chapter 1</strong><br>
+    <span id="ctrlTransInfo" style="font-size:11px;opacity:0.7;"></span>
+  </div>
+</div>
+
 <!-- ===== MAIN LAYOUT ===== -->
-<div class="main-wrapper">
+<div class="main-layout">
 
-  <!-- 왼쪽: 성경 목록 사이드바 -->
-  <aside class="sidebar-bible-list" id="sidebarLeft">
-    <div class="sidebar-search">
-      <input type="text" placeholder="성경책 검색..." id="bookSearchInput" oninput="filterBooks(this.value)">
-    </div>
-
-    <div id="bookListContainer">
-      <div class="testament-group">
-        <div class="testament-header">구약성경 (39권)</div>
-
-        <div class="book-category">모세오경</div>
-        <button class="book-item active" data-book="창세기" data-chapters="50" onclick="selectBook(this)">창세기</button>
-        <button class="book-item" data-book="출애굽기" data-chapters="40" onclick="selectBook(this)">출애굽기</button>
-        <button class="book-item" data-book="레위기" data-chapters="27" onclick="selectBook(this)">레위기</button>
-        <button class="book-item" data-book="민수기" data-chapters="36" onclick="selectBook(this)">민수기</button>
-        <button class="book-item" data-book="신명기" data-chapters="34" onclick="selectBook(this)">신명기</button>
-
-        <div class="book-category">역사서</div>
-        <button class="book-item" data-book="여호수아" data-chapters="24" onclick="selectBook(this)">여호수아</button>
-        <button class="book-item" data-book="사사기" data-chapters="21" onclick="selectBook(this)">사사기</button>
-        <button class="book-item" data-book="룻기" data-chapters="4" onclick="selectBook(this)">룻기</button>
-        <button class="book-item" data-book="사무엘상" data-chapters="31" onclick="selectBook(this)">사무엘상</button>
-        <button class="book-item" data-book="사무엘하" data-chapters="24" onclick="selectBook(this)">사무엘하</button>
-        <button class="book-item" data-book="열왕기상" data-chapters="22" onclick="selectBook(this)">열왕기상</button>
-        <button class="book-item" data-book="열왕기하" data-chapters="25" onclick="selectBook(this)">열왕기하</button>
-        <button class="book-item" data-book="역대상" data-chapters="29" onclick="selectBook(this)">역대상</button>
-        <button class="book-item" data-book="역대하" data-chapters="36" onclick="selectBook(this)">역대하</button>
-        <button class="book-item" data-book="에스라" data-chapters="10" onclick="selectBook(this)">에스라</button>
-        <button class="book-item" data-book="느헤미야" data-chapters="13" onclick="selectBook(this)">느헤미야</button>
-        <button class="book-item" data-book="에스더" data-chapters="10" onclick="selectBook(this)">에스더</button>
-
-        <div class="book-category">시가서</div>
-        <button class="book-item" data-book="욥기" data-chapters="42" onclick="selectBook(this)">욥기</button>
-        <button class="book-item" data-book="시편" data-chapters="150" onclick="selectBook(this)">시편</button>
-        <button class="book-item" data-book="잠언" data-chapters="31" onclick="selectBook(this)">잠언</button>
-        <button class="book-item" data-book="전도서" data-chapters="12" onclick="selectBook(this)">전도서</button>
-        <button class="book-item" data-book="아가" data-chapters="8" onclick="selectBook(this)">아가</button>
-
-        <div class="book-category">대예언서</div>
-        <button class="book-item" data-book="이사야" data-chapters="66" onclick="selectBook(this)">이사야</button>
-        <button class="book-item" data-book="예레미야" data-chapters="52" onclick="selectBook(this)">예레미야</button>
-        <button class="book-item" data-book="예레미야애가" data-chapters="5" onclick="selectBook(this)">예레미야애가</button>
-        <button class="book-item" data-book="에스겔" data-chapters="48" onclick="selectBook(this)">에스겔</button>
-        <button class="book-item" data-book="다니엘" data-chapters="12" onclick="selectBook(this)">다니엘</button>
-
-        <div class="book-category">소예언서</div>
-        <button class="book-item" data-book="호세아" data-chapters="14" onclick="selectBook(this)">호세아</button>
-        <button class="book-item" data-book="요엘" data-chapters="3" onclick="selectBook(this)">요엘</button>
-        <button class="book-item" data-book="아모스" data-chapters="9" onclick="selectBook(this)">아모스</button>
-        <button class="book-item" data-book="오바댜" data-chapters="1" onclick="selectBook(this)">오바댜</button>
-        <button class="book-item" data-book="요나" data-chapters="4" onclick="selectBook(this)">요나</button>
-        <button class="book-item" data-book="미가" data-chapters="7" onclick="selectBook(this)">미가</button>
-        <button class="book-item" data-book="나훔" data-chapters="3" onclick="selectBook(this)">나훔</button>
-        <button class="book-item" data-book="하박국" data-chapters="3" onclick="selectBook(this)">하박국</button>
-        <button class="book-item" data-book="스바냐" data-chapters="3" onclick="selectBook(this)">스바냐</button>
-        <button class="book-item" data-book="학개" data-chapters="2" onclick="selectBook(this)">학개</button>
-        <button class="book-item" data-book="스가랴" data-chapters="14" onclick="selectBook(this)">스가랴</button>
-        <button class="book-item" data-book="말라기" data-chapters="4" onclick="selectBook(this)">말라기</button>
-      </div>
-
-      <div class="testament-group">
-        <div class="testament-header">신약성경 (27권)</div>
-
-        <div class="book-category">복음서</div>
-        <button class="book-item" data-book="마태복음" data-chapters="28" onclick="selectBook(this)">마태복음</button>
-        <button class="book-item" data-book="마가복음" data-chapters="16" onclick="selectBook(this)">마가복음</button>
-        <button class="book-item" data-book="누가복음" data-chapters="24" onclick="selectBook(this)">누가복음</button>
-        <button class="book-item" data-book="요한복음" data-chapters="21" onclick="selectBook(this)">요한복음</button>
-        <button class="book-item" data-book="사도행전" data-chapters="28" onclick="selectBook(this)">사도행전</button>
-
-        <div class="book-category">바울 서신</div>
-        <button class="book-item" data-book="로마서" data-chapters="16" onclick="selectBook(this)">로마서</button>
-        <button class="book-item" data-book="고린도전서" data-chapters="16" onclick="selectBook(this)">고린도전서</button>
-        <button class="book-item" data-book="고린도후서" data-chapters="13" onclick="selectBook(this)">고린도후서</button>
-        <button class="book-item" data-book="갈라디아서" data-chapters="6" onclick="selectBook(this)">갈라디아서</button>
-        <button class="book-item" data-book="에베소서" data-chapters="6" onclick="selectBook(this)">에베소서</button>
-        <button class="book-item" data-book="빌립보서" data-chapters="4" onclick="selectBook(this)">빌립보서</button>
-        <button class="book-item" data-book="골로새서" data-chapters="4" onclick="selectBook(this)">골로새서</button>
-        <button class="book-item" data-book="데살로니가전서" data-chapters="5" onclick="selectBook(this)">데살로니가전서</button>
-        <button class="book-item" data-book="데살로니가후서" data-chapters="3" onclick="selectBook(this)">데살로니가후서</button>
-        <button class="book-item" data-book="디모데전서" data-chapters="6" onclick="selectBook(this)">디모데전서</button>
-        <button class="book-item" data-book="디모데후서" data-chapters="4" onclick="selectBook(this)">디모데후서</button>
-        <button class="book-item" data-book="디도서" data-chapters="3" onclick="selectBook(this)">디도서</button>
-        <button class="book-item" data-book="빌레몬서" data-chapters="1" onclick="selectBook(this)">빌레몬서</button>
-
-        <div class="book-category">일반 서신</div>
-        <button class="book-item" data-book="히브리서" data-chapters="13" onclick="selectBook(this)">히브리서</button>
-        <button class="book-item" data-book="야고보서" data-chapters="5" onclick="selectBook(this)">야고보서</button>
-        <button class="book-item" data-book="베드로전서" data-chapters="5" onclick="selectBook(this)">베드로전서</button>
-        <button class="book-item" data-book="베드로후서" data-chapters="3" onclick="selectBook(this)">베드로후서</button>
-        <button class="book-item" data-book="요한일서" data-chapters="5" onclick="selectBook(this)">요한일서</button>
-        <button class="book-item" data-book="요한이서" data-chapters="1" onclick="selectBook(this)">요한이서</button>
-        <button class="book-item" data-book="요한삼서" data-chapters="1" onclick="selectBook(this)">요한삼서</button>
-        <button class="book-item" data-book="유다서" data-chapters="1" onclick="selectBook(this)">유다서</button>
-
-        <div class="book-category">예언서</div>
-        <button class="book-item" data-book="요한계시록" data-chapters="22" onclick="selectBook(this)">요한계시록</button>
-      </div>
-    </div>
-  </aside>
-
-  <!-- 가운데: 성경 본문 -->
-  <main class="content-main">
-
-    <!-- 브레드크럼 -->
-    <nav class="breadcrumb" id="breadcrumb">
-      <span>성경</span>
-      <span class="bc-sep">›</span>
-      <span id="bcBook">창세기</span>
-      <span class="bc-sep">›</span>
-      <span id="bcChapter">1장</span>
-    </nav>
-
-    <!-- 챕터 헤더 -->
-    <div class="chapter-header">
-      <div class="chapter-meta">
-        <h1 class="chapter-book-name" id="chapterBookName">창세기</h1>
-        <div class="chapter-number" id="chapterNumber">제 1 장</div>
-      </div>
-      <div class="chapter-controls">
-        <button class="ctrl-btn" onclick="prevChapter()" title="이전 장">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          이전
-        </button>
-        <button class="ctrl-btn" onclick="nextChapter()" title="다음 장">
-          다음
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- 폰트 크기 조절 -->
-    <div class="reading-toolbar">
-      <span class="toolbar-label">글자 크기</span>
-      <button class="font-btn" onclick="changeFontSize(-1)">A-</button>
-      <button class="font-btn" onclick="changeFontSize(1)">A+</button>
-      <span class="toolbar-sep">|</span>
-      <span class="toolbar-label">읽기 진행</span>
-      <div class="progress-mini">
-        <div class="progress-mini-fill" id="progressMini"></div>
-      </div>
-      <span class="progress-text" id="progressText">1 / 50장</span>
-    </div>
-
-    <!-- 장 선택 -->
-    <div class="chapter-grid-wrapper">
-      <div class="chapter-grid" id="chapterGrid"></div>
-    </div>
-
-    <!-- 성경 본문 -->
-    <div class="bible-text" id="bibleText">
-      <div class="loading-spinner">
-        <div class="spinner"></div>
-        <span>성경 말씀을 불러오는 중...</span>
-      </div>
-    </div>
-
-
-
-    <!-- 챕터 네비게이션 (하단) -->
-    <div class="chapter-nav-bottom">
-      <button class="nav-big-btn" onclick="prevChapter()">← 이전 장</button>
-      <div class="nav-book-info" id="navBookInfo">창세기 1장</div>
-      <button class="nav-big-btn primary" onclick="nextChapter()">다음 장 →</button>
-    </div>
-
-    <!-- 관련 구절 (SEO용 내부 링크) -->
-    <div class="related-section">
-      <h3 class="related-title">📖 관련 구절 모음</h3>
-      <div class="related-grid">
-        <a href="pages/topics.html?topic=창조" class="related-card">천지창조 구절</a>
-        <a href="pages/topics.html?topic=믿음" class="related-card">믿음에 관한 구절</a>
-        <a href="pages/topics.html?topic=위로" class="related-card">위로의 말씀</a>
-        <a href="pages/topics.html?topic=감사" class="related-card">감사의 말씀</a>
-        <a href="pages/topics.html?topic=사랑" class="related-card">사랑에 관한 구절</a>
-        <a href="pages/topics.html?topic=지혜" class="related-card">지혜의 말씀</a>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- 오른쪽 사이드바 -->
-  <aside class="sidebar-right">
-
-    <!-- 오늘의 말씀 -->
-    <div class="widget">
-      <div class="widget-header">✦ 오늘의 말씀</div>
-      <div class="daily-verse-widget">
-        <div class="daily-verse-text" id="dailyVerseText"></div>
-        <div class="daily-verse-ref" id="dailyVerseRef"></div>
-        <button class="share-verse-btn" onclick="shareDailyVerse()">이 구절 공유하기</button>
-      </div>
-    </div>
-
-    <!-- 사이드바 광고 1 -->
-    <div style="margin-bottom:20px;text-align:center;">
+  <!-- 좌측 Sticky 광고 -->
+  <aside class="ad-sidebar">
+    <div>
+      <div class="ad-label-small">AD</div>
       <ins class="adsbygoogle"
-           style="display:block"
+           style="display:block;width:160px;min-height:600px;"
            data-ad-client="ca-pub-8675368228460145"
            data-ad-slot="7174010171"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
+           data-ad-format="auto"></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
+  </aside>
 
-    <!-- 구절 공유 -->
-    <div class="widget">
-      <div class="widget-header">✦ 구절 공유</div>
-      <div class="share-buttons">
-        <button class="share-btn kakao" onclick="shareToKakao()">💬 카카오톡</button>
-        <button class="share-btn copy" onclick="copyVerse()">📋 복사하기</button>
-        <button class="share-btn image" onclick="createImageCard()">🖼️ 이미지 카드</button>
-        <button class="share-btn twitter" onclick="shareToTwitter()">🐦 X (트위터)</button>
+  <!-- 성경 2컬럼 패널 -->
+  <div class="bible-panels">
+
+    <!-- 왼쪽 패널 -->
+    <div class="bible-panel">
+      <div class="panel-header">
+        <span class="panel-lang-name" id="leftPanelName">Korean (KRV)</span>
+        <span class="panel-direction" id="leftDir">LTR</span>
+      </div>
+      <div class="verse-area" id="leftVerses">
+        <div class="loading-wrap">
+          <div class="spinner"></div>
+          <p>Loading scripture...</p>
+        </div>
+      </div>
+      <div class="chapter-nav">
+        <button class="ch-nav-btn" onclick="prevChapter()">← Prev</button>
+        <span class="ch-nav-info" id="chNavInfo">1 / 50</span>
+        <button class="ch-nav-btn" onclick="nextChapter()">Next →</button>
       </div>
     </div>
 
-    <!-- 주제별 구절 (SEO 유입 핵심) -->
-    <div class="widget">
-      <div class="widget-header">✦ 주제별 말씀</div>
-      <div class="topic-list">
-        <a href="pages/topics.html?topic=위로" class="topic-item">🤍 위로의 말씀</a>
-        <a href="pages/topics.html?topic=감사" class="topic-item">🙏 감사의 말씀</a>
-        <a href="pages/topics.html?topic=믿음" class="topic-item">⭐ 믿음에 관하여</a>
-        <a href="pages/topics.html?topic=소망" class="topic-item">🌅 소망의 말씀</a>
-        <a href="pages/topics.html?topic=결혼" class="topic-item">💍 결혼 & 가정</a>
-        <a href="pages/topics.html?topic=치유" class="topic-item">💊 치유의 말씀</a>
-        <a href="pages/topics.html?topic=용기" class="topic-item">💪 용기의 말씀</a>
-        <a href="pages/topics.html?topic=평안" class="topic-item">☮️ 평안의 말씀</a>
-        <a href="pages/topics.html?topic=사랑" class="topic-item">❤️ 사랑에 관하여</a>
-        <a href="pages/topics.html?topic=지혜" class="topic-item">📚 지혜의 말씀</a>
-        <a href="pages/topics.html?topic=기도" class="topic-item">🙌 기도에 관하여</a>
-        <a href="pages/topics.html?topic=크리스마스" class="topic-item">🎄 크리스마스</a>
+    <!-- 오른쪽 패널 -->
+    <div class="bible-panel">
+      <div class="panel-header">
+        <span class="panel-lang-name" id="rightPanelName">English (KJV)</span>
+        <span class="panel-direction" id="rightDir">LTR</span>
+      </div>
+      <div class="verse-area" id="rightVerses">
+        <div class="loading-wrap">
+          <div class="spinner"></div>
+          <p>Loading scripture...</p>
+        </div>
       </div>
     </div>
 
-    <!-- 사이드바 광고 2 -->
-    <div style="margin-bottom:20px;text-align:center;">
+  </div><!-- /bible-panels -->
+
+  <!-- 우측 Sticky 광고 -->
+  <aside class="ad-sidebar-right">
+    <div>
+      <div class="ad-label-small">AD</div>
       <ins class="adsbygoogle"
-           style="display:block"
+           style="display:block;width:160px;min-height:600px;"
            data-ad-client="ca-pub-8675368228460145"
            data-ad-slot="2500534899"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
+           data-ad-format="auto"></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
-
-    <!-- 뉴스레터 구독 (이메일 마케팅) -->
-    <div class="widget newsletter-widget">
-      <div class="widget-header">✦ 매일 말씀 구독</div>
-      <p class="newsletter-desc">매일 아침 말씀을 이메일로 받아보세요</p>
-      <input type="email" class="email-input" placeholder="이메일 주소 입력">
-      <button class="subscribe-btn" onclick="subscribeNewsletter()">무료 구독하기</button>
-      <p class="newsletter-note">스팸 없음 · 언제든 해지 가능</p>
-    </div>
-
   </aside>
+
+</div><!-- /main-layout -->
+
+<!-- ===== 이미지 카드 공유 모달 ===== -->
+<div class="modal-overlay" id="shareModal" style="display:none;" onclick="closeShareModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-title">
+      🖼️ <span data-i18n="share_verse">Share Verse Card</span>
+    </div>
+    <canvas id="shareCanvas" width="1080" height="1080" style="width:100%;border-radius:8px;margin-bottom:16px;"></canvas>
+    <div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;">
+      <button onclick="changeCardStyle('classic')" style="padding:6px 14px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;cursor:pointer;">Classic</button>
+      <button onclick="changeCardStyle('dark')" style="padding:6px 14px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;cursor:pointer;">Dark</button>
+      <button onclick="changeCardStyle('gold')" style="padding:6px 14px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;cursor:pointer;">Gold</button>
+      <button onclick="changeCardStyle('nature')" style="padding:6px 14px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;cursor:pointer;">Nature</button>
+    </div>
+    <div class="share-btns">
+      <button class="share-platform-btn btn-fb" onclick="shareTo('facebook')">
+        <span class="icon">📘</span>Facebook
+      </button>
+      <button class="share-platform-btn btn-ig" onclick="shareTo('instagram')">
+        <span class="icon">📷</span>Instagram
+      </button>
+      <button class="share-platform-btn btn-pin" onclick="shareTo('pinterest')">
+        <span class="icon">📌</span>Pinterest
+      </button>
+      <button class="share-platform-btn btn-tw" onclick="shareTo('twitter')">
+        <span class="icon">🐦</span>X/Twitter
+      </button>
+    </div>
+    <button class="share-platform-btn btn-dl" onclick="downloadCard()" style="width:100%;margin-bottom:10px;">
+      <span class="icon">⬇️</span> Download Image
+    </button>
+    <button class="modal-close-btn" onclick="closeShareModal()">Close</button>
+  </div>
 </div>
 
 <!-- ===== FOOTER ===== -->
 <footer class="site-footer">
-<div class="footer-inner">
-
-    <!-- 브랜드 -->
-    <div class="footer-brand">
-      <div class="footer-logo">✦ HolyWord</div>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">✦ HolyWord Bible</div>
       <p class="footer-desc">
-        매일 말씀으로 삶을 풍요롭게.<br>
-        6개 번역본으로 성경을 무료로 읽는<br>
-        다국어 성경 읽기 서비스입니다.
+        Free parallel Bible reader in 6 translations.<br>
+        Read, compare, and share God's Word worldwide.
       </p>
       <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
-        <span onclick="setLang('KRV');window.scrollTo(0,0);" title="한국어 개역개정" style="cursor:pointer;font-size:20px;">🇰🇷</span>
-        <span onclick="setLang('KJV');window.scrollTo(0,0);" title="English KJV" style="cursor:pointer;font-size:20px;">🇺🇸</span>
-        <span onclick="setLang('CUV');window.scrollTo(0,0);" title="中文 和合本" style="cursor:pointer;font-size:20px;">🇨🇳</span>
-        <span onclick="setLang('SYNOD');window.scrollTo(0,0);" title="Русский" style="cursor:pointer;font-size:20px;">🇷🇺</span>
+        <span onclick="setLeftTrans('KRV')" title="Korean KRV" style="cursor:pointer;font-size:20px;">🇰🇷</span>
+        <span onclick="setLeftTrans('KJV')" title="English KJV" style="cursor:pointer;font-size:20px;">🇺🇸</span>
+        <span onclick="setLeftTrans('CUV')" title="Chinese CUV" style="cursor:pointer;font-size:20px;">🇨🇳</span>
+        <span onclick="setLeftTrans('SYNOD')" title="Russian" style="cursor:pointer;font-size:20px;">🇷🇺</span>
       </div>
     </div>
-
     <div class="footer-links-group">
-
-      <!-- 메뉴 -->
       <div class="footer-col">
-        <div class="footer-col-title">메뉴</div>
-        <a href="index.html">성경 읽기</a>
-        <a href="pages/topics.html">주제별 구절</a>
-        <a href="pages/daily.html">오늘의 말씀</a>
-        <a href="pages/search.html">구절 검색</a>
-        <a href="pages/prayer.html">대표기도문 작성</a>
+        <div class="footer-col-title">Navigation</div>
+        <a href="index.html">Bible Reader</a>
+        <a href="pages/topics.html">Topic Verses</a>
+        <a href="pages/daily.html">Daily Verse</a>
+        <a href="pages/search.html">Search</a>
+        <a href="pages/prayer.html">AI Prayer</a>
       </div>
-
-      <!-- 번역본 -->
       <div class="footer-col">
-        <div class="footer-col-title">번역본</div>
-        <a href="javascript:void(0)" onclick="setLang('KRV');window.scrollTo(0,0);">🇰🇷 한국어 개역개정</a>
-        <a href="javascript:void(0)" onclick="setLang('KJV');window.scrollTo(0,0);">🇺🇸 English KJV</a>
-        <a href="javascript:void(0)" onclick="setLang('NIV');window.scrollTo(0,0);">🇺🇸 English NIV</a>
-        <a href="javascript:void(0)" onclick="setLang('NASB');window.scrollTo(0,0);">🇺🇸 English NASB</a>
-        <a href="javascript:void(0)" onclick="setLang('CUV');window.scrollTo(0,0);">🇨🇳 中文 和合本</a>
-        <a href="javascript:void(0)" onclick="setLang('SYNOD');window.scrollTo(0,0);">🇷🇺 Русский</a>
+        <div class="footer-col-title">Translations</div>
+        <a href="javascript:void(0)" onclick="setLeftTrans('KRV')">🇰🇷 Korean KRV</a>
+        <a href="javascript:void(0)" onclick="setLeftTrans('KJV')">🇺🇸 English KJV</a>
+        <a href="javascript:void(0)" onclick="setLeftTrans('NIV')">🇺🇸 English NIV</a>
+        <a href="javascript:void(0)" onclick="setLeftTrans('NASB')">🇺🇸 English NASB</a>
+        <a href="javascript:void(0)" onclick="setLeftTrans('CUV')">🇨🇳 Chinese CUV</a>
+        <a href="javascript:void(0)" onclick="setLeftTrans('SYNOD')">🇷🇺 Russian</a>
       </div>
-
-      <!-- 서비스 -->
       <div class="footer-col">
-        <div class="footer-col-title">서비스</div>
-        <a href="pages/terms.html">이용약관</a>
-        <a href="pages/contact.html">광고 문의</a>
+        <div class="footer-col-title">Info</div>
+        <a href="pages/terms.html">Terms of Use</a>
+        <a href="pages/contact.html">Contact / Ads</a>
+        <a href="pages/prayer.html">AI Prayer Writer</a>
       </div>
-
     </div>
   </div>
-
   <div class="footer-bottom">
-    <span>© 2025 HolyWord · 무료 성경 읽기 서비스</span>
-    <span>성경 데이터: <a href="https://bolls.life" target="_blank" rel="noopener" style="color:#C9A84C;text-decoration:none;">Bolls.life</a> API</span>
+    <span>© 2025 HolyWord Bible · Free Online Bible Service</span>
+    <span>Scripture data: <a href="https://bolls.life" target="_blank" rel="noopener" style="color:#d4a017;text-decoration:none;">Bolls.life</a> API</span>
   </div>
 </footer>
 
-<!-- 구절 하이라이트 팝업 -->
-<div class="verse-popup" id="versePopup">
-  <div class="popup-verse" id="popupVerse"></div>
-  <div class="popup-actions">
-    <button onclick="copySelectedVerse()">📋 복사</button>
-    <button onclick="shareSelectedVerse()">📤 공유</button>
-    <button onclick="closePopup()">✕ 닫기</button>
-  </div>
-</div>
-
-<!-- 토스트 알림 -->
 <div class="toast" id="toast"></div>
 
-<!-- 모바일 오버레이 -->
-<div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileNav()"></div>
-
+<!-- Scripts -->
 <script src="js/bible-data.js"></script>
 <script src="js/app.js"></script>
-
-
-</div>
 </body>
 </html>

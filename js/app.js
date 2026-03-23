@@ -1,320 +1,456 @@
 /**
- * HolyWord - app.js v9 (최종)
- * Bolls.life API 기반 6개 번역본
- * 전면광고: 1분 무조작 → 5초 카운트다운 → 닫기
+ * HolyWord Global v2 - app.js
+ * Parallel Bible Reader + Image Card Sharing
  */
 
-const App = {
-  currentBook: '창세기',
-  currentChapter: 1,
-  totalChapters: 50,
-  currentLang: 'KRV',   // Bolls.life translation code
-  fontSize: 18,
-  highlightedVerses: new Set(),
-  selectedVerse: null,
+// ===== 66권 성경 목록 =====
+const BOOKS = [
+  {n:'창세기',e:'Genesis',ch:50},{n:'출애굽기',e:'Exodus',ch:40},{n:'레위기',e:'Leviticus',ch:27},
+  {n:'민수기',e:'Numbers',ch:36},{n:'신명기',e:'Deuteronomy',ch:34},{n:'여호수아',e:'Joshua',ch:24},
+  {n:'사사기',e:'Judges',ch:21},{n:'룻기',e:'Ruth',ch:4},{n:'사무엘상',e:'1 Samuel',ch:31},
+  {n:'사무엘하',e:'2 Samuel',ch:24},{n:'열왕기상',e:'1 Kings',ch:22},{n:'열왕기하',e:'2 Kings',ch:25},
+  {n:'역대상',e:'1 Chronicles',ch:29},{n:'역대하',e:'2 Chronicles',ch:36},{n:'에스라',e:'Ezra',ch:10},
+  {n:'느헤미야',e:'Nehemiah',ch:13},{n:'에스더',e:'Esther',ch:10},{n:'욥기',e:'Job',ch:42},
+  {n:'시편',e:'Psalms',ch:150},{n:'잠언',e:'Proverbs',ch:31},{n:'전도서',e:'Ecclesiastes',ch:12},
+  {n:'아가',e:'Song of Solomon',ch:8},{n:'이사야',e:'Isaiah',ch:66},{n:'예레미야',e:'Jeremiah',ch:52},
+  {n:'예레미야애가',e:'Lamentations',ch:5},{n:'에스겔',e:'Ezekiel',ch:48},{n:'다니엘',e:'Daniel',ch:12},
+  {n:'호세아',e:'Hosea',ch:14},{n:'요엘',e:'Joel',ch:3},{n:'아모스',e:'Amos',ch:9},
+  {n:'오바댜',e:'Obadiah',ch:1},{n:'요나',e:'Jonah',ch:4},{n:'미가',e:'Micah',ch:7},
+  {n:'나훔',e:'Nahum',ch:3},{n:'하박국',e:'Habakkuk',ch:3},{n:'스바냐',e:'Zephaniah',ch:3},
+  {n:'학개',e:'Haggai',ch:2},{n:'스가랴',e:'Zechariah',ch:14},{n:'말라기',e:'Malachi',ch:4},
+  {n:'마태복음',e:'Matthew',ch:28},{n:'마가복음',e:'Mark',ch:16},{n:'누가복음',e:'Luke',ch:24},
+  {n:'요한복음',e:'John',ch:21},{n:'사도행전',e:'Acts',ch:28},{n:'로마서',e:'Romans',ch:16},
+  {n:'고린도전서',e:'1 Corinthians',ch:16},{n:'고린도후서',e:'2 Corinthians',ch:13},
+  {n:'갈라디아서',e:'Galatians',ch:6},{n:'에베소서',e:'Ephesians',ch:6},{n:'빌립보서',e:'Philippians',ch:4},
+  {n:'골로새서',e:'Colossians',ch:4},{n:'데살로니가전서',e:'1 Thessalonians',ch:5},
+  {n:'데살로니가후서',e:'2 Thessalonians',ch:3},{n:'디모데전서',e:'1 Timothy',ch:6},
+  {n:'디모데후서',e:'2 Timothy',ch:4},{n:'디도서',e:'Titus',ch:3},{n:'빌레몬서',e:'Philemon',ch:1},
+  {n:'히브리서',e:'Hebrews',ch:13},{n:'야고보서',e:'James',ch:5},{n:'베드로전서',e:'1 Peter',ch:5},
+  {n:'베드로후서',e:'2 Peter',ch:3},{n:'요한일서',e:'1 John',ch:5},{n:'요한이서',e:'2 John',ch:1},
+  {n:'요한삼서',e:'3 John',ch:1},{n:'유다서',e:'Jude',ch:1},{n:'요한계시록',e:'Revelation',ch:22}
+];
+
+// ===== 번역본 메타 =====
+const TRANS_META = {
+  KRV:  {name:'Korean (KRV)', flag:'🇰🇷', rtl:false, cls:''},
+  KJV:  {name:'English (KJV)', flag:'🇺🇸', rtl:false, cls:''},
+  NIV:  {name:'English (NIV)', flag:'🇺🇸', rtl:false, cls:''},
+  NASB: {name:'English (NASB)', flag:'🇺🇸', rtl:false, cls:''},
+  CUV:  {name:'Chinese (CUV)', flag:'🇨🇳', rtl:false, cls:''},
+  SYNOD:{name:'Russian (Synodal)', flag:'🇷🇺', rtl:false, cls:''},
+  LXXE: {name:'Greek LXX', flag:'🏛️', rtl:false, cls:'greek'},
+  TR:   {name:'Greek NT (TR)', flag:'🏛️', rtl:false, cls:'greek'},
+  WLC:  {name:'Hebrew OT (WLC)', flag:'✡️', rtl:true, cls:'hebrew'},
 };
 
-// ===== 초기화 =====
-document.addEventListener('DOMContentLoaded', () => {
-  parseURL();         // 1. URL 파라미터 파싱 (lang/book/ch)
-  initDailyVerse();   // 2. 오늘의 말씀
-  loadChapter();      // 3. 성경 본문
-  initKeys();         // 4. 키보드
-});
+// ===== 상태 =====
+const State = {
+  bookIdx: 0,     // 창세기=0
+  chapter: 1,
+  leftTrans: 'KRV',
+  rightTrans: 'KJV',
+  uiLang: 'en',
+};
 
-// ===== URL 파싱 (loadChapter 전에 실행) =====
+// ===== i18n =====
+const I18N = {
+  en: { book:'Book', chapter:'Chapter', left:'Left Column', right:'Right Column',
+        loading:'Loading scripture...', prev:'← Prev', next:'Next →',
+        share:'Share', copy:'Copy', pinterest:'Pin' },
+  ko: { book:'성경 권', chapter:'장', left:'왼쪽 번역본', right:'오른쪽 번역본',
+        loading:'말씀을 불러오는 중...', prev:'← 이전', next:'다음 →',
+        share:'공유', copy:'복사', pinterest:'핀' },
+};
+
+// ===== 캐시 =====
+const cache = new Map();
+
+// ===== Bolls.life API =====
+async function fetchChapter(trans, bookNum, chapter) {
+  const key = `${trans}_${bookNum}_${chapter}`;
+  if (cache.has(key)) return cache.get(key);
+
+  const url = `https://bolls.life/get-text/${trans}/${bookNum}/${chapter}/`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) throw new Error('empty');
+    const verses = data.map(v => ({
+      number: v.verse,
+      text: (v.text || '').replace(/<[^>]+>/g, '').replace(/\r?\n/g,' ').trim()
+    }));
+    cache.set(key, verses);
+    return verses;
+  } catch(e) {
+    // KJV 폴백
+    if (trans !== 'KJV') {
+      try {
+        const r2 = await fetch(`https://bolls.life/get-text/KJV/${bookNum}/${chapter}/`);
+        const d2 = await r2.json();
+        const v2 = d2.map(v=>({number:v.verse, text:(v.text||'').replace(/<[^>]+>/g,'').trim()}));
+        cache.set(key, v2);
+        return v2;
+      } catch(e2) {}
+    }
+    return [{number:1, text:`Unable to load ${BOOKS[State.bookIdx]?.e} ${chapter}. Please try again.`}];
+  }
+}
+
+// ===== UI 초기화 =====
+function init() {
+  buildBookSelect();
+  buildChapterSelect();
+  detectUserLang();
+  parseURL();
+  loadBoth();
+}
+
+function buildBookSelect() {
+  const sel = document.getElementById('bookSelect');
+  BOOKS.forEach((b, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `${i+1}. ${b.e} / ${b.n}`;
+    if (i === State.bookIdx) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+function buildChapterSelect() {
+  const sel = document.getElementById('chapterSelect');
+  sel.innerHTML = '';
+  const maxCh = BOOKS[State.bookIdx].ch;
+  for (let i = 1; i <= maxCh; i++) {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `Chapter ${i} / ${i}장`;
+    if (i === State.chapter) opt.selected = true;
+    sel.appendChild(opt);
+  }
+}
+
+function detectUserLang() {
+  const lang = navigator.language || navigator.userLanguage || 'en';
+  if (lang.startsWith('ko')) {
+    State.uiLang = 'ko';
+    State.leftTrans = 'KRV';
+    State.rightTrans = 'KJV';
+    document.getElementById('leftTrans').value = 'KRV';
+    document.getElementById('rightTrans').value = 'KJV';
+    document.getElementById('uiLangFlag').textContent = '🇰🇷';
+    document.getElementById('uiLangName').textContent = '한국어';
+    document.documentElement.lang = 'ko';
+  } else {
+    // 영미권 기본: 영어 왼쪽
+    State.leftTrans = 'KJV';
+    State.rightTrans = 'KRV';
+    document.getElementById('leftTrans').value = 'KJV';
+    document.getElementById('rightTrans').value = 'KRV';
+  }
+}
+
 function parseURL() {
   const p = new URLSearchParams(location.search);
-
-  const lang = p.get('lang');
-  if (lang && window.LANG_CONFIG?.[lang]) {
-    App.currentLang = lang;
-    _applyLangUI(lang);
-  }
-
-  const book = p.get('book');
-  if (book) {
-    App.currentBook = decodeURIComponent(book);
-    const all = [...(window.BIBLE_BOOKS?.ot||[]), ...(window.BIBLE_BOOKS?.nt||[])];
-    const info = all.find(b => b.name === App.currentBook);
-    if (info) App.totalChapters = info.chapters;
-  }
-
-  const ch = p.get('ch');
-  if (ch) App.currentChapter = parseInt(ch) || 1;
+  if (p.get('book')) { State.bookIdx = parseInt(p.get('book')) || 0; document.getElementById('bookSelect').value = State.bookIdx; }
+  if (p.get('ch'))   { State.chapter = parseInt(p.get('ch')) || 1; }
+  if (p.get('lt'))   { State.leftTrans = p.get('lt'); document.getElementById('leftTrans').value = State.leftTrans; }
+  if (p.get('rt'))   { State.rightTrans = p.get('rt'); document.getElementById('rightTrans').value = State.rightTrans; }
+  buildChapterSelect();
+  document.getElementById('chapterSelect').value = State.chapter;
 }
 
-// ===== 언어 UI 적용 (API 호출 없음) =====
-function _applyLangUI(translation) {
-  const cfg = window.LANG_CONFIG?.[translation];
-  if (!cfg) return;
-
-  // 언어 버튼 텍스트 업데이트
-  const parts = cfg.label.split(' ');
-  const flagEl = document.getElementById('currentLangFlag');
-  const nameEl = document.getElementById('currentLangName');
-  if (flagEl) flagEl.textContent = parts[0] || '';
-  if (nameEl) nameEl.textContent = parts.slice(1).join(' ') || translation;
-
-  // RTL (현재 6개 번역본은 모두 LTR)
-  const bt = document.getElementById('bibleText');
-  if (bt) {
-    bt.style.direction = cfg.rtl ? 'rtl' : 'ltr';
-    bt.style.textAlign = cfg.rtl ? 'right' : 'left';
-  }
-
-  document.getElementById('langDropdown')?.classList.remove('open');
+// ===== 이벤트 핸들러 =====
+function onBookChange() {
+  State.bookIdx = parseInt(document.getElementById('bookSelect').value);
+  State.chapter = 1;
+  buildChapterSelect();
+  loadBoth();
 }
 
-// ===== 오늘의 말씀 =====
-function initDailyVerse() {
-  if (!window.DAILY_VERSES?.length) return;
-  const v = DAILY_VERSES[new Date().getDate() % DAILY_VERSES.length];
-  const el = document.getElementById('dailyVerseText');
-  const ref = document.getElementById('dailyVerseRef');
-  if (el) el.textContent = `"${v.text}"`;
-  if (ref) ref.textContent = v.ref;
-  window._dv = v;
+function onChapterChange() {
+  State.chapter = parseInt(document.getElementById('chapterSelect').value);
+  loadBoth();
 }
 
-// ===== 챕터 로드 =====
-async function loadChapter() {
-  showLoading();
-  updateUI();
-  try {
-    // Bolls.life는 translation code를 직접 사용
-    const verses = await fetchBibleChapter(App.currentBook, App.currentChapter, App.currentLang);
-    renderVerses(verses);
-    updateURL();
-    window.scrollTo({top:0, behavior:'smooth'});
-  } catch(e) {
-    console.error('loadChapter 오류:', e);
-    showError();
-  }
+function prevChapter() {
+  if (State.chapter > 1) { State.chapter--; document.getElementById('chapterSelect').value = State.chapter; loadBoth(); }
+  else toast('First chapter');
 }
 
-function showLoading() {
-  const c = document.getElementById('bibleText');
-  if (c) c.innerHTML = `<div class="loading-spinner"><div class="spinner"></div><span>말씀을 불러오는 중...</span></div>`;
+function nextChapter() {
+  if (State.chapter < BOOKS[State.bookIdx].ch) { State.chapter++; document.getElementById('chapterSelect').value = State.chapter; loadBoth(); }
+  else toast('Last chapter');
 }
 
-function showError() {
-  const c = document.getElementById('bibleText');
-  if (c) c.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#9E855A;">
-    <div style="font-size:32px;margin-bottom:16px;">📖</div>
-    <p style="margin-bottom:12px;">말씀을 불러올 수 없습니다</p>
-    <p style="font-size:12px;margin-bottom:16px;color:#C9A84C;">성경 본문: Bolls.life API</p>
-    <button onclick="loadChapter()" style="padding:8px 20px;background:#C9A84C;color:#1A1208;border:none;border-radius:6px;cursor:pointer;">다시 시도</button>
-  </div>`;
+function setLeftTrans(t) { document.getElementById('leftTrans').value = t; State.leftTrans = t; loadBoth(); }
+
+// ===== 양쪽 동시 로드 =====
+async function loadBoth() {
+  State.leftTrans = document.getElementById('leftTrans').value;
+  State.rightTrans = document.getElementById('rightTrans').value;
+
+  const book = BOOKS[State.bookIdx];
+  const bookNum = State.bookIdx + 1;
+
+  // 컨트롤 정보 업데이트
+  document.getElementById('ctrlBookChap').textContent = `${book.e} · Chapter ${State.chapter}`;
+  document.getElementById('ctrlTransInfo').textContent = `${TRANS_META[State.leftTrans]?.name} ↔ ${TRANS_META[State.rightTrans]?.name}`;
+  document.getElementById('chNavInfo').textContent = `${State.chapter} / ${book.ch}`;
+  document.title = `${book.e} ${State.chapter} (${State.leftTrans}/${State.rightTrans}) | HolyWord Bible`;
+
+  // 패널 헤더
+  const lm = TRANS_META[State.leftTrans]||{}, rm = TRANS_META[State.rightTrans]||{};
+  document.getElementById('leftPanelName').textContent = lm.flag+' '+lm.name;
+  document.getElementById('rightPanelName').textContent = rm.flag+' '+rm.name;
+  document.getElementById('leftDir').textContent = lm.rtl ? 'RTL' : 'LTR';
+  document.getElementById('rightDir').textContent = rm.rtl ? 'RTL' : 'LTR';
+
+  // 로딩 표시
+  showLoading('leftVerses'); showLoading('rightVerses');
+
+  // 병렬 로드
+  const [lv, rv] = await Promise.all([
+    fetchChapter(State.leftTrans, bookNum, State.chapter),
+    fetchChapter(State.rightTrans, bookNum, State.chapter)
+  ]);
+
+  renderVerses('leftVerses', lv, State.leftTrans, book, lm);
+  renderVerses('rightVerses', rv, State.rightTrans, book, rm);
+  updateURL();
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
-function renderVerses(verses) {
-  const c = document.getElementById('bibleText');
-  if (!c) return;
-  c.style.fontSize = App.fontSize + 'px';
+function showLoading(id) {
+  document.getElementById(id).innerHTML = `<div class="loading-wrap"><div class="spinner"></div><p>Loading...</p></div>`;
+}
+
+function renderVerses(containerId, verses, trans, book, meta) {
+  const c = document.getElementById(containerId);
   c.innerHTML = '';
 
-  verses.forEach((v, idx) => {
-    const d = document.createElement('div');
-    d.className = 'verse-row' + (App.highlightedVerses.has(v.number) ? ' highlighted' : '');
-    d.dataset.verse = v.number;
-    d.innerHTML = `<span class="v-num">${v.number}</span><span class="v-text">${v.text}</span>`;
-    d.addEventListener('click', () => selectVerse(v.number, v.text));
-    c.appendChild(d);
+  verses.forEach(v => {
+    const row = document.createElement('div');
+    row.className = 'verse-row';
+    row.dataset.verse = v.number;
+    row.dataset.text = v.text;
+    row.dataset.ref = `${book.e} ${State.chapter}:${v.number}`;
 
+    const numEl = document.createElement('span');
+    numEl.className = 'v-num';
+    numEl.textContent = v.number;
+
+    const txtEl = document.createElement('span');
+    txtEl.className = 'v-text' + (meta.rtl ? ' rtl' : '') + (meta.cls ? ' '+meta.cls : '');
+    txtEl.textContent = v.text;
+
+    // 액션 버튼
+    const actions = document.createElement('div');
+    actions.className = 'verse-actions';
+    actions.innerHTML = `
+      <button class="v-action-btn share" onclick="openShareModal(event,'${v.text.replace(/'/g,"\\'")}','${book.e} ${State.chapter}:${v.number}')" title="Share verse card">🖼️</button>
+      <button class="v-action-btn" onclick="copyVerse(event,'${v.text.replace(/'/g,"\\'")}','${book.e} ${State.chapter}:${v.number}')" title="Copy">📋</button>
+      <button class="v-action-btn pinterest" onclick="pinVerse(event,'${v.text.replace(/'/g,"\\'")}','${book.e} ${State.chapter}:${v.number}')" title="Pin to Pinterest">📌</button>`;
+
+    row.appendChild(numEl);
+    row.appendChild(txtEl);
+    row.appendChild(actions);
+    row.addEventListener('click', () => row.classList.toggle('highlighted'));
+    c.appendChild(row);
   });
 
-  // 성경 본문 출처 표시
+  // 출처
   const src = document.createElement('div');
-  src.style.cssText = 'text-align:center;padding:16px 0;font-size:11px;color:#9E855A;border-top:1px solid rgba(201,168,76,0.1);margin-top:20px;';
-  src.innerHTML = `성경 본문: <a href="https://bolls.life" target="_blank" rel="noopener" style="color:#C9A84C;text-decoration:none;">Bolls.life</a> API`;
+  src.style.cssText = 'text-align:center;padding:16px;font-size:11px;color:#94a3b8;border-top:1px solid #f1f5f9;margin-top:12px;';
+  src.innerHTML = `Scripture: <a href="https://bolls.life" target="_blank" rel="noopener" style="color:#2563eb;text-decoration:none;">Bolls.life</a> · ${trans}`;
   c.appendChild(src);
 }
 
-// ===== 구절 선택 =====
-function selectVerse(num, text) {
-  App.selectedVerse = {num, text, ref:`${App.currentBook} ${App.currentChapter}:${num}`};
-  document.querySelector(`[data-verse="${num}"]`)?.classList.toggle('highlighted');
-  App.highlightedVerses.has(num) ? App.highlightedVerses.delete(num) : App.highlightedVerses.add(num);
-  const pp = document.getElementById('versePopup');
-  const pv = document.getElementById('popupVerse');
-  if (pp && pv) {
-    pv.innerHTML = `<strong style="color:#C9A84C;font-size:11px;">${App.currentBook} ${App.currentChapter}:${num}</strong><br><br>"${text}"`;
-    pp.classList.add('show');
-    setTimeout(() => pp.classList.remove('show'), 5000);
-  }
-}
-function closePopup() { document.getElementById('versePopup')?.classList.remove('show'); }
-function copySelectedVerse() {
-  if (!App.selectedVerse) return;
-  navigator.clipboard.writeText(`"${App.selectedVerse.text}" — ${App.selectedVerse.ref}`).then(() => toast('복사되었습니다 ✓'));
-  closePopup();
-}
-function shareSelectedVerse() {
-  if (!App.selectedVerse) return;
-  if (navigator.share) navigator.share({title:'HolyWord',text:`"${App.selectedVerse.text}" — ${App.selectedVerse.ref}`,url:location.href});
-  else { navigator.clipboard.writeText(`"${App.selectedVerse.text}" — ${App.selectedVerse.ref}`); toast('복사되었습니다 ✓'); }
-  closePopup();
-}
-
-// ===== 챕터 이동 =====
-function prevChapter() {
-  if (App.currentChapter > 1) { App.currentChapter--; loadChapter(); }
-  else toast('첫 번째 장입니다');
-}
-function nextChapter() {
-  if (App.currentChapter < App.totalChapters) { App.currentChapter++; loadChapter(); }
-  else toast('마지막 장입니다');
-}
-
-// ===== 책 선택 =====
-function selectBook(btn) {
-  document.querySelectorAll('.book-item').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  App.currentBook = btn.dataset.book;
-  App.totalChapters = parseInt(btn.dataset.chapters);
-  App.currentChapter = 1;
-  App.highlightedVerses.clear();
-  loadChapter();
-  if (window.innerWidth < 960) toggleMobileNav();
-}
-
-// ===== UI 업데이트 =====
-function updateUI() {
-  const all = [...(window.BIBLE_BOOKS?.ot||[]), ...(window.BIBLE_BOOKS?.nt||[])];
-  const info = all.find(b => b.name === App.currentBook);
-  if (info) App.totalChapters = info.chapters;
-
-  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
-  set('chapterBookName', App.currentBook);
-  set('chapterNumber', `제 ${App.currentChapter} 장`);
-  set('bcBook', App.currentBook);
-  set('bcChapter', `${App.currentChapter}장`);
-  set('navBookInfo', `${App.currentBook} ${App.currentChapter}장`);
-
-  renderChapterGrid();
-
-  const pct = Math.round(App.currentChapter / App.totalChapters * 100);
-  const fill = document.getElementById('progressMini');
-  const txt = document.getElementById('progressText');
-  if (fill) fill.style.width = pct + '%';
-  if (txt) txt.textContent = `${App.currentChapter} / ${App.totalChapters}장`;
-
-  const cfg = window.LANG_CONFIG?.[App.currentLang];
-  document.title = `${App.currentBook} ${App.currentChapter}장 (${cfg?.sub || App.currentLang}) | HolyWord`;
-}
-
-function renderChapterGrid() {
-  const grid = document.getElementById('chapterGrid');
-  if (!grid) return;
-  grid.innerHTML = '';
-  const max = Math.min(App.totalChapters, 50);
-  for (let i = 1; i <= max; i++) {
-    const btn = document.createElement('button');
-    btn.className = 'ch-num-btn' + (i === App.currentChapter ? ' active' : '');
-    btn.textContent = i;
-    btn.onclick = () => { App.currentChapter = i; loadChapter(); };
-    grid.appendChild(btn);
-  }
-  if (App.totalChapters > 50) {
-    const more = document.createElement('span');
-    more.style.cssText = 'font-size:12px;color:#9E855A;padding:8px;align-self:center;';
-    more.textContent = `... ${App.totalChapters}장까지`;
-    grid.appendChild(more);
-  }
-}
-
-// ===== 언어 전환 =====
-function setLang(translation) {
-  if (!window.LANG_CONFIG?.[translation]) return;
-  if (App.currentLang === translation) {
-    document.getElementById('langDropdown')?.classList.remove('open');
-    return;
-  }
-  App.currentLang = translation;
-  App.highlightedVerses.clear();
-  window.verseCache?.clear();
-  _applyLangUI(translation);
-
-  const cfg = window.LANG_CONFIG[translation];
-  toast(`${cfg.label} ${cfg.sub} 성경으로 변경`);
-  loadChapter();
-
+function updateURL() {
   const url = new URL(location);
-  url.searchParams.set('lang', translation);
+  url.searchParams.set('book', State.bookIdx);
+  url.searchParams.set('ch', State.chapter);
+  url.searchParams.set('lt', State.leftTrans);
+  url.searchParams.set('rt', State.rightTrans);
   history.pushState({}, '', url);
+}
+
+// ===== 이미지 카드 공유 =====
+let _shareVerse = '', _shareRef = '', _cardStyle = 'classic';
+
+const CARD_STYLES = {
+  classic: { bg:'#1a3a5c', text:'#ffffff', accent:'#d4a017', sub:'rgba(255,255,255,0.6)' },
+  dark:    { bg:'#0f172a', text:'#f1f5f9', accent:'#60a5fa', sub:'rgba(241,245,249,0.6)' },
+  gold:    { bg:'#1c1409', text:'#f0c040', accent:'#d4a017', sub:'rgba(240,192,64,0.7)' },
+  nature:  { bg:'#14532d', text:'#dcfce7', accent:'#86efac', sub:'rgba(220,252,231,0.65)' },
+};
+
+function openShareModal(e, verse, ref) {
+  if (e) e.stopPropagation();
+  _shareVerse = verse;
+  _shareRef = ref;
+  _cardStyle = 'classic';
+  document.getElementById('shareModal').style.display = 'flex';
+  renderCard();
+}
+
+function closeShareModal(e) {
+  if (!e || e.target === document.getElementById('shareModal')) {
+    document.getElementById('shareModal').style.display = 'none';
+  }
+}
+
+function changeCardStyle(style) {
+  _cardStyle = style;
+  renderCard();
+}
+
+function renderCard() {
+  const canvas = document.getElementById('shareCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = 1080, H = 1080;
+  canvas.width = W; canvas.height = H;
+
+  const s = CARD_STYLES[_cardStyle] || CARD_STYLES.classic;
+
+  // 배경
+  ctx.fillStyle = s.bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // 테두리 장식
+  ctx.strokeStyle = s.accent;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(30, 30, W-60, H-60);
+  ctx.lineWidth = 1;
+  ctx.globalAlpha = 0.4;
+  ctx.strokeRect(40, 40, W-80, H-80);
+  ctx.globalAlpha = 1;
+
+  // 십자가 아이콘
+  ctx.fillStyle = s.accent;
+  ctx.font = 'bold 52px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('✦', W/2, 130);
+
+  // 브랜드명
+  ctx.fillStyle = s.accent;
+  ctx.font = 'bold 24px Inter, Arial';
+  ctx.fillText('HolyWord Bible', W/2, 175);
+
+  // 구분선
+  ctx.strokeStyle = s.accent;
+  ctx.lineWidth = 1;
+  ctx.globalAlpha = 0.4;
+  ctx.beginPath(); ctx.moveTo(120, 200); ctx.lineTo(W-120, 200); ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // 성경 구절 텍스트 (자동 줄바꿈)
+  ctx.fillStyle = s.text;
+  ctx.font = 'italic 38px Georgia, serif';
+  ctx.textAlign = 'center';
+  const verse = `"${_shareVerse}"`;
+  const maxW = W - 160;
+  const lineH = 56;
+  let y = 290;
+  const words = verse.split(' ');
+  let line = '';
+  const lines = [];
+  for (const w of words) {
+    const test = line ? line + ' ' + w : w;
+    if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; }
+    else line = test;
+  }
+  if (line) lines.push(line);
+
+  // 텍스트가 너무 길면 폰트 축소
+  if (lines.length > 8) ctx.font = 'italic 30px Georgia, serif';
+  lines.forEach(l => { ctx.fillText(l, W/2, y); y += lineH; });
+
+  // 성경 레퍼런스
+  ctx.fillStyle = s.accent;
+  ctx.font = 'bold 30px Inter, Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('— ' + _shareRef, W/2, Math.max(y + 40, 820));
+
+  // 하단 구분선
+  ctx.strokeStyle = s.accent;
+  ctx.lineWidth = 1;
+  ctx.globalAlpha = 0.4;
+  ctx.beginPath(); ctx.moveTo(120, H-120); ctx.lineTo(W-120, H-120); ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // 워터마크
+  ctx.fillStyle = s.sub;
+  ctx.font = '20px Inter, Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('holyword.kr  |  bible2.kingdom2025.com', W/2, H-70);
+}
+
+function downloadCard() {
+  const canvas = document.getElementById('shareCanvas');
+  const a = document.createElement('a');
+  a.download = `holyword-${_shareRef.replace(/[^a-zA-Z0-9]/g,'-')}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+  toast('Image downloaded!');
+}
+
+function shareTo(platform) {
+  const canvas = document.getElementById('shareCanvas');
+  const imgUrl = canvas.toDataURL('image/png');
+  const text = encodeURIComponent(`"${_shareVerse}" — ${_shareRef} | holyword.kr`);
+  const siteUrl = encodeURIComponent('https://holyword.kr');
+
+  switch(platform) {
+    case 'facebook':
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${siteUrl}&quote=${text}`, '_blank', 'width=600,height=400');
+      break;
+    case 'twitter':
+      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${siteUrl}&hashtags=Bible,HolyWord,Scripture`, '_blank', 'width=600,height=400');
+      break;
+    case 'pinterest':
+      pinVerse(null, _shareVerse, _shareRef);
+      break;
+    case 'instagram':
+      downloadCard();
+      toast('Image saved! Upload to Instagram manually.');
+      break;
+  }
+}
+
+function pinVerse(e, verse, ref) {
+  if (e) e.stopPropagation();
+  const desc = encodeURIComponent(`"${verse}" — ${ref} | Read more at holyword.kr`);
+  const media = encodeURIComponent('https://holyword.kr/og-image.jpg');
+  const url = encodeURIComponent('https://holyword.kr');
+  window.open(`https://pinterest.com/pin/create/button/?url=${url}&media=${media}&description=${desc}`, '_blank', 'width=750,height=550');
+}
+
+function copyVerse(e, verse, ref) {
+  if (e) e.stopPropagation();
+  navigator.clipboard.writeText(`"${verse}" — ${ref}\n\nhttps://holyword.kr`).then(() => toast('Copied! ✓'));
+}
+
+// ===== UI 언어 =====
+function setUiLang(lang) {
+  State.uiLang = lang;
+  const flags = {en:'🇺🇸', ko:'🇰🇷'};
+  const names = {en:'English', ko:'한국어'};
+  document.getElementById('uiLangFlag').textContent = flags[lang] || '🇺🇸';
+  document.getElementById('uiLangName').textContent = names[lang] || 'English';
+  document.getElementById('langDropdown').classList.remove('open');
+  document.documentElement.lang = lang === 'ko' ? 'ko' : 'en';
+  toast(lang === 'ko' ? '한국어 모드' : 'English mode');
 }
 
 function toggleLangMenu() {
-  document.getElementById('langDropdown')?.classList.toggle('open');
+  document.getElementById('langDropdown').classList.toggle('open');
 }
-
 document.addEventListener('click', e => {
-  if (!e.target.closest('.lang-picker')) {
-    document.getElementById('langDropdown')?.classList.remove('open');
-  }
+  if (!e.target.closest('.lang-picker')) document.getElementById('langDropdown')?.classList.remove('open');
 });
 
-// ===== 폰트 크기 =====
-function changeFontSize(d) {
-  App.fontSize = Math.max(14, Math.min(26, App.fontSize + d));
-  const c = document.getElementById('bibleText');
-  if (c) c.style.fontSize = App.fontSize + 'px';
-  toast(`글자 크기: ${App.fontSize}px`);
-}
-
-// ===== 공유 =====
-function shareToKakao() { toast('카카오 SDK 연동 후 사용 가능합니다'); }
-function copyVerse() {
-  if (!window._dv) return;
-  navigator.clipboard.writeText(`"${window._dv.text}" — ${window._dv.ref}\n\nhttps://bible2.kingdom2025.com`);
-  toast('복사되었습니다 ✓');
-}
-function createImageCard() { toast('이미지 카드 기능 준비 중'); }
-function shareToTwitter() {
-  const v = App.selectedVerse || window._dv;
-  if (!v) return;
-  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('"'+(v.text||v)+'" — '+(v.ref||'')+'\n\n#성경 #HolyWord')}&url=${encodeURIComponent(location.href)}`, '_blank');
-}
-function shareDailyVerse() {
-  if (navigator.share && window._dv) navigator.share({title:'오늘의 말씀',text:`"${window._dv.text}" — ${window._dv.ref}`,url:location.href});
-  else copyVerse();
-}
-function subscribeNewsletter() {
-  const i = document.querySelector('.email-input');
-  if (!i?.value.includes('@')) { toast('올바른 이메일을 입력해주세요'); return; }
-  toast('구독 완료! 매일 아침 말씀을 보내드립니다 ✓');
-  i.value = '';
-}
-
-// ===== 검색 =====
-function filterBooks(q) {
-  q = q.toLowerCase();
-  document.querySelectorAll('.book-item').forEach(b => {
-    b.style.display = (b.dataset.book||'').includes(q) || !q ? 'block' : 'none';
-  });
-  document.querySelectorAll('.book-category,.testament-header').forEach(el => {
-    el.style.display = q ? 'none' : '';
-  });
-}
-
-// ===== 모바일 =====
-function toggleMobileNav() {
-  document.getElementById('sidebarLeft')?.classList.toggle('open');
-  document.getElementById('mobileOverlay')?.classList.toggle('show');
-}
-
-// ===== URL 업데이트 =====
-function updateURL() {
-  const url = new URL(location);
-  url.searchParams.set('book', App.currentBook);
-  url.searchParams.set('ch', App.currentChapter);
-  url.searchParams.set('lang', App.currentLang);
-  history.pushState({}, '', url);
-}
-
-
-// ===== 토스트 =====
+// ===== TOAST =====
 function toast(msg) {
   const t = document.getElementById('toast');
   if (!t) return;
@@ -323,16 +459,6 @@ function toast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// ===== 키보드 =====
-function initKeys() {
-  document.addEventListener('keydown', e => {
-    if (['INPUT','TEXTAREA'].includes(e.target.tagName)) return;
-    if (e.key==='ArrowRight') nextChapter();
-    if (e.key==='ArrowLeft') prevChapter();
-    if (e.key==='+') changeFontSize(1);
-    if (e.key==='-') changeFontSize(-1);
-    if (e.key==='Escape') { closePopup(); }
-  });
-}
-
-window.addEventListener('popstate', () => { parseURL(); loadChapter(); });
+// ===== INIT =====
+window.addEventListener('popstate', () => { parseURL(); loadBoth(); });
+document.addEventListener('DOMContentLoaded', init);
