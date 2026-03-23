@@ -556,11 +556,22 @@ html, body {
     background-color: #e8f0ee;
     transition: 0.3s;
 }
-/* 전체 배경색 및 박스 색상 통일 */
-body, html { background-color: #f4f7f6 !important; color: #2c3e50; }
-.card, aside, .controls { background-color: #f4f7f6 !important; border: 1px solid #d1d8d6; border-radius: 8px; padding: 15px; }
-.verse-row { cursor: pointer; padding: 10px; border-bottom: 1px solid #e0e6e4; }
+/* 전체 배경색 및 폰트 통일 */
+body { background-color: #f4f7f6 !important; margin: 0; font-family: 'Pretendard', sans-serif; }
+
+/* 메뉴 상단바 스타일 */
+.main-header { background: #2c3e50; color: white; padding: 15px 0; }
+.nav-container { display: flex; justify-content: space-between; align-items: center; width: 90%; max-width: 1200px; margin: 0 auto; }
+.nav-menu { list-style: none; display: flex; gap: 20px; }
+.nav-menu a { color: white; text-decoration: none; font-weight: 500; }
+
+/* 레이아웃 디자인 */
+.main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; width: 95%; max-width: 1400px; margin: 20px auto; }
+.analysis-card { background: white; border-radius: 12px; border: 1px solid #d1d8d6; overflow: hidden; position: sticky; top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.card-header { background: #2c3e50; color: white; padding: 12px 15px; font-weight: bold; }
+.card-body { padding: 20px; background: #ffffff; min-height: 250px; }
+
+/* 하이라이트 효과 */
+.verse-row { cursor: pointer; transition: 0.2s; padding: 8px; border-radius: 5px; }
 .verse-row:hover { background: #e8f0ee; }
 .highlighted { background: #d0e8e0 !important; border-left: 4px solid #2c3e50; }
-#toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 20px; opacity: 0; transition: 0.3s; }
-#toast.show { opacity: 1; }
