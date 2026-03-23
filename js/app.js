@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDailyVerse();    // 2. 오늘의 말씀
   loadChapter();       // 3. 성경 본문 (lang 이미 설정됨)
   initKeys();          // 4. 키보드 단축키
-  setTimeout(showInterstitial, 60000); // 5. 1분 후 전면광고
+  initInterstitial(); // 5. 아무 조작 없을 때 1분 후 전면광고
 });
 
 // ===== URL 파라미터 파싱 (loadChapter 전에 반드시 실행) =====
@@ -321,34 +321,110 @@ function updateURL() {
 }
 
 // ===== 전면광고 =====
+// ===== 전면광고 — 아무 조작 없을 때 1분 후 =====
+let _idleTimer = null;
+let _interShown = false;
+
+function initInterstitial() {
+  _resetIdleTimer();
+  // 사용자 활동 감지 → 타이머 리셋
+  ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(ev => {
+    document.addEventListener(ev, _resetIdleTimer, { passive: true });
+  });
+}
+
+function _resetIdleTimer() {
+  clearTimeout(_idleTimer);
+  // 아무 조작 없이 1분 경과 시 전면광고
+  _idleTimer = setTimeout(() => {
+    if (!_interShown) showInterstitial();
+  }, 60000);
+}
+
 function showInterstitial() {
   if (document.getElementById('iOv')) return;
+  _interShown = true;
+
   const ov = document.createElement('div');
   ov.id = 'iOv';
-  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:flex;align-items:center;justify-content:center;';
-  ov.innerHTML = `<div style="background:#1A1208;border:1px solid #C9A84C;border-radius:16px;padding:24px;max-width:520px;width:92%;text-align:center;">
-    <div style="font-size:10px;color:#9E855A;letter-spacing:2px;margin-bottom:14px;">광고</div>
-    <ins class="adsbygoogle" style="display:block;min-height:280px;"
-         data-ad-client="ca-pub-8675368228460145" data-ad-slot="7174010171"
-         data-ad-format="auto" data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle=window.adsbygoogle||[]).push({});<\/script>
-    <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:12px;color:#9E855A;" id="iCnt">5초 후 닫기 가능</span>
-      <button id="iBtn" onclick="closeInter()" style="background:#C9A84C;color:#1A1208;border:none;padding:8px 22px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;opacity:.35;pointer-events:none;">닫기 ✕</button>
-    </div></div>`;
+  ov.style.cssText = [
+    'position:fixed','inset:0','background:rgba(0,0,0,0.88)',
+    'z-index:99999','display:flex','align-items:center','justify-content:center'
+  ].join(';');
+
+  // 광고 컨테이너 생성
+  const box = document.createElement('div');
+  box.style.cssText = [
+    'background:#1A1208','border:1px solid #C9A84C','border-radius:16px',
+    'padding:24px','max-width:520px','width:92%','text-align:center'
+  ].join(';');
+
+  // 광고 ins 태그
+  const ins = document.createElement('ins');
+  ins.className = 'adsbygoogle';
+  ins.style.cssText = 'display:block;min-height:280px;';
+  ins.setAttribute('data-ad-client','ca-pub-8675368228460145');
+  ins.setAttribute('data-ad-slot','7174010171');
+  ins.setAttribute('data-ad-format','auto');
+  ins.setAttribute('data-full-width-responsive','true');
+
+  // 하단 카운트다운 영역
+  const bottom = document.createElement('div');
+  bottom.style.cssText = 'margin-top:16px;display:flex;align-items:center;justify-content:space-between;';
+
+  const cnt = document.createElement('span');
+  cnt.id = 'iCnt';
+  cnt.style.cssText = 'font-size:12px;color:#9E855A;';
+  cnt.textContent = '5초 후 닫기 가능';
+
+  const closeBtn = document.createElement('button');
+  closeBtn.id = 'iBtn';
+  closeBtn.textContent = '닫기 ✕';
+  closeBtn.style.cssText = [
+    'background:#C9A84C','color:#1A1208','border:none',
+    'padding:8px 22px','border-radius:20px','font-size:13px',
+    'font-weight:700','cursor:pointer','opacity:0.35','pointer-events:none'
+  ].join(';');
+  closeBtn.onclick = closeInter;
+
+  bottom.appendChild(cnt);
+  bottom.appendChild(closeBtn);
+
+  const adLabel = document.createElement('div');
+  adLabel.style.cssText = 'font-size:10px;color:#9E855A;letter-spacing:2px;margin-bottom:14px;';
+  adLabel.textContent = '광고';
+
+  box.appendChild(adLabel);
+  box.appendChild(ins);
+  box.appendChild(bottom);
+  ov.appendChild(box);
   document.body.appendChild(ov);
-  try { (adsbygoogle=window.adsbygoogle||[]).push({}); } catch(e) {}
-  let n=5;
-  const t = setInterval(()=>{
+
+  // AdSense 로드
+  try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+
+  // DOM 렌더링 후 카운트다운 시작
+  let n = 5;
+  const timer = setInterval(() => {
     n--;
-    const c=document.getElementById('iCnt'),b=document.getElementById('iBtn');
-    if(c) c.textContent=n>0?`${n}초 후 닫기 가능`:'닫기 가능';
-    if(n<=0){clearInterval(t);if(b){b.style.opacity='1';b.style.pointerEvents='auto';}}
-  },1000);
+    const cntEl = document.getElementById('iCnt');
+    const btnEl = document.getElementById('iBtn');
+    if (cntEl) cntEl.textContent = n > 0 ? `${n}초 후 닫기 가능` : '닫기 가능';
+    if (n <= 0) {
+      clearInterval(timer);
+      if (btnEl) {
+        btnEl.style.opacity = '1';
+        btnEl.style.pointerEvents = 'auto';
+      }
+    }
+  }, 1000);
 }
+
 function closeInter() {
   document.getElementById('iOv')?.remove();
-  setTimeout(showInterstitial, 30*60*1000);
+  _interShown = false;
+  // 닫은 후 30분 뒤 다시 idle 감지 재시작
+  setTimeout(() => { _resetIdleTimer(); }, 30 * 60 * 1000);
 }
 
 // ===== 토스트 =====

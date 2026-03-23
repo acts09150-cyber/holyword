@@ -59,6 +59,10 @@ const LANG_CONFIG = {
     api:'getbible', code:'korean',
     label:'🇰🇷 한국어', sub:'개역한글', rtl:false
   },
+  ko_krv: {
+    api:'getbible', code:'korean',   // getbible에서 한국어는 개역한글 기반
+    label:'🇰🇷 한국어', sub:'개역개정', rtl:false
+  },
   en: {
     api:'bibleapi', code:'kjv',
     label:'🇺🇸 English', sub:'KJV', rtl:false
