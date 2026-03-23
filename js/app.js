@@ -266,16 +266,32 @@ function setLang(lang, flag, name) {
   App.currentLang = lang;
   App.highlightedVerses.clear();
 
-  if (flag) document.getElementById('currentLangFlag').textContent = flag;
-  if (name) document.getElementById('currentLangName').textContent = name;
+  // LANG_CONFIG에서 정보 가져오기
+  const config = window.LANG_CONFIG?.[lang];
+  const displayFlag = flag || config?.flag || '';
+  const displayName = name || config?.name || lang;
+
+  const flagEl = document.getElementById('currentLangFlag');
+  const nameEl = document.getElementById('currentLangName');
+  if (flagEl) flagEl.textContent = displayFlag;
+  if (nameEl) nameEl.textContent = displayName;
+
+  // RTL 언어 처리 (아랍어 등)
+  const bibleText = document.getElementById('bibleText');
+  if (bibleText) {
+    bibleText.style.direction = config?.rtl ? 'rtl' : 'ltr';
+    bibleText.style.textAlign = config?.rtl ? 'right' : 'left';
+    bibleText.style.fontFamily = config?.rtl
+      ? "'Noto Naskh Arabic', 'Arial Unicode MS', sans-serif"
+      : '';
+  }
 
   const dropdown = document.getElementById('langDropdown');
   if (dropdown) dropdown.classList.remove('open');
 
   loadChapter();
-  showToast(`언어 변경: ${name || lang}`);
+  showToast(`언어 변경: ${displayFlag} ${displayName}`);
 
-  // URL 업데이트
   const url = new URL(window.location);
   url.searchParams.set('lang', lang);
   history.pushState({}, '', url);
