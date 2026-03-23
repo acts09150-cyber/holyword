@@ -11,7 +11,55 @@ const BOOKS = [
   {n:'사무엘하',e:'2 Samuel',ch:24},{n:'열왕기상',e:'1 Kings',ch:22},{n:'열왕기하',e:'2 Kings',ch:25},
   {n:'역대상',e:'1 Chronicles',ch:29},{n:'역대하',e:'2 Chronicles',ch:36},{n:'에스라',e:'Ezra',ch:10},
   {n:'느헤미야',e:'Nehemiah',ch:13},{n:'에스더',e:'Esther',ch:10},{n:'욥기',e:'Job',ch:42},
-  {n:'시편',e:'Psalms',ch:150},{n:'잠언',e:'Proverbs',ch:31},{n:'전도서',e:'Ecclesiastes',ch:12},
+  {n:'시편',e:'Psalms',ch:150},{n:'잠언',e:'Proverbs',ch:31},{n:'전도서',e:'Ecclesiastes',ch:12},// js/app.js (메뉴와 원어 기능이 모두 포함된 버전)
+const State = { bookIdx: 0, chapter: 1, leftTrans: 'KRV', rightTrans: 'KJV' };
+
+async function loadOriginalInfo(verseNum, krText) {
+    const bookNum = State.bookIdx + 1;
+    const trans = bookNum <= 39 ? 'WLC' : 'SBLGNT';
+    const container = document.getElementById('analysis-content');
+    container.innerHTML = `<div style="text-align:center; padding:20px;">로딩 중...</div>`;
+
+    try {
+        const res = await fetch(`https://bolls.life/get-text/${trans}/${bookNum}/${State.chapter}/${verseNum}/`);
+        const data = await res.json();
+        const ori = data.text.replace(/<[^>]+>/g, '').trim();
+
+        container.innerHTML = `
+            <div style="font-size:1.7rem; margin-bottom:15px; color:#2c3e50; direction:${bookNum<=39?'rtl':'ltr'}">${ori}</div>
+            <p style="color:#666; font-size:0.95rem; border-left:3px solid #ccc; padding-left:10px;">${krText}</p>
+            <button onclick="copyToNote('${krText.replace(/'/g,"\\'")}','${ori.replace(/'/g,"\\'")}','${verseNum}')" style="width:100%; padding:15px; background:#2c3e50; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; margin-top:20px;">사역자용 상세 복사</button>
+        `;
+    } catch(e) { container.innerHTML = "데이터 로드 실패"; }
+}
+
+function copyToNote(kr, ori, v) {
+    const ref = `${BOOKS[State.bookIdx].n} ${State.chapter}:${v}`;
+    const text = `[HolyWord 원어연구]\n본문: ${kr}\n원어(${ref}): ${ori}`;
+    navigator.clipboard.writeText(text);
+    alert("사역자용 상세 데이터가 복사되었습니다!");
+}
+
+function renderVerses(id, verses) {
+    const c = document.getElementById(id);
+    c.innerHTML = '';
+    verses.forEach(v => {
+        const div = document.createElement('div');
+        div.className = 'verse-row';
+        div.onclick = () => {
+            document.querySelectorAll('.verse-row').forEach(r => r.classList.remove('highlighted'));
+            div.classList.add('highlighted');
+            loadOriginalInfo(v.number, v.text);
+        };
+        div.innerHTML = `<span style="color:#2c3e50; font-weight:bold; margin-right:10px;">${v.number}</span>${v.text}`;
+        c.appendChild(div);
+    });
+}
+
+// 초기화 및 기타 함수는 기존 소스 코드(BOOKS 등)와 함께 로드되도록 설정
+function onBookChange() { State.bookIdx = parseInt(document.getElementById('bookSelect').value); State.chapter = 1; loadBoth(); }
+function onChapterChange() { State.chapter = parseInt(document.getElementById('chapterSelect').value); loadBoth(); }
+async function loadBoth() { /* fetchChapter 호출 및 renderVerses 실행 로직 */ }
   {n:'아가',e:'Song of Solomon',ch:8},{n:'이사야',e:'Isaiah',ch:66},{n:'예레미야',e:'Jeremiah',ch:52},
   {n:'예레미야애가',e:'Lamentations',ch:5},{n:'에스겔',e:'Ezekiel',ch:48},{n:'다니엘',e:'Daniel',ch:12},
   {n:'호세아',e:'Hosea',ch:14},{n:'요엘',e:'Joel',ch:3},{n:'아모스',e:'Amos',ch:9},
