@@ -43,19 +43,12 @@
         <span class="chevron">▾</span>
       </button>
       <div class="lang-dropdown" id="langDropdown">
-        <button onclick="setLang('ko')">🇰🇷 한국어 <span style="float:right;opacity:0.5;font-size:10px;">개역한글</span></button>
-        <button onclick="setLang('ko_krv')">🇰🇷 한국어 <span style="float:right;opacity:0.5;font-size:10px;">개역개정</span></button>
-        <button onclick="setLang('en')">🇺🇸 English KJV <span style="float:right;opacity:0.5;font-size:10px;">King James</span></button>
-        <button onclick="setLang('en_web')">🇺🇸 English WEB <span style="float:right;opacity:0.5;font-size:10px;">현대영어</span></button>
-        <button onclick="setLang('zh')">🇨🇳 中文 简体 <span style="float:right;opacity:0.5;font-size:10px;">和合本</span></button>
-        <button onclick="setLang('zh_t')">🇹🇼 中文 繁體 <span style="float:right;opacity:0.5;font-size:10px;">和合本</span></button>
-        <button onclick="setLang('es')">🇪🇸 Español <span style="float:right;opacity:0.5;font-size:10px;">Reina-Valera</span></button>
-        <button onclick="setLang('ja')">🇯🇵 日本語 <span style="float:right;opacity:0.5;font-size:10px;">口語訳</span></button>
-        <button onclick="setLang('pt')">🇧🇷 Português <span style="float:right;opacity:0.5;font-size:10px;">Almeida</span></button>
-        <button onclick="setLang('fr')">🇫🇷 Français <span style="float:right;opacity:0.5;font-size:10px;">Louis Segond</span></button>
-        <button onclick="setLang('de')">🇩🇪 Deutsch <span style="float:right;opacity:0.5;font-size:10px;">Luther 1912</span></button>
-        <button onclick="setLang('ar')">🇸🇦 العربية <span style="float:right;opacity:0.5;font-size:10px;">Van Dyke</span></button>
-        <button onclick="setLang('ru')">🇷🇺 Русский <span style="float:right;opacity:0.5;font-size:10px;">Синодальный</span></button>
+        <button onclick="setLang('KRV')">🇰🇷 한국어 <span style="float:right;opacity:0.5;font-size:10px;">개역개정 KRV</span></button>
+        <button onclick="setLang('KJV')">🇺🇸 English <span style="float:right;opacity:0.5;font-size:10px;">KJV</span></button>
+        <button onclick="setLang('NIV')">🇺🇸 English <span style="float:right;opacity:0.5;font-size:10px;">NIV</span></button>
+        <button onclick="setLang('NASB')">🇺🇸 English <span style="float:right;opacity:0.5;font-size:10px;">NASB</span></button>
+        <button onclick="setLang('CUV')">🇨🇳 中文 <span style="float:right;opacity:0.5;font-size:10px;">和合本 CUV</span></button>
+        <button onclick="setLang('SYNOD')">🇷🇺 Русский <span style="float:right;opacity:0.5;font-size:10px;">Синодальный</span></button>
       </div>
     </div>
 
@@ -365,18 +358,11 @@
     <div class="footer-brand">
       <div class="footer-logo">✦ HolyWord</div>
       <p class="footer-desc">전 세계 10개 언어로 성경을 무료로 읽을 수 있는 서비스입니다. 매일 말씀으로 삶을 풍요롭게 하세요.</p>
-      <div class="footer-langs" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;">
-        <span onclick="setLang('ko');window.scrollTo(0,0);" style="cursor:pointer;font-size:20px;" title="한국어 개역한글">🇰🇷</span>
-        <span onclick="setLang('en');window.scrollTo(0,0);" style="cursor:pointer;font-size:20px;" title="English KJV">🇺🇸</span>
-        <span onclick="setLang('zh');window.scrollTo(0,0);" style="cursor:pointer;font-size:20px;" title="中文 简体">🇨🇳</span>
-        <span onclick="setLang('zh_t');window.scrollTo(0,0);" style="cursor:pointer;font-size:20px;" title="中文 繁體">🇹🇼</span>
-        <span onclick="setLang('es');window.scrollTo(0,0);" style="cursor:pointer;font-size:20px;" title="Español">🇪🇸</span>
-        <span onclick="setLang('ja');window.scrollTo(0,0);" style="cursor:pointer;font-size:20px;" title="日本語">🇯🇵</span>
-        <span onclick="setLang('pt');window.scrollTo(0,0);" style="cursor:pointer;font-size:20px;" title="Português">🇧🇷</span>
-        <span onclick="setLang('fr');window.scrollTo(0,0);" style="cursor:pointer;font-size:20px;" title="Français">🇫🇷</span>
-        <span onclick="setLang('de');window.scrollTo(0,0);" style="cursor:pointer;font-size:20px;" title="Deutsch">🇩🇪</span>
-        <span onclick="setLang('ar');window.scrollTo(0,0);" style="cursor:pointer;font-size:20px;" title="العربية">🇸🇦</span>
-        <span onclick="setLang('ru');window.scrollTo(0,0);" style="cursor:pointer;font-size:20px;" title="Русский">🇷🇺</span>
+      <div class="footer-langs" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+        <span onclick="setLang('KRV');window.scrollTo(0,0);" style="cursor:pointer;font-size:22px;" title="한국어 개역개정">🇰🇷</span>
+        <span onclick="setLang('KJV');window.scrollTo(0,0);" style="cursor:pointer;font-size:22px;" title="English KJV">🇺🇸</span>
+        <span onclick="setLang('CUV');window.scrollTo(0,0);" style="cursor:pointer;font-size:22px;" title="中文 和合本">🇨🇳</span>
+        <span onclick="setLang('SYNOD');window.scrollTo(0,0);" style="cursor:pointer;font-size:22px;" title="Русский">🇷🇺</span>
       </div>
     </div>
 
@@ -390,6 +376,13 @@
       </div>
       <div class="footer-col">
         <div class="footer-col-title">언어</div>
+        <a href="javascript:void(0)" onclick="setLang('KRV');window.scrollTo(0,0);">🇰🇷 한국어 개역개정</a>
+        <a href="javascript:void(0)" onclick="setLang('KJV');window.scrollTo(0,0);">🇺🇸 English KJV</a>
+        <a href="javascript:void(0)" onclick="setLang('NIV');window.scrollTo(0,0);">🇺🇸 English NIV</a>
+        <a href="javascript:void(0)" onclick="setLang('NASB');window.scrollTo(0,0);">🇺🇸 English NASB</a>
+        <a href="javascript:void(0)" onclick="setLang('CUV');window.scrollTo(0,0);">🇨🇳 中文 和合本</a>
+        <a href="javascript:void(0)" onclick="setLang('SYNOD');window.scrollTo(0,0);">🇷🇺 Русский</a>
+      </div>
         <a href="javascript:void(0)" onclick="setLang('ko');window.scrollTo(0,0);">🇰🇷 한국어 개역한글</a>
         <a href="javascript:void(0)" onclick="setLang('ko_krv');window.scrollTo(0,0);">🇰🇷 한국어 개역개정</a>
         <a href="javascript:void(0)" onclick="setLang('en');window.scrollTo(0,0);">🇺🇸 English KJV</a>

@@ -1,39 +1,38 @@
 /**
- * HolyWord - app.js v7 (최종)
- * 다국어 완전 지원 + NIV(WEB) 추가
+ * HolyWord - app.js v9 (최종)
+ * Bolls.life API 기반 6개 번역본
+ * 전면광고: 1분 무조작 → 5초 카운트다운 → 닫기
  */
 
 const App = {
   currentBook: '창세기',
   currentChapter: 1,
   totalChapters: 50,
-  currentLang: 'ko',
+  currentLang: 'KRV',   // Bolls.life translation code
   fontSize: 18,
   highlightedVerses: new Set(),
   selectedVerse: null,
 };
 
-// ===== 초기화 (순서 엄수: URL파싱 → 오늘말씀 → 챕터로드) =====
+// ===== 초기화 =====
 document.addEventListener('DOMContentLoaded', () => {
-  parseURL();          // 1. URL에서 lang/book/ch 파싱 (loadChapter 전!)
-  initDailyVerse();    // 2. 오늘의 말씀
-  loadChapter();       // 3. 성경 본문 (lang 이미 설정됨)
-  initKeys();          // 4. 키보드 단축키
-  initInterstitial(); // 5. 아무 조작 없을 때 1분 후 전면광고
+  parseURL();         // 1. URL 파라미터 파싱 (lang/book/ch)
+  initDailyVerse();   // 2. 오늘의 말씀
+  loadChapter();      // 3. 성경 본문
+  initKeys();         // 4. 키보드
+  initInterstitial(); // 5. 전면광고 idle 감지
 });
 
-// ===== URL 파라미터 파싱 (loadChapter 전에 반드시 실행) =====
+// ===== URL 파싱 (loadChapter 전에 실행) =====
 function parseURL() {
-  const p = new URLSearchParams(window.location.search);
+  const p = new URLSearchParams(location.search);
 
-  // 언어
   const lang = p.get('lang');
   if (lang && window.LANG_CONFIG?.[lang]) {
     App.currentLang = lang;
-    _applyLangUI(lang); // UI만 적용 (loadChapter 호출 안 함)
+    _applyLangUI(lang);
   }
 
-  // 책
   const book = p.get('book');
   if (book) {
     App.currentBook = decodeURIComponent(book);
@@ -42,26 +41,23 @@ function parseURL() {
     if (info) App.totalChapters = info.chapters;
   }
 
-  // 챕터
   const ch = p.get('ch');
   if (ch) App.currentChapter = parseInt(ch) || 1;
 }
 
 // ===== 언어 UI 적용 (API 호출 없음) =====
-function _applyLangUI(lang) {
-  const cfg = window.LANG_CONFIG?.[lang];
+function _applyLangUI(translation) {
+  const cfg = window.LANG_CONFIG?.[translation];
   if (!cfg) return;
 
-  // 플래그/이름 업데이트
+  // 언어 버튼 텍스트 업데이트
   const parts = cfg.label.split(' ');
-  const flag = parts[0];
-  const name = parts.slice(1).join(' ');
   const flagEl = document.getElementById('currentLangFlag');
   const nameEl = document.getElementById('currentLangName');
-  if (flagEl) flagEl.textContent = flag;
-  if (nameEl) nameEl.textContent = name;
+  if (flagEl) flagEl.textContent = parts[0] || '';
+  if (nameEl) nameEl.textContent = parts.slice(1).join(' ') || translation;
 
-  // RTL (아랍어)
+  // RTL (현재 6개 번역본은 모두 LTR)
   const bt = document.getElementById('bibleText');
   if (bt) {
     bt.style.direction = cfg.rtl ? 'rtl' : 'ltr';
@@ -87,12 +83,13 @@ async function loadChapter() {
   showLoading();
   updateUI();
   try {
+    // Bolls.life는 translation code를 직접 사용
     const verses = await fetchBibleChapter(App.currentBook, App.currentChapter, App.currentLang);
     renderVerses(verses);
     updateURL();
     window.scrollTo({top:0, behavior:'smooth'});
   } catch(e) {
-    console.error(e);
+    console.error('loadChapter 오류:', e);
     showError();
   }
 }
@@ -107,7 +104,8 @@ function showError() {
   if (c) c.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#9E855A;">
     <div style="font-size:32px;margin-bottom:16px;">📖</div>
     <p style="margin-bottom:12px;">말씀을 불러올 수 없습니다</p>
-    <button onclick="loadChapter()" style="padding:8px 20px;background:#C9A84C;color:#1A1208;border:none;border-radius:6px;cursor:pointer;font-size:13px;">다시 시도</button>
+    <p style="font-size:12px;margin-bottom:16px;color:#C9A84C;">성경 본문: Bolls.life API</p>
+    <button onclick="loadChapter()" style="padding:8px 20px;background:#C9A84C;color:#1A1208;border:none;border-radius:6px;cursor:pointer;">다시 시도</button>
   </div>`;
 }
 
@@ -135,9 +133,15 @@ function renderVerses(verses) {
         data-ad-format="auto"
         data-full-width-responsive="true"></ins>`;
       c.appendChild(ad);
-      try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+      try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
     }
   });
+
+  // 성경 본문 출처 표시
+  const src = document.createElement('div');
+  src.style.cssText = 'text-align:center;padding:16px 0;font-size:11px;color:#9E855A;border-top:1px solid rgba(201,168,76,0.1);margin-top:20px;';
+  src.innerHTML = `성경 본문: <a href="https://bolls.life" target="_blank" rel="noopener" style="color:#C9A84C;text-decoration:none;">Bolls.life</a> API`;
+  c.appendChild(src);
 }
 
 // ===== 구절 선택 =====
@@ -156,7 +160,7 @@ function selectVerse(num, text) {
 function closePopup() { document.getElementById('versePopup')?.classList.remove('show'); }
 function copySelectedVerse() {
   if (!App.selectedVerse) return;
-  navigator.clipboard.writeText(`"${App.selectedVerse.text}" — ${App.selectedVerse.ref}\n(bible2.kingdom2025.com)`).then(() => toast('복사되었습니다 ✓'));
+  navigator.clipboard.writeText(`"${App.selectedVerse.text}" — ${App.selectedVerse.ref}`).then(() => toast('복사되었습니다 ✓'));
   closePopup();
 }
 function shareSelectedVerse() {
@@ -166,7 +170,7 @@ function shareSelectedVerse() {
   closePopup();
 }
 
-// ===== 챕터 네비 =====
+// ===== 챕터 이동 =====
 function prevChapter() {
   if (App.currentChapter > 1) { App.currentChapter--; loadChapter(); }
   else toast('첫 번째 장입니다');
@@ -210,7 +214,7 @@ function updateUI() {
   if (txt) txt.textContent = `${App.currentChapter} / ${App.totalChapters}장`;
 
   const cfg = window.LANG_CONFIG?.[App.currentLang];
-  document.title = `${App.currentBook} ${App.currentChapter}장 (${cfg?.sub||''}) | HolyWord`;
+  document.title = `${App.currentBook} ${App.currentChapter}장 (${cfg?.sub || App.currentLang}) | HolyWord`;
 }
 
 function renderChapterGrid() {
@@ -233,24 +237,24 @@ function renderChapterGrid() {
   }
 }
 
-// ===== 언어 전환 (버튼 클릭 시) =====
-function setLang(lang) {
-  if (App.currentLang === lang) {
+// ===== 언어 전환 =====
+function setLang(translation) {
+  if (!window.LANG_CONFIG?.[translation]) return;
+  if (App.currentLang === translation) {
     document.getElementById('langDropdown')?.classList.remove('open');
     return;
   }
-  App.currentLang = lang;
+  App.currentLang = translation;
   App.highlightedVerses.clear();
-  verseCache?.clear(); // 캐시 초기화
-  _applyLangUI(lang);
+  window.verseCache?.clear();
+  _applyLangUI(translation);
 
-  const cfg = window.LANG_CONFIG?.[lang];
-  toast(`${cfg?.label || lang} (${cfg?.sub || ''}) 성경으로 변경`);
-
-  loadChapter(); // 새 언어로 다시 로드
+  const cfg = window.LANG_CONFIG[translation];
+  toast(`${cfg.label} ${cfg.sub} 성경으로 변경`);
+  loadChapter();
 
   const url = new URL(location);
-  url.searchParams.set('lang', lang);
+  url.searchParams.set('lang', translation);
   history.pushState({}, '', url);
 }
 
@@ -259,7 +263,9 @@ function toggleLangMenu() {
 }
 
 document.addEventListener('click', e => {
-  if (!e.target.closest('.lang-picker')) document.getElementById('langDropdown')?.classList.remove('open');
+  if (!e.target.closest('.lang-picker')) {
+    document.getElementById('langDropdown')?.classList.remove('open');
+  }
 });
 
 // ===== 폰트 크기 =====
@@ -320,110 +326,97 @@ function updateURL() {
   history.pushState({}, '', url);
 }
 
-// ===== 전면광고 =====
-// ===== 전면광고 — 아무 조작 없을 때 1분 후 =====
+// ===== 전면광고 (1분 무조작 시 → 5초 카운트다운) =====
 let _idleTimer = null;
 let _interShown = false;
 
 function initInterstitial() {
   _resetIdleTimer();
-  // 사용자 활동 감지 → 타이머 리셋
   ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(ev => {
-    document.addEventListener(ev, _resetIdleTimer, { passive: true });
+    document.addEventListener(ev, _resetIdleTimer, {passive:true});
   });
 }
 
 function _resetIdleTimer() {
   clearTimeout(_idleTimer);
-  // 아무 조작 없이 1분 경과 시 전면광고
   _idleTimer = setTimeout(() => {
     if (!_interShown) showInterstitial();
-  }, 60000);
+  }, 60000); // 1분
 }
 
 function showInterstitial() {
   if (document.getElementById('iOv')) return;
   _interShown = true;
 
+  // 오버레이
   const ov = document.createElement('div');
   ov.id = 'iOv';
-  ov.style.cssText = [
-    'position:fixed','inset:0','background:rgba(0,0,0,0.88)',
-    'z-index:99999','display:flex','align-items:center','justify-content:center'
-  ].join(';');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:flex;align-items:center;justify-content:center;';
 
-  // 광고 컨테이너 생성
+  // 박스
   const box = document.createElement('div');
-  box.style.cssText = [
-    'background:#1A1208','border:1px solid #C9A84C','border-radius:16px',
-    'padding:24px','max-width:520px','width:92%','text-align:center'
-  ].join(';');
+  box.style.cssText = 'background:#1A1208;border:1px solid #C9A84C;border-radius:16px;padding:24px;max-width:520px;width:92%;text-align:center;';
 
-  // 광고 ins 태그
+  // 광고 라벨
+  const label = document.createElement('div');
+  label.style.cssText = 'font-size:10px;color:#9E855A;letter-spacing:2px;margin-bottom:14px;text-transform:uppercase;';
+  label.textContent = '광고';
+
+  // AdSense ins 태그 (createElement로 동적 생성)
   const ins = document.createElement('ins');
   ins.className = 'adsbygoogle';
-  ins.style.cssText = 'display:block;min-height:280px;';
+  ins.style.cssText = 'display:block;min-height:250px;';
   ins.setAttribute('data-ad-client','ca-pub-8675368228460145');
   ins.setAttribute('data-ad-slot','7174010171');
   ins.setAttribute('data-ad-format','auto');
   ins.setAttribute('data-full-width-responsive','true');
 
-  // 하단 카운트다운 영역
-  const bottom = document.createElement('div');
-  bottom.style.cssText = 'margin-top:16px;display:flex;align-items:center;justify-content:space-between;';
+  // 하단 카운트다운
+  const footer = document.createElement('div');
+  footer.style.cssText = 'margin-top:16px;display:flex;align-items:center;justify-content:space-between;';
 
-  const cnt = document.createElement('span');
-  cnt.id = 'iCnt';
-  cnt.style.cssText = 'font-size:12px;color:#9E855A;';
-  cnt.textContent = '5초 후 닫기 가능';
+  const countEl = document.createElement('span');
+  countEl.id = 'iCnt';
+  countEl.style.cssText = 'font-size:12px;color:#9E855A;font-family:Noto Sans KR,sans-serif;';
+  countEl.textContent = '5초 후 닫기 가능';
 
   const closeBtn = document.createElement('button');
   closeBtn.id = 'iBtn';
   closeBtn.textContent = '닫기 ✕';
-  closeBtn.style.cssText = [
-    'background:#C9A84C','color:#1A1208','border:none',
-    'padding:8px 22px','border-radius:20px','font-size:13px',
-    'font-weight:700','cursor:pointer','opacity:0.35','pointer-events:none'
-  ].join(';');
-  closeBtn.onclick = closeInter;
+  closeBtn.style.cssText = 'background:#C9A84C;color:#1A1208;border:none;padding:8px 22px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;opacity:0.35;pointer-events:none;font-family:Noto Sans KR,sans-serif;';
+  closeBtn.addEventListener('click', closeInter);
 
-  bottom.appendChild(cnt);
-  bottom.appendChild(closeBtn);
-
-  const adLabel = document.createElement('div');
-  adLabel.style.cssText = 'font-size:10px;color:#9E855A;letter-spacing:2px;margin-bottom:14px;';
-  adLabel.textContent = '광고';
-
-  box.appendChild(adLabel);
+  footer.appendChild(countEl);
+  footer.appendChild(closeBtn);
+  box.appendChild(label);
   box.appendChild(ins);
-  box.appendChild(bottom);
+  box.appendChild(footer);
   ov.appendChild(box);
   document.body.appendChild(ov);
 
-  // AdSense 로드
+  // AdSense 로드 (DOM 삽입 후)
   try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
 
-  // DOM 렌더링 후 카운트다운 시작
-  let n = 5;
-  const timer = setInterval(() => {
-    n--;
-    const cntEl = document.getElementById('iCnt');
-    const btnEl = document.getElementById('iBtn');
-    if (cntEl) cntEl.textContent = n > 0 ? `${n}초 후 닫기 가능` : '닫기 가능';
-    if (n <= 0) {
-      clearInterval(timer);
-      if (btnEl) {
-        btnEl.style.opacity = '1';
-        btnEl.style.pointerEvents = 'auto';
+  // 카운트다운 (DOM 완전 삽입 후 100ms 뒤 시작)
+  setTimeout(() => {
+    let n = 5;
+    const timer = setInterval(() => {
+      n--;
+      const cEl = document.getElementById('iCnt');
+      const bEl = document.getElementById('iBtn');
+      if (cEl) cEl.textContent = n > 0 ? `${n}초 후 닫기 가능` : '닫기 가능';
+      if (n <= 0) {
+        clearInterval(timer);
+        if (bEl) { bEl.style.opacity='1'; bEl.style.pointerEvents='auto'; }
       }
-    }
-  }, 1000);
+    }, 1000);
+  }, 100);
 }
 
 function closeInter() {
   document.getElementById('iOv')?.remove();
   _interShown = false;
-  // 닫은 후 30분 뒤 다시 idle 감지 재시작
+  // 30분 후 다시 감지
   setTimeout(() => { _resetIdleTimer(); }, 30 * 60 * 1000);
 }
 
