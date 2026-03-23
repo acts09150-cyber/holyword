@@ -1,44 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-
-  <!-- 메인 페이지 -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://holyword.kr/</loc>
+    <loc>https://bible2.kingdom2025.com/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://holyword.kr/?lang=ko"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://holyword.kr/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="zh" href="https://holyword.kr/?lang=zh"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://holyword.kr/?lang=es"/>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://holyword.kr/?lang=ja"/>
   </url>
-
-  <!-- 오늘의 말씀 -->
   <url>
-    <loc>https://holyword.kr/pages/daily.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- 주제별 구절 -->
-  <url>
-    <loc>https://holyword.kr/pages/topics.html</loc>
+    <loc>https://bible2.kingdom2025.com/pages/topics.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-
-  <!-- 구약 - 창세기 -->
-  <url><loc>https://holyword.kr/?book=창세기&amp;ch=1</loc><priority>0.8</priority></url>
-  <url><loc>https://holyword.kr/?book=창세기&amp;ch=2</loc><priority>0.7</priority></url>
-  <!-- ... 50장까지 자동 생성 필요 -->
-
-  <!-- 신약 - 요한복음 (트래픽 최고) -->
-  <url><loc>https://holyword.kr/?book=요한복음&amp;ch=1</loc><priority>0.9</priority></url>
-  <url><loc>https://holyword.kr/?book=요한복음&amp;ch=3</loc><priority>0.95</priority></url><!-- 3:16 -->
-
-  <!-- 시편 (SEO 황금) -->
-  <url><loc>https://holyword.kr/?book=시편&amp;ch=23</loc><priority>0.95</priority></url><!-- 목자 -->
-  <url><loc>https://holyword.kr/?book=시편&amp;ch=1</loc><priority>0.9</priority></url>
-
+  <url>
+    <loc>https://bible2.kingdom2025.com/pages/daily.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://bible2.kingdom2025.com/pages/search.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bible2.kingdom2025.com/pages/prayer.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bible2.kingdom2025.com/pages/terms.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://bible2.kingdom2025.com/pages/contact.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
 </urlset>
