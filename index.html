@@ -1,78 +1,295 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HolyWord Global - 원어 성경 연구</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ID" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- SEO: English-first for global audience -->
+<title>HolyWord Bible - Read KRV, KJV, NIV, NASB, Chinese, Russian Online Free</title>
+<meta name="description" content="Read the Bible online for free in Korean (KRV), English (KJV, NIV, NASB), Chinese (CUV), and Russian. Parallel Bible view, verse sharing, and AI prayer generator.">
+<meta name="keywords" content="Bible online free, KJV Bible, NIV Bible, Korean Bible KRV, Chinese Bible CUV, parallel Bible, read Bible online, scripture, holy bible, free bible study">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://holyword.kr">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://holyword.kr">
+<meta property="og:title" content="HolyWord - Free Online Parallel Bible Reader">
+<meta property="og:description" content="Read the Bible in Korean, English (KJV/NIV/NASB), Chinese & Russian. Parallel view, verse image sharing for Instagram & Pinterest.">
+<meta property="og:image" content="https://holyword.kr/og-image.jpg">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ko_KR">
+<meta property="og:site_name" content="HolyWord Bible">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HolyWord - Free Parallel Bible Reader">
+<meta name="twitter:description" content="Read KJV, NIV, Korean KRV, Chinese CUV side by side. Share beautiful verse cards.">
+
+<!-- Pinterest -->
+<meta name="pinterest" content="nopin" id="pinterest-meta">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Sans+SC&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+<!-- AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8675368228460145" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="css/style.css">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "HolyWord Bible",
+  "url": "https://holyword.kr",
+  "description": "Free online parallel Bible reader in Korean, English, Chinese and Russian",
+  "applicationCategory": "ReligiousApplication",
+  "operatingSystem": "Web",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+}
+</script>
 </head>
-<body class="bible-reader-page"> <header class="main-header">
-        <nav class="nav-container">
-            <div class="logo">
-                <a href="index.html"><h1>HolyWord <span>GLOBAL</span></h1></a>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="pages/daily.html">Daily</a></li>
-                <li><a href="pages/topics.html">Topics</a></li>
-                <li><a href="pages/prayer.html">Prayer</a></li>
-                <li><a href="pages/search.html">Search</a></li>
-            </ul>
-        </nav>
-    </header>
+<body>
 
-    <div class="container main-layout-container">
-        <div class="ad-section top-ad" style="margin: 20px 0; text-align: center;">
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-YOUR_ID" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <a href="index.html" class="logo">
+    <span class="logo-cross">✦</span>
+    <span class="logo-text">HolyWord</span>
+    <span class="logo-sub">Bible</span>
+  </a>
+  <nav class="header-nav">
+    <a href="index.html" class="nav-link active">📖 Bible Reader</a>
+    <a href="pages/topics.html" class="nav-link">🏷️ Topics</a>
+    <a href="pages/daily.html" class="nav-link">☀️ Daily Verse</a>
+    <a href="pages/search.html" class="nav-link">🔍 Search</a>
+    <a href="pages/prayer.html" class="nav-link">🙏 AI Prayer</a>
+  </nav>
+  <div class="lang-picker">
+    <button class="lang-current" onclick="toggleLangMenu()" aria-label="Select language">
+      <span id="uiLangFlag">🇺🇸</span>
+      <span id="uiLangName">English</span>
+      <span>▾</span>
+    </button>
+    <div class="lang-dropdown" id="langDropdown">
+      <button onclick="setUiLang('en')">🇺🇸 English <span class="lang-badge">Interface</span></button>
+      <button onclick="setUiLang('ko')">🇰🇷 한국어 <span class="lang-badge">인터페이스</span></button>
+    </div>
+  </div>
+</header>
+
+<!-- 상단 광고 (Leaderboard) -->
+<div class="ad-top-bar">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-8675368228460145"
+       data-ad-slot="2926108557"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- ===== CONTROLS BAR ===== -->
+<div class="controls-bar" id="controlsBar">
+  <div class="ctrl-group">
+    <span class="ctrl-label" data-i18n="book">Book</span>
+    <select class="ctrl-select" id="bookSelect" onchange="onBookChange()"></select>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label" data-i18n="chapter">Chapter</span>
+    <select class="ctrl-select" id="chapterSelect" onchange="onChapterChange()"></select>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label" data-i18n="left">Left Column</span>
+    <select class="ctrl-select" id="leftTrans" onchange="loadBoth()">
+      <option value="KJV">English – KJV</option>
+      <option value="NIV">English – NIV</option>
+      <option value="NASB">English – NASB</option>
+      <option value="KRV" selected>Korean – KRV (개역개정)</option>
+      <option value="CUV">Chinese – CUV (和合本)</option>
+      <option value="SYNOD">Russian – Synodal</option>
+      <option value="LXXE">Greek – LXX (Septuagint)</option>
+      <option value="TR">Greek – NT Textus Receptus</option>
+      <option value="WLC">Hebrew – WLC</option>
+    </select>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label" data-i18n="right">Right Column</span>
+    <select class="ctrl-select" id="rightTrans" onchange="loadBoth()">
+      <option value="KJV" selected>English – KJV</option>
+      <option value="NIV">English – NIV</option>
+      <option value="NASB">English – NASB</option>
+      <option value="KRV">Korean – KRV (개역개정)</option>
+      <option value="CUV">Chinese – CUV (和合本)</option>
+      <option value="SYNOD">Russian – Synodal</option>
+      <option value="LXXE">Greek – LXX (Septuagint)</option>
+      <option value="TR">Greek – NT Textus Receptus</option>
+      <option value="WLC">Hebrew – WLC</option>
+    </select>
+  </div>
+  <div class="ctrl-info" id="ctrlInfo">
+    <strong id="ctrlBookChap">Genesis · Chapter 1</strong><br>
+    <span id="ctrlTransInfo" style="font-size:11px;opacity:0.7;"></span>
+  </div>
+</div>
+
+<!-- ===== MAIN LAYOUT ===== -->
+<div class="main-layout">
+
+  <!-- 좌측 Sticky 광고 -->
+  <aside class="ad-sidebar">
+    <div>
+      <div class="ad-label-small">AD</div>
+      <ins class="adsbygoogle"
+           style="display:block;width:160px;min-height:600px;"
+           data-ad-client="ca-pub-8675368228460145"
+           data-ad-slot="7174010171"
+           data-ad-format="auto"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </aside>
+
+  <!-- 성경 2컬럼 패널 -->
+  <div class="bible-panels">
+
+    <!-- 왼쪽 패널 -->
+    <div class="bible-panel">
+      <div class="panel-header">
+        <span class="panel-lang-name" id="leftPanelName">Korean (KRV)</span>
+        <span class="panel-direction" id="leftDir">LTR</span>
+      </div>
+      <div class="verse-area" id="leftVerses">
+        <div class="loading-wrap">
+          <div class="spinner"></div>
+          <p>Loading scripture...</p>
         </div>
-
-        <section class="bible-controls card">
-            <div class="control-row">
-                <select id="bookSelect" onchange="onBookChange()"></select>
-                <select id="chapterSelect" onchange="onChapterChange()"></select>
-                <div class="trans-selectors">
-                    <select id="leftTrans" onchange="loadBoth()">
-                        <option value="KRV">Korean (KRV)</option>
-                        <option value="WLC">Hebrew (WLC)</option>
-                    </select>
-                    <span class="swap-icon">↔</span>
-                    <select id="rightTrans" onchange="loadBoth()">
-                        <option value="KJV" selected>English (KJV)</option>
-                        <option value="NIV">English (NIV)</option>
-                    </select>
-                </div>
-            </div>
-        </section>
-
-        <div class="content-wrapper" style="display: flex; gap: 20px; align-items: flex-start;">
-            <div class="bible-display-area card" style="flex: 2;">
-                <div id="bible-grid" class="bible-grid">
-                    <div id="leftVerses" class="verse-column"></div>
-                    <div id="rightVerses" class="verse-column"></div>
-                </div>
-            </div>
-
-            <aside class="side-content" style="flex: 0.8; position: sticky; top: 20px;">
-                <div id="original-analysis-container" class="card" style="background-color: transparent; border: 1px solid #d1d8d6;">
-                    <div class="card-header" style="background: #2c3e50; color: white; padding: 12px; border-radius: 8px 8px 0 0;">
-                        <i class="fas fa-microscope"></i> 원어 분석 & 복사
-                    </div>
-                    <div id="analysis-content" class="card-body" style="padding: 20px; min-height: 300px;">
-                        <p style="color: #7f8c8d; text-align: center;">성경 구절을 클릭하시면<br>이곳에 원어 분석이 나타납니다.</p>
-                    </div>
-                </div>
-                <div class="ad-section side-ad" style="margin-top: 20px;">
-                    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-YOUR_ID" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                </div>
-            </aside>
-        </div>
+      </div>
+      <div class="chapter-nav">
+        <button class="ch-nav-btn" onclick="prevChapter()">← Prev</button>
+        <span class="ch-nav-info" id="chNavInfo">1 / 50</span>
+        <button class="ch-nav-btn" onclick="nextChapter()">Next →</button>
+      </div>
     </div>
 
-    <div id="toast"></div>
+    <!-- 오른쪽 패널 -->
+    <div class="bible-panel">
+      <div class="panel-header">
+        <span class="panel-lang-name" id="rightPanelName">English (KJV)</span>
+        <span class="panel-direction" id="rightDir">LTR</span>
+      </div>
+      <div class="verse-area" id="rightVerses">
+        <div class="loading-wrap">
+          <div class="spinner"></div>
+          <p>Loading scripture...</p>
+        </div>
+      </div>
+    </div>
 
-    <script src="js/bible-data.js"></script> <script src="js/app.js"></script>
+  </div><!-- /bible-panels -->
+
+  <!-- 우측 Sticky 광고 -->
+  <aside class="ad-sidebar-right">
+    <div>
+      <div class="ad-label-small">AD</div>
+      <ins class="adsbygoogle"
+           style="display:block;width:160px;min-height:600px;"
+           data-ad-client="ca-pub-8675368228460145"
+           data-ad-slot="2500534899"
+           data-ad-format="auto"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </aside>
+
+</div><!-- /main-layout -->
+
+<!-- ===== 이미지 카드 공유 모달 ===== -->
+<div class="modal-overlay" id="shareModal" style="display:none;" onclick="closeShareModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-title">
+      🖼️ <span data-i18n="share_verse">Share Verse Card</span>
+    </div>
+    <canvas id="shareCanvas" width="1080" height="1080" style="width:100%;border-radius:8px;margin-bottom:16px;"></canvas>
+    <div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;">
+      <button onclick="changeCardStyle('classic')" style="padding:6px 14px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;cursor:pointer;">Classic</button>
+      <button onclick="changeCardStyle('dark')" style="padding:6px 14px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;cursor:pointer;">Dark</button>
+      <button onclick="changeCardStyle('gold')" style="padding:6px 14px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;cursor:pointer;">Gold</button>
+      <button onclick="changeCardStyle('nature')" style="padding:6px 14px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;cursor:pointer;">Nature</button>
+    </div>
+    <div class="share-btns">
+      <button class="share-platform-btn btn-fb" onclick="shareTo('facebook')">
+        <span class="icon">📘</span>Facebook
+      </button>
+      <button class="share-platform-btn btn-ig" onclick="shareTo('instagram')">
+        <span class="icon">📷</span>Instagram
+      </button>
+      <button class="share-platform-btn btn-pin" onclick="shareTo('pinterest')">
+        <span class="icon">📌</span>Pinterest
+      </button>
+      <button class="share-platform-btn btn-tw" onclick="shareTo('twitter')">
+        <span class="icon">🐦</span>X/Twitter
+      </button>
+    </div>
+    <button class="share-platform-btn btn-dl" onclick="downloadCard()" style="width:100%;margin-bottom:10px;">
+      <span class="icon">⬇️</span> Download Image
+    </button>
+    <button class="modal-close-btn" onclick="closeShareModal()">Close</button>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">✦ HolyWord Bible</div>
+      <p class="footer-desc">
+        Free parallel Bible reader in 6 translations.<br>
+        Read, compare, and share God's Word worldwide.
+      </p>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <span onclick="setLeftTrans('KRV')" title="Korean KRV" style="cursor:pointer;font-size:20px;">🇰🇷</span>
+        <span onclick="setLeftTrans('KJV')" title="English KJV" style="cursor:pointer;font-size:20px;">🇺🇸</span>
+        <span onclick="setLeftTrans('CUV')" title="Chinese CUV" style="cursor:pointer;font-size:20px;">🇨🇳</span>
+        <span onclick="setLeftTrans('SYNOD')" title="Russian" style="cursor:pointer;font-size:20px;">🇷🇺</span>
+      </div>
+    </div>
+    <div class="footer-links-group">
+      <div class="footer-col">
+        <div class="footer-col-title">Navigation</div>
+        <a href="index.html">Bible Reader</a>
+        <a href="pages/topics.html">Topic Verses</a>
+        <a href="pages/daily.html">Daily Verse</a>
+        <a href="pages/search.html">Search</a>
+        <a href="pages/prayer.html">AI Prayer</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Translations</div>
+        <a href="javascript:void(0)" onclick="setLeftTrans('KRV')">🇰🇷 Korean KRV</a>
+        <a href="javascript:void(0)" onclick="setLeftTrans('KJV')">🇺🇸 English KJV</a>
+        <a href="javascript:void(0)" onclick="setLeftTrans('NIV')">🇺🇸 English NIV</a>
+        <a href="javascript:void(0)" onclick="setLeftTrans('NASB')">🇺🇸 English NASB</a>
+        <a href="javascript:void(0)" onclick="setLeftTrans('CUV')">🇨🇳 Chinese CUV</a>
+        <a href="javascript:void(0)" onclick="setLeftTrans('SYNOD')">🇷🇺 Russian</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Info</div>
+        <a href="pages/terms.html">Terms of Use</a>
+        <a href="pages/contact.html">Contact / Ads</a>
+        <a href="pages/prayer.html">AI Prayer Writer</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 HolyWord Bible · Free Online Bible Service</span>
+    <span>Scripture data: <a href="https://bolls.life" target="_blank" rel="noopener" style="color:#d4a017;text-decoration:none;">Bolls.life</a> API</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- Scripts -->
+<script src="js/bible-data.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
