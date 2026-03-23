@@ -539,3 +539,20 @@ body {
 }
 
 .btn-copy:hover { background: var(--blue-light); }
+/* 모든 페이지 배경색 통일 */
+html, body {
+    background-color: #f4f7f6 !important;
+    color: #2c3e50;
+}
+
+/* 모든 카드(박스) 배경색 통일 */
+.card, .original-analysis-card, aside, section {
+    background-color: #f4f7f6 !important;
+    border-color: #d1d8d6 !important;
+}
+
+/* 원어 텍스트 강조 */
+.v-text:hover {
+    background-color: #e8f0ee;
+    transition: 0.3s;
+}
