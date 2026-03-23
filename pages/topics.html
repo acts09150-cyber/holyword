@@ -3,121 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="주제별 성경 구절 모음 - 위로, 믿음, 사랑, 감사, 소망, 결혼, 치유에 관한 성경 말씀을 찾아보세요.">
-<meta name="keywords" content="성경구절, 위로의말씀, 믿음의말씀, 사랑의말씀, 주제별성경">
+<meta name="description" content="주제별 성경 구절 모음 - 위로, 믿음, 사랑, 감사, 소망, 기도, 평안, 용기, 지혜, 치유, 결혼, 하나님, 예수, 성령에 관한 성경 말씀">
+<meta name="keywords" content="성경구절,위로의말씀,믿음의말씀,사랑의말씀,주제별성경">
 <title>주제별 성경 구절 | HolyWord</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8675368228460145" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="../css/style.css">
 <style>
-.topics-hero {
-  background: var(--dark);
-  border-bottom: 1px solid var(--border-strong);
-  padding: 48px 32px;
-  text-align: center;
-}
-.topics-hero h1 {
-  font-family: var(--font-serif);
-  color: var(--gold);
-  font-size: 36px;
-  margin-bottom: 12px;
-}
-.topics-hero p { color: rgba(255,255,255,0.55); font-size: 15px; }
+*{box-sizing:border-box;}
+.page-wrap{display:grid;grid-template-columns:160px 1fr 160px;max-width:1400px;margin:0 auto;min-height:80vh;}
+.side-ad{padding:20px 8px;position:sticky;top:70px;height:fit-content;text-align:center;}
+.topics-main{padding:0 20px;}
 
-.topics-page {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 40px 24px;
-}
+.topics-hero{background:#1A1208;border-bottom:1px solid rgba(201,168,76,0.4);padding:44px 24px;text-align:center;}
+.topics-hero h1{font-family:'Playfair Display',serif;color:#C9A84C;font-size:34px;margin-bottom:10px;font-weight:700;}
+.topics-hero p{color:rgba(255,255,255,0.5);font-size:14px;}
 
-.topic-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 40px;
-  justify-content: center;
-}
-.topic-tab {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  padding: 9px 18px;
-  border-radius: 24px;
-  font-size: 14px;
-  transition: all 0.2s;
-  cursor: pointer;
-  font-family: var(--font-sans);
-}
-.topic-tab:hover, .topic-tab.active {
-  background: var(--gold);
-  color: var(--dark);
-  border-color: var(--gold);
-  font-weight: 600;
-}
+.category-tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:28px 0 24px;}
+.cat-btn{background:#F5EFE5;border:1px solid rgba(201,168,76,0.25);color:#6B5735;padding:9px 18px;border-radius:24px;font-size:13px;cursor:pointer;transition:all 0.2s;font-family:'Noto Sans KR',sans-serif;}
+.cat-btn:hover{background:rgba(201,168,76,0.15);border-color:#C9A84C;color:#2D1F08;}
+.cat-btn.active{background:#C9A84C;color:#1A1208;border-color:#C9A84C;font-weight:700;}
 
-.topic-section { margin-bottom: 48px; }
-.topic-section-title {
-  font-family: var(--font-serif);
-  font-size: 24px;
-  color: var(--dark);
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid var(--border);
-}
+.section-title-wrap{margin-bottom:22px;padding-bottom:12px;border-bottom:2px solid rgba(201,168,76,0.2);}
+.section-title{font-family:'Playfair Display',serif;font-size:24px;color:#2D1F08;font-weight:700;}
+.section-count{font-size:12px;color:#9E855A;margin-top:4px;}
 
-.verse-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-}
+.verse-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:36px;}
+.v-card{background:white;border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:22px 20px 18px;cursor:pointer;transition:all 0.2s;position:relative;border-left:3px solid transparent;display:flex;flex-direction:column;min-height:150px;}
+.v-card:hover{border-color:rgba(201,168,76,0.4);border-left-color:#C9A84C;box-shadow:0 4px 16px rgba(0,0,0,0.08);transform:translateY(-1px);}
+.v-card-text{font-family:'Playfair Display',serif;font-size:15px;color:#2D1F08;line-height:1.75;font-style:italic;margin-bottom:14px;flex:1;}
+.v-card-ref{font-size:12px;color:#C9A84C;font-weight:600;}
+.v-card-actions{position:absolute;top:12px;right:12px;display:flex;gap:5px;opacity:0;transition:opacity 0.2s;}
+.v-card:hover .v-card-actions{opacity:1;}
+.v-action-btn{background:#F5EFE5;border:1px solid rgba(201,168,76,0.3);border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;color:#6B5735;font-family:'Noto Sans KR',sans-serif;transition:all 0.15s;}
+.v-action-btn:hover{background:#C9A84C;color:#1A1208;}
 
-.verse-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 24px;
-  transition: all 0.2s;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.verse-card::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: var(--gold);
-  transform: scaleY(0);
-  transition: transform 0.2s;
-}
-.verse-card:hover::before { transform: scaleY(1); }
-.verse-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+.mid-ad{margin:24px 0;text-align:center;}
 
-.vc-text {
-  font-family: var(--font-serif);
-  font-size: 16px;
-  color: var(--text-primary);
-  line-height: 1.75;
-  margin-bottom: 14px;
-  font-style: italic;
-}
-.vc-ref {
-  font-size: 12px;
-  color: var(--gold);
-  font-weight: 600;
-}
-.vc-copy {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-size: 14px;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.verse-card:hover .vc-copy { opacity: 1; }
+.toast{position:fixed;bottom:-80px;left:50%;transform:translateX(-50%);background:#1A1208;color:#C9A84C;padding:10px 22px;border-radius:24px;font-size:13px;border:1px solid rgba(201,168,76,0.4);transition:bottom 0.3s;z-index:9999;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;}
+.toast.show{bottom:30px;}
+
+@media(max-width:1100px){.page-wrap{grid-template-columns:130px 1fr 130px;}}
+@media(max-width:860px){.page-wrap{grid-template-columns:1fr;}.side-ad{display:none;}.verse-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.verse-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -127,6 +55,7 @@
     <a href="../index.html" class="logo">
       <span class="logo-cross">✦</span>
       <span class="logo-text">HolyWord</span>
+      <span class="logo-sub">다국어 성경</span>
     </a>
     <nav class="header-nav">
       <a href="../index.html" class="nav-link">성경 읽기</a>
@@ -137,139 +66,299 @@
   </div>
 </header>
 
-<!-- 상단 광고 -->
-<div class="ad-zone ad-leaderboard">
-  <div class="ad-label">광고</div>
-  <div class="ad-placeholder" style="width:100%;max-width:728px;height:90px;">
-    <div class="ad-demo-text"><strong>728×90</strong> 주제별 구절 페이지 광고</div>
-  </div>
+<!-- 상단 자동 광고 -->
+<div style="text-align:center;padding:8px 0;background:#F9F5EE;border-bottom:1px solid rgba(201,168,76,0.15);">
+  <ins class="adsbygoogle" style="display:block"
+       data-ad-client="ca-pub-8675368228460145"
+       data-ad-slot="2926108557"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
 
+<!-- 히어로 -->
 <div class="topics-hero">
-  <h1>주제별 말씀 모음</h1>
+  <h1>✦ 주제별 말씀 모음</h1>
   <p>삶의 모든 순간에 필요한 성경 구절을 주제별로 찾아보세요</p>
 </div>
 
-<div class="topics-page">
-
-  <!-- 주제 탭 -->
-  <div class="topic-tabs">
-    <button class="topic-tab active" onclick="showTopic('all', this)">전체</button>
-    <button class="topic-tab" onclick="showTopic('위로', this)">🤍 위로</button>
-    <button class="topic-tab" onclick="showTopic('믿음', this)">⭐ 믿음</button>
-    <button class="topic-tab" onclick="showTopic('사랑', this)">❤️ 사랑</button>
-    <button class="topic-tab" onclick="showTopic('감사', this)">🙏 감사</button>
-    <button class="topic-tab" onclick="showTopic('소망', this)">🌅 소망</button>
-    <button class="topic-tab" onclick="showTopic('결혼', this)">💍 결혼</button>
-    <button class="topic-tab" onclick="showTopic('치유', this)">💊 치유</button>
+<!-- 카테고리 탭 (히어로 바로 아래 전체 너비) -->
+<div style="background:#FBF7F0;border-bottom:1px solid rgba(201,168,76,0.15);padding:0 24px;">
+  <div class="category-tabs" id="categoryTabs">
+    <button class="cat-btn active" data-topic="위로" onclick="switchTopic(this)">🤍 위로</button>
+    <button class="cat-btn" data-topic="믿음" onclick="switchTopic(this)">⭐ 믿음</button>
+    <button class="cat-btn" data-topic="사랑" onclick="switchTopic(this)">❤️ 사랑</button>
+    <button class="cat-btn" data-topic="감사" onclick="switchTopic(this)">🙏 감사</button>
+    <button class="cat-btn" data-topic="소망" onclick="switchTopic(this)">🌅 소망</button>
+    <button class="cat-btn" data-topic="기도" onclick="switchTopic(this)">🙌 기도</button>
+    <button class="cat-btn" data-topic="평안" onclick="switchTopic(this)">☮️ 평안</button>
+    <button class="cat-btn" data-topic="용기" onclick="switchTopic(this)">💪 용기</button>
+    <button class="cat-btn" data-topic="지혜" onclick="switchTopic(this)">📚 지혜</button>
+    <button class="cat-btn" data-topic="치유" onclick="switchTopic(this)">💊 치유</button>
+    <button class="cat-btn" data-topic="결혼" onclick="switchTopic(this)">💍 결혼</button>
+    <button class="cat-btn" data-topic="하나님" onclick="switchTopic(this)">✝️ 하나님</button>
+    <button class="cat-btn" data-topic="예수" onclick="switchTopic(this)">✨ 예수</button>
+    <button class="cat-btn" data-topic="성령" onclick="switchTopic(this)">🕊️ 성령</button>
   </div>
+</div>
 
-  <!-- 광고 (주제 탭 아래) -->
-  <div class="ad-zone ad-in-article" style="margin-bottom:40px;">
-    <div class="ad-label">광고</div>
-    <div class="ad-placeholder" style="width:100%;height:100px;">
-      <div class="ad-demo-text"><strong>In-Article 광고</strong> · 주제 선택 후 노출</div>
-    </div>
-  </div>
+<!-- 3단 레이아웃: 좌광고 + 본문 + 우광고 -->
+<div class="page-wrap">
 
-  <!-- 구절 목록 -->
-  <div id="topicContent"></div>
+  <!-- 좌측 광고 -->
+  <aside class="side-ad">
+    <ins class="adsbygoogle"
+         style="display:block;width:150px;min-height:500px;"
+         data-ad-client="ca-pub-8675368228460145"
+         data-ad-slot="7174010171"
+         data-ad-format="auto"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </aside>
+
+  <!-- 본문 -->
+  <main class="topics-main" style="padding-top:28px;">
+    <div id="topicContent"></div>
+  </main>
+
+  <!-- 우측 광고 -->
+  <aside class="side-ad">
+    <ins class="adsbygoogle"
+         style="display:block;width:150px;min-height:500px;"
+         data-ad-client="ca-pub-8675368228460145"
+         data-ad-slot="2500534899"
+         data-ad-format="auto"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </aside>
 
 </div>
 
-<!-- 하단 광고 -->
-<div class="ad-zone ad-leaderboard">
-  <div class="ad-label">광고</div>
-  <div class="ad-placeholder" style="width:100%;max-width:728px;height:90px;">
-    <div class="ad-demo-text"><strong>728×90</strong> 하단 배너</div>
-  </div>
+<!-- 하단 자동 광고 -->
+<div style="text-align:center;padding:12px 0;background:#F9F5EE;border-top:1px solid rgba(201,168,76,0.15);">
+  <ins class="adsbygoogle" style="display:block"
+       data-ad-client="ca-pub-8675368228460145"
+       data-ad-slot="4520193575"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
 
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-logo">✦ HolyWord</div>
-      <p class="footer-desc">전 세계 10개 언어로 성경을 무료로 읽을 수 있는 서비스입니다.</p>
+      <p class="footer-desc">전 세계 언어로 성경을 무료로 읽을 수 있는 서비스입니다.</p>
     </div>
     <div class="footer-links-group">
       <div class="footer-col">
-        <div class="footer-col-title">성경 읽기</div>
-        <a href="../index.html">메인으로</a>
+        <div class="footer-col-title">바로가기</div>
+        <a href="../index.html">성경 읽기</a>
         <a href="topics.html">주제별 구절</a>
         <a href="daily.html">오늘의 말씀</a>
+        <a href="search.html">구절 검색</a>
       </div>
     </div>
   </div>
-  <div class="footer-bottom">
-    <span>© 2025 HolyWord</span>
-  </div>
+  <div class="footer-bottom"><span>© 2025 HolyWord · 무료 다국어 성경 서비스</span></div>
 </footer>
 
 <div class="toast" id="toast"></div>
 
-<script src="../js/bible-data.js"></script>
 <script>
-function showTopic(topic, btn) {
-  document.querySelectorAll('.topic-tab').forEach(t => t.classList.remove('active'));
+const TOPICS = {
+  위로:{emoji:'🤍',verses:[
+    {v:'수고하고 무거운 짐 진 자들아 다 내게로 오라 내가 너희를 쉬게 하리라',r:'마태복음 11:28'},
+    {v:'마음이 상한 자를 가까이 하시고 충심으로 통회하는 자를 구원하시는도다',r:'시편 34:18'},
+    {v:'그는 마음이 상한 자를 고치시며 그들의 상처를 싸매시는도다',r:'시편 147:3'},
+    {v:'우리가 사방으로 우겨쌈을 당하여도 싸이지 아니하며 답답한 일을 당하여도 낙심하지 아니하며',r:'고린도후서 4:8'},
+    {v:'내가 확신하노니 사망이나 생명이나 어떤 피조물이라도 우리를 우리 주 그리스도 예수 안에 있는 하나님의 사랑에서 끊을 수 없으리라',r:'로마서 8:38-39'},
+    {v:'내가 너와 함께 하여 어디로 가든지 너를 지키며 너를 이끌어 이 땅으로 돌아오게 할지라',r:'창세기 28:15'},
+  ]},
+  믿음:{emoji:'⭐',verses:[
+    {v:'믿음은 바라는 것들의 실상이요 보이지 않는 것들의 증거니',r:'히브리서 11:1'},
+    {v:'예수께서 이르시되 할 수 있거든이 무슨 말이냐 믿는 자에게는 능히 하지 못할 일이 없느니라',r:'마가복음 9:23'},
+    {v:'너는 마음을 다하여 여호와를 신뢰하고 네 명철을 의지하지 말라',r:'잠언 3:5'},
+    {v:'내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라',r:'빌립보서 4:13'},
+    {v:'두려워하지 말라 내가 너와 함께 함이라 놀라지 말라 나는 네 하나님이 됨이라',r:'이사야 41:10'},
+    {v:'믿음의 주요 또 온전하게 하시는 이인 예수를 바라보자 그는 그 앞에 있는 기쁨을 위하여 십자가를 참으사',r:'히브리서 12:2'},
+  ]},
+  사랑:{emoji:'❤️',verses:[
+    {v:'사랑은 오래 참고 사랑은 온유하며 시기하지 아니하며 사랑은 자랑하지 아니하며 교만하지 아니하며',r:'고린도전서 13:4'},
+    {v:'하나님이 세상을 이처럼 사랑하사 독생자를 주셨으니 이는 그를 믿는 자마다 멸망하지 않고 영생을 얻게 하려 하심이라',r:'요한복음 3:16'},
+    {v:'새 계명을 너희에게 주노니 서로 사랑하라 내가 너희를 사랑한 것 같이 너희도 서로 사랑하라',r:'요한복음 13:34'},
+    {v:'무엇보다도 뜨겁게 서로 사랑할지니 사랑은 허다한 죄를 덮느니라',r:'베드로전서 4:8'},
+    {v:'사랑 안에 두려움이 없고 온전한 사랑이 두려움을 내쫓나니',r:'요한일서 4:18'},
+    {v:'하나님은 사랑이심이라 사랑 안에 거하는 자는 하나님 안에 거하고 하나님도 그의 안에 거하시느니라',r:'요한일서 4:16'},
+  ]},
+  감사:{emoji:'🙏',verses:[
+    {v:'범사에 감사하라 이것이 그리스도 예수 안에서 너희를 향하신 하나님의 뜻이니라',r:'데살로니가전서 5:18'},
+    {v:'여호와께 감사하라 그는 선하시며 그 인자하심이 영원함이로다',r:'시편 107:1'},
+    {v:'이것이 주께서 만드신 날이라 우리가 기뻐하고 즐거워하리로다',r:'시편 118:24'},
+    {v:'감사함으로 그의 문에 들어가며 찬송함으로 그의 궁정에 들어가서 그에게 감사하며 그의 이름을 송축할지어다',r:'시편 100:4'},
+    {v:'모든 것이 하나님께로서 났으며 그가 그리스도로 말미암아 우리를 자기와 화목하게 하셨느니라',r:'고린도후서 5:18'},
+    {v:'너희 구할 것을 감사함으로 하나님께 아뢰라 그리하면 모든 지각에 뛰어난 하나님의 평강이 너희 마음과 생각을 지키시리라',r:'빌립보서 4:6-7'},
+  ]},
+  소망:{emoji:'🌅',verses:[
+    {v:'내가 너희를 향하여 계획하는 것들을 내가 아노니 재앙이 아니라 평안이요 너희에게 미래와 희망을 주려 하는 것이라',r:'예레미야 29:11'},
+    {v:'소망 중에 즐거워하며 환난 중에 참으며 기도에 항상 힘쓰며',r:'로마서 12:12'},
+    {v:'여호와를 앙망하는 자는 새 힘을 얻으리니 독수리가 날개치며 올라감 같을 것이요',r:'이사야 40:31'},
+    {v:'믿음의 주요 또 온전하게 하시는 이인 예수를 바라보자',r:'히브리서 12:2'},
+    {v:'소망이 우리를 부끄럽게 하지 아니함은 우리에게 주신 성령으로 말미암아 하나님의 사랑이 우리 마음에 부은 바 됨이니',r:'로마서 5:5'},
+    {v:'주 여호와여 주는 나의 소망이시요 내가 어릴 때부터 신뢰한 이시라',r:'시편 71:5'},
+  ]},
+  기도:{emoji:'🙌',verses:[
+    {v:'아무 것도 염려하지 말고 다만 모든 일에 기도와 간구로, 너희 구할 것을 감사함으로 하나님께 아뢰라',r:'빌립보서 4:6'},
+    {v:'구하라 그리하면 너희에게 주실 것이요 찾으라 그리하면 찾아낼 것이요 문을 두드리라 그리하면 너희에게 열릴 것이니',r:'마태복음 7:7'},
+    {v:'쉬지 말고 기도하라',r:'데살로니가전서 5:17'},
+    {v:'너는 내게 부르짖으라 내가 네게 응답하겠고 네가 알지 못하는 크고 은밀한 일을 네게 보이리라',r:'예레미야 33:3'},
+    {v:'무엇이든지 기도하고 구하는 것은 받은 줄로 믿으라 그리하면 너희에게 그대로 되리라',r:'마가복음 11:24'},
+    {v:'두 세 사람이 내 이름으로 모인 곳에는 나도 그들 중에 있느니라',r:'마태복음 18:20'},
+  ]},
+  평안:{emoji:'☮️',verses:[
+    {v:'그리하면 모든 지각에 뛰어난 하나님의 평강이 그리스도 예수 안에서 너희 마음과 생각을 지키시리라',r:'빌립보서 4:7'},
+    {v:'평안을 너희에게 끼치노니 곧 나의 평안을 너희에게 주노라 내가 너희에게 주는 것은 세상이 주는 것과 같지 아니하니라',r:'요한복음 14:27'},
+    {v:'여호와는 나의 목자시니 내게 부족함이 없으리로다',r:'시편 23:1'},
+    {v:'주께서 심지가 견고한 자를 평강하고 평강하도록 지키시리니 이는 그가 주를 신뢰함이니이다',r:'이사야 26:3'},
+    {v:'이는 내가 너희에게 평안을 주려 함이라 세상에서는 너희가 환난을 당하나 담대하라 내가 세상을 이기었노라',r:'요한복음 16:33'},
+    {v:'여호와께서 자기 백성에게 힘을 주심이여 여호와께서 평강의 복으로 자기 백성에게 복을 주시리로다',r:'시편 29:11'},
+  ]},
+  용기:{emoji:'💪',verses:[
+    {v:'강하고 담대하라 두려워하지 말며 놀라지 말라 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라',r:'여호수아 1:9'},
+    {v:'주 너의 하나님이 너와 함께 하느니라 그가 너를 떠나지 아니하시며 버리지 아니하시리라',r:'신명기 31:6'},
+    {v:'두려워하지 말라 내가 너와 함께 함이라 놀라지 말라 나는 네 하나님이 됨이라 내가 너를 굳세게 하리라',r:'이사야 41:10'},
+    {v:'내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라',r:'빌립보서 4:13'},
+    {v:'하나님이 우리에게 주신 것은 두려워하는 마음이 아니요 오직 능력과 사랑과 절제하는 마음이니',r:'디모데후서 1:7'},
+    {v:'담대히 말하되 주는 나를 돕는 이시니 내가 무서워하지 아니하겠노라',r:'히브리서 13:6'},
+  ]},
+  지혜:{emoji:'📚',verses:[
+    {v:'여호와를 경외하는 것이 지혜의 근본이라 거룩하신 자를 아는 것이 명철이니라',r:'잠언 9:10'},
+    {v:'너희 중에 누구든지 지혜가 부족하거든 모든 사람에게 후히 주시고 꾸짖지 아니하시는 하나님께 구하라 그리하면 주시리라',r:'야고보서 1:5'},
+    {v:'너는 마음을 다하여 여호와를 신뢰하고 네 명철을 의지하지 말라 너는 범사에 그를 인정하라 그리하면 네 길을 지도하시리라',r:'잠언 3:5-6'},
+    {v:'내 아들아 내 법을 잊어버리지 말고 네 마음으로 내 명령을 지키라',r:'잠언 3:1'},
+    {v:'지혜가 제일이니 지혜를 얻으라 네가 얻은 모든 것을 가지고 명철을 얻을지니라',r:'잠언 4:7'},
+    {v:'오직 위로부터 난 지혜는 첫째 성결하고 다음에 화평하고 관용하고 양순하며 긍휼과 선한 열매가 가득하고',r:'야고보서 3:17'},
+  ]},
+  치유:{emoji:'💊',verses:[
+    {v:'그는 마음이 상한 자를 고치시며 그들의 상처를 싸매시는도다',r:'시편 147:3'},
+    {v:'그가 찔림은 우리의 허물 때문이요 그가 상함은 우리의 죄악 때문이라 그가 징계를 받으므로 우리는 평화를 누리고 그가 채찍에 맞으므로 우리는 나음을 받았도다',r:'이사야 53:5'},
+    {v:'내가 너를 낫게 하겠다',r:'예레미야 30:17'},
+    {v:'믿음의 기도는 병든 자를 구원하리니 주께서 그를 일으키시리라',r:'야고보서 5:15'},
+    {v:'이는 선지자 이사야를 통하여 하신 말씀에 우리의 연약한 것을 친히 담당하시고 병을 짊어지셨도다 함을 이루려 하심이더라',r:'마태복음 8:17'},
+    {v:'나 여호와가 너를 치료하는 여호와임이라',r:'출애굽기 15:26'},
+  ]},
+  결혼:{emoji:'💍',verses:[
+    {v:'이러므로 남자가 부모를 떠나 그의 아내와 합하여 둘이 한 몸을 이룰지로다',r:'창세기 2:24'},
+    {v:'집과 재물은 조상에게서 상속하거니와 슬기로운 아내는 여호와께서 주시느니라',r:'잠언 19:14'},
+    {v:'무엇보다도 뜨겁게 서로 사랑할지니 사랑은 허다한 죄를 덮느니라',r:'베드로전서 4:8'},
+    {v:'두 사람이 한 사람보다 나음은 그들이 수고함으로 좋은 상을 얻을 것임이라',r:'전도서 4:9'},
+    {v:'사랑은 오래 참고 사랑은 온유하며 시기하지 아니하며',r:'고린도전서 13:4'},
+    {v:'아내를 사랑하며 괴롭게 하지 말라',r:'골로새서 3:19'},
+  ]},
+  하나님:{emoji:'✝️',verses:[
+    {v:'태초에 하나님이 천지를 창조하시니라',r:'창세기 1:1'},
+    {v:'하나님은 사랑이심이라 사랑 안에 거하는 자는 하나님 안에 거하고 하나님도 그의 안에 거하시느니라',r:'요한일서 4:16'},
+    {v:'여호와는 나의 빛이요 나의 구원이시니 내가 누구를 두려워하리요',r:'시편 27:1'},
+    {v:'하나님은 우리의 피난처시요 힘이시니 환난 중에 만날 큰 도움이시라',r:'시편 46:1'},
+    {v:'우리가 알거니와 하나님을 사랑하는 자 곧 그의 뜻대로 부르심을 입은 자들에게는 모든 것이 합력하여 선을 이루느니라',r:'로마서 8:28'},
+    {v:'여호와 우리 주여 주의 이름이 온 땅에 어찌 그리 아름다운지요',r:'시편 8:1'},
+  ]},
+  예수:{emoji:'✨',verses:[
+    {v:'예수께서 이르시되 내가 곧 길이요 진리요 생명이니 나로 말미암지 않고는 아버지께로 올 자가 없느니라',r:'요한복음 14:6'},
+    {v:'내가 세상 끝날까지 너희와 항상 함께 있으리라',r:'마태복음 28:20'},
+    {v:'하나님이 세상을 이처럼 사랑하사 독생자를 주셨으니 이는 그를 믿는 자마다 멸망하지 않고 영생을 얻게 하려 하심이라',r:'요한복음 3:16'},
+    {v:'내가 온 것은 양으로 생명을 얻게 하고 더 풍성히 얻게 하려는 것이라',r:'요한복음 10:10'},
+    {v:'예수 그리스도는 어제나 오늘이나 영원토록 동일하시니라',r:'히브리서 13:8'},
+    {v:'나는 부활이요 생명이니 나를 믿는 자는 죽어도 살겠고',r:'요한복음 11:25'},
+  ]},
+  성령:{emoji:'🕊️',verses:[
+    {v:'오직 성령의 열매는 사랑과 희락과 화평과 오래 참음과 자비와 양선과 충성과',r:'갈라디아서 5:22'},
+    {v:'보혜사 곧 아버지께서 내 이름으로 보내실 성령 그가 너희에게 모든 것을 가르치고 내가 너희에게 말한 모든 것을 생각나게 하리라',r:'요한복음 14:26'},
+    {v:'성령도 우리의 연약함을 도우시나니 우리는 마땅히 기도할 바를 알지 못하나 오직 성령이 말할 수 없는 탄식으로 우리를 위하여 친히 간구하시느니라',r:'로마서 8:26'},
+    {v:'너희가 하나님의 성전인 것과 하나님의 성령이 너희 안에 계시는 것을 알지 못하느냐',r:'고린도전서 3:16'},
+    {v:'오직 성령이 너희에게 임하시면 너희가 권능을 받고',r:'사도행전 1:8'},
+    {v:'주는 영이시니 주의 영이 계신 곳에는 자유가 있느니라',r:'고린도후서 3:17'},
+  ]},
+};
+
+let currentTopic='위로';
+
+function switchTopic(btn){
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  currentTopic=btn.dataset.topic;
+  renderTopic(currentTopic);
+  window.scrollTo({top:200,behavior:'smooth'});
+}
 
-  const content = document.getElementById('topicContent');
-  content.innerHTML = '';
+function renderTopic(topic){
+  const data=TOPICS[topic];
+  if(!data) return;
+  const el=document.getElementById('topicContent');
 
-  const topics = topic === 'all' ? Object.keys(TOPIC_VERSES) : [topic];
+  let html=`
+    <div style="margin-bottom:22px;padding-bottom:12px;border-bottom:2px solid rgba(201,168,76,0.2);">
+      <div style="font-family:'Playfair Display',serif;font-size:24px;color:#2D1F08;font-weight:700;">${data.emoji} ${topic}에 관한 말씀</div>
+      <div style="font-size:12px;color:#9E855A;margin-top:4px;">${data.verses.length}개 구절</div>
+    </div>
+    <div style="margin:20px 0;text-align:center;">
+      <ins class="adsbygoogle" style="display:block"
+           data-ad-client="ca-pub-8675368228460145"
+           data-ad-slot="2240680444"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+    <div class="verse-grid">`;
 
-  topics.forEach(t => {
-    const verses = TOPIC_VERSES[t];
-    if (!verses) return;
+  data.verses.forEach(item=>{
+    const sv=item.v.replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+    const sr=item.r.replace(/'/g,'&#39;');
+    html+=`<div class="v-card">
+      <div class="v-card-actions">
+        <button class="v-action-btn" onclick="copyCard(event,'${sv}','${sr}')">📋 복사</button>
+        <button class="v-action-btn" onclick="goRead(event,'${sr}')">📖 읽기</button>
+      </div>
+      <div class="v-card-text">"${item.v}"</div>
+      <div class="v-card-ref">${item.r}</div>
+    </div>`;
+  });
 
-    const section = document.createElement('div');
-    section.className = 'topic-section';
-    section.innerHTML = `<h2 class="topic-section-title">${t}에 관한 말씀</h2>`;
+  html+='</div>';
+  el.innerHTML=html;
 
-    const grid = document.createElement('div');
-    grid.className = 'verse-cards';
+  try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}
+}
 
-    verses.forEach(v => {
-      const card = document.createElement('div');
-      card.className = 'verse-card';
-      card.innerHTML = `
-        <button class="vc-copy" onclick="copyCard(event, this)">📋</button>
-        <div class="vc-text">"${v.verse}"</div>
-        <div class="vc-ref">${v.ref}</div>`;
-      card.dataset.verse = v.verse;
-      card.dataset.ref = v.ref;
-      grid.appendChild(card);
-    });
+function copyCard(e,verse,ref){
+  e.stopPropagation();
+  const v=verse.replace(/&#39;/g,"'").replace(/&quot;/g,'"');
+  navigator.clipboard.writeText('"'+v+'" — '+ref+'\n\nhttps://bible2.kingdom2025.com');
+  showToast('구절이 복사되었습니다 ✓');
+}
 
-    section.appendChild(grid);
-    content.appendChild(section);
+function goRead(e,ref){
+  e.stopPropagation();
+  const m=ref.match(/^(.+?)\s+(\d+)/);
+  if(m) window.location.href='../index.html?book='+encodeURIComponent(m[1])+'&ch='+m[2]+'&lang=ko';
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  if(!t)return;
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// URL 파라미터
+const params=new URLSearchParams(window.location.search);
+const tp=params.get('topic');
+if(tp&&TOPICS[tp]){
+  currentTopic=tp;
+  document.querySelectorAll('.cat-btn').forEach(b=>{
+    if(b.dataset.topic===tp)b.classList.add('active');
+    else b.classList.remove('active');
   });
 }
-
-function copyCard(e, btn) {
-  e.stopPropagation();
-  const card = btn.closest('.verse-card');
-  const text = `"${card.dataset.verse}" — ${card.dataset.ref}\n\nhttps://holyword.kr`;
-  navigator.clipboard.writeText(text).then(() => showToast('구절이 복사되었습니다 ✓'));
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-// 초기 로드
-document.querySelector('.topic-tab').click();
-
-// URL 파라미터 처리
-const params = new URLSearchParams(window.location.search);
-if (params.get('topic')) {
-  const topicBtn = [...document.querySelectorAll('.topic-tab')]
-    .find(b => b.textContent.includes(params.get('topic')));
-  if (topicBtn) topicBtn.click();
-}
+renderTopic(currentTopic);
 </script>
 </body>
 </html>
