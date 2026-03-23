@@ -114,22 +114,19 @@ function renderVerses(verses) {
     div.addEventListener('click', () => selectVerse(v.number, v.text));
     container.appendChild(div);
 
-    // 중간 광고 (15절 뒤에 삽입 — 체류 후 노출)
+    // 본문 중간 광고 (15절 후 자동 삽입)
     if (idx === 14 && verses.length > 20) {
       const adDiv = document.createElement('div');
-      adDiv.className = 'ad-zone ad-in-article';
+      adDiv.style.cssText = 'margin:28px 0;text-align:center;';
       adDiv.innerHTML = `
-        <div class="ad-label">광고</div>
-        <div class="ad-placeholder" style="width:100%;height:100px;">
-          <!--
-          <ins class="adsbygoogle" style="display:block;text-align:center;"
-               data-ad-layout="in-article" data-ad-format="fluid"
-               data-ad-client="ca-pub-YOUR_ID" data-ad-slot="YOUR_SLOT"></ins>
-          <script>(adsbygoogle = window.adsbygoogle || []).push({});<\/script>
-          -->
-          <div class="ad-demo-text">In-Article 광고 · 본문 중간 · 높은 CTR</div>
-        </div>`;
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-8675368228460145"
+             data-ad-slot="2240680444"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>`;
       container.appendChild(adDiv);
+      try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
     }
   });
 }

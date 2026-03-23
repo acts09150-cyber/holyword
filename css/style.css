@@ -174,52 +174,13 @@ button { cursor: pointer; font-family: var(--font-sans); }
 /* ============================================= */
 /* AD ZONES */
 /* ============================================= */
-.ad-zone {
-  background: var(--ad-bg);
-  border-top: 1px solid var(--ad-border);
-  border-bottom: 1px solid var(--ad-border);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px;
-  gap: 6px;
-  position: relative;
-}
-
-.ad-leaderboard {
-  padding: 12px;
-}
-
-.ad-label {
-  font-size: 9px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-}
-
-.ad-placeholder {
-  background: #EDE5D5;
-  border: 1px dashed var(--gold);
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 12px;
-}
-
-.ad-demo-text {
-  color: var(--text-muted);
-  font-size: 12px;
-  line-height: 1.6;
-}
-.ad-demo-text strong { color: var(--text-secondary); }
-
-.ad-in-article {
-  margin: 32px 0;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--ad-border);
-}
+/* 광고 - 자연스럽게 (박스 없음) */
+.ad-zone { display: block; }
+.ad-label { display: none; }
+.ad-placeholder { display: none; }
+.ad-demo-text { display: none; }
+.ad-in-article { margin: 24px 0; text-align: center; }
+.ad-leaderboard { padding: 6px 0; text-align: center; background: transparent; }
 
 /* ============================================= */
 /* MAIN LAYOUT */
