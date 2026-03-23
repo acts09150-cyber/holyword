@@ -17,7 +17,108 @@ const State = { bookIdx: 0, chapter: 1, leftTrans: 'KRV', rightTrans: 'KJV' };
 async function loadOriginalInfo(verseNum, krText) {
     const bookNum = State.bookIdx + 1;
     const trans = bookNum <= 39 ? 'WLC' : 'SBLGNT';
+    const container = document.getElementById('analysis-content');// js/app.js (전체 복사 후 덮어쓰기)
+const State = { bookIdx: 0, chapter: 1, leftTrans: 'KRV', rightTrans: 'KJV' };
+
+// 초기화 함수
+function init() {
+    buildBookSelect();
+    buildChapterSelect();
+    loadBoth();
+}
+
+async function fetchChapter(trans, bookNum, chapter) {
+    try {
+        const res = await fetch(`https://bolls.life/get-text/${trans}/${bookNum}/${chapter}/`);
+        const data = await res.json();
+        return data.map(v => ({ number: v.verse, text: v.text.replace(/<[^>]+>/g, '').trim() }));
+    } catch(e) { return [{number:1, text:'데이터를 불러올 수 없습니다.'}]; }
+}
+
+async function loadBoth() {
+    State.leftTrans = document.getElementById('leftTrans').value;
+    State.rightTrans = document.getElementById('rightTrans').value;
+    const bookNum = State.bookIdx + 1;
+
+    const [lv, rv] = await Promise.all([
+        fetchChapter(State.leftTrans, bookNum, State.chapter),
+        fetchChapter(State.rightTrans, bookNum, State.chapter)
+    ]);
+
+    renderVerses('leftVerses', lv);
+    renderVerses('rightVerses', rv);
+}
+
+function renderVerses(containerId, verses) {
+    const c = document.getElementById(containerId);
+    c.innerHTML = '';
+    verses.forEach(v => {
+        const row = document.createElement('div');
+        row.className = 'verse-row';
+        row.style.cursor = 'pointer';
+        row.onclick = () => {
+            document.querySelectorAll('.verse-row').forEach(r => r.classList.remove('highlighted'));
+            // 양쪽 열의 동일한 절 번호에 하이라이트
+            document.querySelectorAll(`.verse-row`).forEach(r => {
+                if(r.innerText.startsWith(v.number + ' ')) r.classList.add('highlighted');
+            });
+            loadOriginalInfo(v.number, v.text);
+        };
+        row.innerHTML = `<span class="v-num" style="font-weight:bold; color:#2c3e50; margin-right:8px;">${v.number}</span><span class="v-text">${v.text}</span>`;
+        c.appendChild(row);
+    });
+}
+
+async function loadOriginalInfo(verseNum, krText) {
+    const bookNum = State.bookIdx + 1;
+    const trans = bookNum <= 39 ? 'WLC' : 'SBLGNT'; // 구약 히브리어, 신약 헬라어 자동 선택
     const container = document.getElementById('analysis-content');
+    container.innerHTML = `<div style="text-align:center;">원어 분석 중...</div>`;
+
+    try {
+        const res = await fetch(`https://bolls.life/get-text/${trans}/${bookNum}/${State.chapter}/${verseNum}/`);
+        const data = await res.json();
+        const ori = data.text.replace(/<[^>]+>/g, '').trim();
+
+        container.innerHTML = `
+            <div style="font-size:1.8rem; margin-bottom:15px; color:#1a3a5c; line-height:1.4; direction:${bookNum<=39?'rtl':'ltr'}">${ori}</div>
+            <p style="color:#555; font-size:0.95rem; border-left:3px solid #d1d8d6; padding-left:10px;">${krText}</p>
+            <button onclick="copyPastor('${krText.replace(/'/g,"\\'")}','${ori.replace(/'/g,"\\'")}','${verseNum}')" style="width:100%; padding:12px; background:#2c3e50; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; margin-top:20px;">📋 사역자용 상세 복사</button>
+        `;
+    } catch(e) { container.innerHTML = "원어 데이터를 불러오지 못했습니다."; }
+}
+
+function copyPastor(kr, ori, v) {
+    const bookName = BOOKS[State.bookIdx].n;
+    const result = `> [원어연구] ${kr}\n> 원어(${bookName} ${State.chapter}:${v}): ${ori}\n\n출처: HolyWord 글로벌 성경`;
+    navigator.clipboard.writeText(result);
+    alert("사역자용 상세 복사가 완료되었습니다!");
+}
+
+// 목사님의 bible-data.js에 BOOKS 배열이 있다고 가정합니다.
+function buildBookSelect() {
+    const sel = document.getElementById('bookSelect');
+    BOOKS.forEach((b, i) => {
+        const opt = document.createElement('option');
+        opt.value = i; opt.textContent = b.n;
+        sel.appendChild(opt);
+    });
+}
+
+function buildChapterSelect() {
+    const sel = document.getElementById('chapterSelect');
+    sel.innerHTML = '';
+    for (let i = 1; i <= BOOKS[State.bookIdx].ch; i++) {
+        const opt = document.createElement('option');
+        opt.value = i; opt.textContent = i + '장';
+        sel.appendChild(opt);
+    }
+}
+
+function onBookChange() { State.bookIdx = parseInt(document.getElementById('bookSelect').value); State.chapter = 1; buildChapterSelect(); loadBoth(); }
+function onChapterChange() { State.chapter = parseInt(document.getElementById('chapterSelect').value); loadBoth(); }
+
+document.addEventListener('DOMContentLoaded', init);
     container.innerHTML = `<div style="text-align:center; padding:20px;">로딩 중...</div>`;
 
     try {
