@@ -326,9 +326,9 @@ function updateURL() {
   history.pushState({}, '', url);
 }
 
-// ===== 전면광고 (1분 무조작 시 → 5초 카운트다운) =====
+// ===== 전면광고 (1분 무조작 → 단 1회만 송출) =====
 let _idleTimer = null;
-let _interShown = false;
+let _interDone = false;  // 한 번 보여줬으면 다시 안 보여줌
 
 function initInterstitial() {
   _resetIdleTimer();
@@ -338,15 +338,16 @@ function initInterstitial() {
 }
 
 function _resetIdleTimer() {
+  if (_interDone) return;  // 이미 송출됐으면 타이머 리셋 안 함
   clearTimeout(_idleTimer);
   _idleTimer = setTimeout(() => {
-    if (!_interShown) showInterstitial();
+    if (!_interDone) showInterstitial();
   }, 60000); // 1분
 }
 
 function showInterstitial() {
   if (document.getElementById('iOv')) return;
-  _interShown = true;
+  _interDone = true;
 
   // 오버레이
   const ov = document.createElement('div');
@@ -437,9 +438,8 @@ function showInterstitial() {
 
 function closeInter() {
   document.getElementById('iOv')?.remove();
-  _interShown = false;
-  // 30분 후 다시 감지
-  setTimeout(() => { _resetIdleTimer(); }, 30 * 60 * 1000);
+  _interDone = true;   // 이후 재송출 완전 차단
+  clearTimeout(_idleTimer);
 }
 
 // ===== 토스트 =====
