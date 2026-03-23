@@ -2,34 +2,38 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HolyWord Global - 원어 성경 연구</title>
+    <title>HolyWord Global v2</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ID" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body style="background-color: #f4f7f6;"> <div class="top-ad-area" style="width:100%; text-align:center; padding: 10px 0;">
+<body>
+    <div style="text-align:center; padding:10px;">
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-YOUR_ID" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <div class="container">
-        <div class="main-content" style="display: flex; gap: 20px;">
-            <div id="bible-display" style="flex: 2;">
-                <div id="leftVerses"></div>
-                <div id="rightVerses"></div>
-            </div>
-
-            <aside class="side-content" style="flex: 1;">
-                <div id="original-analysis-container" style="background-color: #f4f7f6; border: 1px solid #d1d8d6; border-radius: 10px; padding: 20px;">
-                    <h3 style="color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 10px;">원어 분석 & 복사</h3>
-                    <div id="analysis-content">
-                        <p style="color: #7f8c8d;">구절을 클릭하면 원어가 나타납니다.</p>
-                    </div>
-                </div>
-            </aside>
-        </div>
+    <div class="controls" style="display:flex; gap:10px; padding:20px; background:#f4f7f6;">
+        <select id="bookSelect" onchange="onBookChange()"></select>
+        <select id="chapterSelect" onchange="onChapterChange()"></select>
+        <select id="leftTrans"><option value="KRV">개역개정</option></select>
+        <select id="rightTrans"><option value="KJV">KJV</option></select>
     </div>
 
+    <main style="display:flex; gap:20px; padding:20px;">
+        <div id="bible-container" style="flex:2; display:flex; gap:20px;">
+            <div id="leftVerses" style="flex:1;"></div>
+            <div id="rightVerses" style="flex:1;"></div>
+        </div>
+        
+        <aside style="flex:0.8;">
+            <div id="original-analysis-container" class="card">
+                <h3>원어 분석 & 복사</h3>
+                <div id="analysis-content">절을 클릭하세요.</div>
+            </div>
+        </aside>
+    </main>
+
+    <div id="toast"></div>
     <script src="js/app.js"></script>
 </body>
 </html>
