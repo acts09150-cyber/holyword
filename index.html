@@ -354,27 +354,38 @@
 <!-- ===== FOOTER ===== -->
 <footer class="site-footer">
   <div class="footer-inner">
+
+    <!-- 브랜드 -->
     <div class="footer-brand">
       <div class="footer-logo">✦ HolyWord</div>
-      <p class="footer-desc">전 세계 10개 언어로 성경을 무료로 읽을 수 있는 서비스입니다. 매일 말씀으로 삶을 풍요롭게 하세요.</p>
-      <div class="footer-langs" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
-        <span onclick="setLang('KRV');window.scrollTo(0,0);" style="cursor:pointer;font-size:22px;" title="한국어 개역개정">🇰🇷</span>
-        <span onclick="setLang('KJV');window.scrollTo(0,0);" style="cursor:pointer;font-size:22px;" title="English KJV">🇺🇸</span>
-        <span onclick="setLang('CUV');window.scrollTo(0,0);" style="cursor:pointer;font-size:22px;" title="中文 和合本">🇨🇳</span>
-        <span onclick="setLang('SYNOD');window.scrollTo(0,0);" style="cursor:pointer;font-size:22px;" title="Русский">🇷🇺</span>
+      <p class="footer-desc">
+        매일 말씀으로 삶을 풍요롭게.<br>
+        6개 번역본으로 성경을 무료로 읽는<br>
+        다국어 성경 읽기 서비스입니다.
+      </p>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <span onclick="setLang('KRV');window.scrollTo(0,0);" title="한국어 개역개정" style="cursor:pointer;font-size:20px;">🇰🇷</span>
+        <span onclick="setLang('KJV');window.scrollTo(0,0);" title="English KJV" style="cursor:pointer;font-size:20px;">🇺🇸</span>
+        <span onclick="setLang('CUV');window.scrollTo(0,0);" title="中文 和合本" style="cursor:pointer;font-size:20px;">🇨🇳</span>
+        <span onclick="setLang('SYNOD');window.scrollTo(0,0);" title="Русский" style="cursor:pointer;font-size:20px;">🇷🇺</span>
       </div>
     </div>
 
     <div class="footer-links-group">
+
+      <!-- 메뉴 -->
       <div class="footer-col">
-        <div class="footer-col-title">성경 읽기</div>
-        <a href="#">구약성경</a>
-        <a href="#">신약성경</a>
+        <div class="footer-col-title">메뉴</div>
+        <a href="index.html">성경 읽기</a>
         <a href="pages/topics.html">주제별 구절</a>
         <a href="pages/daily.html">오늘의 말씀</a>
+        <a href="pages/search.html">구절 검색</a>
+        <a href="pages/prayer.html">대표기도 작성</a>
       </div>
+
+      <!-- 번역본 -->
       <div class="footer-col">
-        <div class="footer-col-title">언어</div>
+        <div class="footer-col-title">번역본</div>
         <a href="javascript:void(0)" onclick="setLang('KRV');window.scrollTo(0,0);">🇰🇷 한국어 개역개정</a>
         <a href="javascript:void(0)" onclick="setLang('KJV');window.scrollTo(0,0);">🇺🇸 English KJV</a>
         <a href="javascript:void(0)" onclick="setLang('NIV');window.scrollTo(0,0);">🇺🇸 English NIV</a>
@@ -382,33 +393,21 @@
         <a href="javascript:void(0)" onclick="setLang('CUV');window.scrollTo(0,0);">🇨🇳 中文 和合本</a>
         <a href="javascript:void(0)" onclick="setLang('SYNOD');window.scrollTo(0,0);">🇷🇺 Русский</a>
       </div>
-        <a href="javascript:void(0)" onclick="setLang('ko');window.scrollTo(0,0);">🇰🇷 한국어 개역한글</a>
-        <a href="javascript:void(0)" onclick="setLang('ko_krv');window.scrollTo(0,0);">🇰🇷 한국어 개역개정</a>
-        <a href="javascript:void(0)" onclick="setLang('en');window.scrollTo(0,0);">🇺🇸 English KJV</a>
-        <a href="javascript:void(0)" onclick="setLang('en_web');window.scrollTo(0,0);">🇺🇸 English WEB</a>
-        <a href="javascript:void(0)" onclick="setLang('zh');window.scrollTo(0,0);">🇨🇳 中文 简体</a>
-        <a href="javascript:void(0)" onclick="setLang('zh_t');window.scrollTo(0,0);">🇹🇼 中文 繁體</a>
-        <a href="javascript:void(0)" onclick="setLang('es');window.scrollTo(0,0);">🇪🇸 Español</a>
-        <a href="javascript:void(0)" onclick="setLang('ja');window.scrollTo(0,0);">🇯🇵 日本語</a>
-        <a href="javascript:void(0)" onclick="setLang('pt');window.scrollTo(0,0);">🇧🇷 Português</a>
-        <a href="javascript:void(0)" onclick="setLang('fr');window.scrollTo(0,0);">🇫🇷 Français</a>
-        <a href="javascript:void(0)" onclick="setLang('de');window.scrollTo(0,0);">🇩🇪 Deutsch</a>
-        <a href="javascript:void(0)" onclick="setLang('ar');window.scrollTo(0,0);">🇸🇦 العربية</a>
-        <a href="javascript:void(0)" onclick="setLang('ru');window.scrollTo(0,0);">🇷🇺 Русский</a>
-      </div>
+
+      <!-- 서비스 -->
       <div class="footer-col">
         <div class="footer-col-title">서비스</div>
-        <a href="#">소개</a>
-        <a href="#">광고 문의</a>
         <a href="#">개인정보처리방침</a>
         <a href="#">이용약관</a>
-        <a href="#">후원하기</a>
+        <a href="#">광고 문의</a>
       </div>
+
     </div>
   </div>
+
   <div class="footer-bottom">
-    <span>© 2025 HolyWord · 무료 다국어 성경 읽기 서비스</span>
-    <span>본 서비스는 공개 성경 데이터를 사용합니다</span>
+    <span>© 2025 HolyWord · 무료 성경 읽기 서비스</span>
+    <span>성경 데이터: <a href="https://bolls.life" target="_blank" rel="noopener" style="color:#C9A84C;text-decoration:none;">Bolls.life</a> API</span>
   </div>
 </footer>
 
