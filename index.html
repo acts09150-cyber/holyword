@@ -8,13 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <div class="top-ad-banner" style="text-align:center; padding:10px; background:#f4f7f6;">
-        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-YOUR_ID" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-
-    <header class="main-header">
+<body class="bible-reader-page"> <header class="main-header">
         <nav class="nav-container">
             <div class="logo">
                 <a href="index.html"><h1>HolyWord <span>GLOBAL</span></h1></a>
@@ -28,42 +22,57 @@
         </nav>
     </header>
 
-    <section class="bible-controls">
-        <div class="control-row">
-            <select id="bookSelect" onchange="onBookChange()"></select>
-            <select id="chapterSelect" onchange="onChapterChange()"></select>
-            <select id="leftTrans" onchange="loadBoth()">
-                <option value="KRV">Korean (KRV)</option>
-                <option value="WLC">Hebrew (WLC)</option>
-            </select>
-            <select id="rightTrans" onchange="loadBoth()">
-                <option value="KJV">English (KJV)</option>
-                <option value="NIV">English (NIV)</option>
-            </select>
+    <div class="container main-layout-container">
+        <div class="ad-section top-ad" style="margin: 20px 0; text-align: center;">
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-YOUR_ID" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
-    </section>
 
-    <main class="main-layout">
-        <div class="bible-grid">
-            <div id="leftVerses" class="verse-column"></div>
-            <div id="rightVerses" class="verse-column"></div>
-        </div>
-        
-        <aside class="side-analysis">
-            <div id="original-analysis-container" class="analysis-card">
-                <div class="card-header">
-                    <i class="fas fa-book-open"></i> 원어 분석 & 복사
-                </div>
-                <div id="analysis-content" class="card-body">
-                    <p class="placeholder-text">성경 구절을 클릭하시면<br>원어 데이터가 로드됩니다.</p>
+        <section class="bible-controls card">
+            <div class="control-row">
+                <select id="bookSelect" onchange="onBookChange()"></select>
+                <select id="chapterSelect" onchange="onChapterChange()"></select>
+                <div class="trans-selectors">
+                    <select id="leftTrans" onchange="loadBoth()">
+                        <option value="KRV">Korean (KRV)</option>
+                        <option value="WLC">Hebrew (WLC)</option>
+                    </select>
+                    <span class="swap-icon">↔</span>
+                    <select id="rightTrans" onchange="loadBoth()">
+                        <option value="KJV" selected>English (KJV)</option>
+                        <option value="NIV">English (NIV)</option>
+                    </select>
                 </div>
             </div>
-        </aside>
-    </main>
+        </section>
+
+        <div class="content-wrapper" style="display: flex; gap: 20px; align-items: flex-start;">
+            <div class="bible-display-area card" style="flex: 2;">
+                <div id="bible-grid" class="bible-grid">
+                    <div id="leftVerses" class="verse-column"></div>
+                    <div id="rightVerses" class="verse-column"></div>
+                </div>
+            </div>
+
+            <aside class="side-content" style="flex: 0.8; position: sticky; top: 20px;">
+                <div id="original-analysis-container" class="card" style="background-color: transparent; border: 1px solid #d1d8d6;">
+                    <div class="card-header" style="background: #2c3e50; color: white; padding: 12px; border-radius: 8px 8px 0 0;">
+                        <i class="fas fa-microscope"></i> 원어 분석 & 복사
+                    </div>
+                    <div id="analysis-content" class="card-body" style="padding: 20px; min-height: 300px;">
+                        <p style="color: #7f8c8d; text-align: center;">성경 구절을 클릭하시면<br>이곳에 원어 분석이 나타납니다.</p>
+                    </div>
+                </div>
+                <div class="ad-section side-ad" style="margin-top: 20px;">
+                    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-YOUR_ID" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+            </aside>
+        </div>
+    </div>
 
     <div id="toast"></div>
 
-    <script src="js/bible-data.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/bible-data.js"></script> <script src="js/app.js"></script>
 </body>
 </html>
