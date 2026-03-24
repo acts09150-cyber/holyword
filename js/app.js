@@ -65,6 +65,16 @@ const I18N = {
 // ===== 캐시 =====
 const cache = new Map();
 
+// ===== 텍스트 정리 (Strong's 번호, HTML 태그 등 제거) =====
+function cleanText(raw) {
+  return raw
+    .replace(/<[^>]+>/g, '')           // HTML 태그 제거
+    .replace(/\d{3,5}/g, '')           // Strong's 번호 (3-5자리 숫자) 제거
+    .replace(/\s{2,}/g, ' ')           // 다중 공백 → 단일
+    .replace(/\r?\n/g, ' ')
+    .trim();
+}
+
 // ===== Bolls.life API =====
 async function fetchChapter(trans, bookNum, chapter) {
   const key = `${trans}_${bookNum}_${chapter}`;
@@ -78,7 +88,7 @@ async function fetchChapter(trans, bookNum, chapter) {
     if (!Array.isArray(data) || data.length === 0) throw new Error('empty');
     const verses = data.map(v => ({
       number: v.verse,
-      text: (v.text || '').replace(/<[^>]+>/g, '').replace(/\r?\n/g,' ').trim()
+      text: cleanText(v.text || '')
     }));
     cache.set(key, verses);
     return verses;
@@ -88,7 +98,7 @@ async function fetchChapter(trans, bookNum, chapter) {
       try {
         const r2 = await fetch(`https://bolls.life/get-text/KJV/${bookNum}/${chapter}/`);
         const d2 = await r2.json();
-        const v2 = d2.map(v=>({number:v.verse, text:(v.text||'').replace(/<[^>]+>/g,'').trim()}));
+        const v2 = d2.map(v=>({number:v.verse, text:cleanText(v.text||'')}));
         cache.set(key, v2);
         return v2;
       } catch(e2) {}
