@@ -10,53 +10,54 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8675368228460145" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="../css/style.css">
 <style>
-.contact-hero{background:#1A1208;padding:48px 32px;text-align:center;border-bottom:1px solid rgba(201,168,76,0.3);}
-.contact-hero h1{font-family:'Playfair Display',serif;color:#C9A84C;font-size:30px;margin-bottom:8px;}
+body { background: #f8fafc; font-family: "Inter","Noto Sans KR",sans-serif; }
+.contact-hero{background:#1a3a5c;padding:48px 32px;text-align:center;border-bottom:1px solid rgba(26,58,92,0.25);}
+.contact-hero h1{font-family:'Georgia','Playfair Display',serif;color:#d4a017;font-size:30px;margin-bottom:8px;}
 .contact-hero p{color:rgba(255,255,255,0.45);font-size:13px;}
 .contact-wrap{max-width:700px;margin:0 auto;padding:52px 32px 80px;}
 
 /* 정보 카드 */
 .info-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:48px;}
-.info-card{background:white;border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:20px;text-align:center;}
+.info-card{background:white;border:1px solid rgba(26,58,92,0.15);border-radius:12px;padding:20px;text-align:center;}
 .info-card-icon{font-size:28px;margin-bottom:10px;}
-.info-card-title{font-size:11px;color:#9E855A;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;font-weight:700;}
-.info-card-val{font-size:13px;color:#2D1F08;font-weight:500;word-break:break-all;}
+.info-card-title{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;font-weight:700;}
+.info-card-val{font-size:13px;color:#1e293b;font-weight:500;word-break:break-all;}
 
 /* 폼 */
-.form-section{background:white;border:1px solid rgba(201,168,76,0.2);border-radius:16px;padding:32px;box-shadow:0 2px 16px rgba(0,0,0,0.06);}
-.form-title{font-family:'Playfair Display',serif;font-size:20px;color:#2D1F08;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid rgba(201,168,76,0.15);}
+.form-section{background:white;border:1px solid rgba(26,58,92,0.15);border-radius:16px;padding:32px;box-shadow:0 2px 16px rgba(0,0,0,0.06);}
+.form-title{font-family:'Georgia','Playfair Display',serif;font-size:20px;color:#1e293b;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid rgba(26,58,92,0.1);}
 .form-row{margin-bottom:20px;}
-.form-label{display:block;font-size:13px;font-weight:600;color:#2D1F08;margin-bottom:7px;}
-.form-label span{color:#C9A84C;margin-left:3px;}
+.form-label{display:block;font-size:13px;font-weight:600;color:#1e293b;margin-bottom:7px;}
+.form-label span{color:#d4a017;margin-left:3px;}
 .form-input,.form-select,.form-textarea{
-  width:100%;background:#FBF7F0;border:1px solid rgba(201,168,76,0.25);
-  border-radius:8px;color:#2D1F08;padding:11px 14px;font-size:14px;
+  width:100%;background:#f8fafc;border:1px solid rgba(201,168,76,0.25);
+  border-radius:8px;color:#1e293b;padding:11px 14px;font-size:14px;
   font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color 0.2s;
   box-sizing:border-box;
 }
-.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#C9A84C;background:white;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#d4a017;background:white;}
 .form-textarea{resize:vertical;min-height:140px;line-height:1.7;}
-.form-select option{background:white;color:#2D1F08;}
+.form-select option{background:white;color:#1e293b;}
 .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .submit-btn{
-  width:100%;background:#1A1208;color:#C9A84C;border:2px solid #C9A84C;
+  width:100%;background:#1a3a5c;color:#d4a017;border:2px solid #d4a017;
   padding:14px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;
   font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;margin-top:8px;
 }
-.submit-btn:hover{background:#C9A84C;color:#1A1208;}
-.form-notice{font-size:12px;color:#9E855A;margin-top:12px;line-height:1.7;word-break:keep-all;}
+.submit-btn:hover{background:#d4a017;color:#1a3a5c;}
+.form-notice{font-size:12px;color:#94a3b8;margin-top:12px;line-height:1.7;word-break:keep-all;}
 
 /* 완료 메시지 */
 .success-msg{
   display:none;text-align:center;padding:48px 24px;
-  background:#FBF7F0;border-radius:12px;border:1px solid rgba(201,168,76,0.2);
+  background:#f8fafc;border-radius:12px;border:1px solid rgba(26,58,92,0.15);
 }
 .success-msg.show{display:block;}
 .success-icon{font-size:48px;margin-bottom:16px;}
-.success-title{font-family:'Playfair Display',serif;font-size:22px;color:#C9A84C;margin-bottom:10px;}
-.success-desc{font-size:14px;color:#6B5735;line-height:1.7;}
+.success-title{font-family:'Georgia','Playfair Display',serif;font-size:22px;color:#d4a017;margin-bottom:10px;}
+.success-desc{font-size:14px;color:#64748b;line-height:1.7;}
 
-.toast{position:fixed;bottom:-80px;left:50%;transform:translateX(-50%);background:#1A1208;color:#C9A84C;padding:10px 22px;border-radius:24px;font-size:13px;border:1px solid rgba(201,168,76,0.4);transition:bottom 0.3s;z-index:9999;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;}
+.toast{position:fixed;bottom:-80px;left:50%;transform:translateX(-50%);background:#1a3a5c;color:#d4a017;padding:10px 22px;border-radius:24px;font-size:13px;border:1px solid rgba(26,58,92,0.3);transition:bottom 0.3s;z-index:9999;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;}
 .toast.show{bottom:30px;}
 
 @media(max-width:600px){
@@ -83,7 +84,7 @@
 </header>
 
 <!-- 상단 광고 -->
-<div style="text-align:center;padding:8px 0;background:#F9F5EE;border-bottom:1px solid rgba(201,168,76,0.15);">
+<div style="text-align:center;padding:8px 0;background:#f8fafc;border-bottom:1px solid rgba(26,58,92,0.1);">
   <ins class="adsbygoogle" style="display:block"
        data-ad-client="ca-pub-8675368228460145"
        data-ad-slot="2926108557"
@@ -160,7 +161,7 @@
     </div>
 
     <div class="form-row">
-      <label class="form-label">회사/단체명 <span style="color:#9E855A;font-weight:400;">(선택)</span></label>
+      <label class="form-label">회사/단체명 <span style="color:#94a3b8;font-weight:400;">(선택)</span></label>
       <input type="text" class="form-input" id="fCompany" placeholder="회사 또는 단체명 (해당 시 입력)">
     </div>
 
@@ -180,7 +181,7 @@
     <p class="success-desc">
       소중한 문의 감사합니다.<br>
       영업일 기준 1~3일 내에 이메일로 답변드리겠습니다.<br><br>
-      <a href="../index.html" style="color:#C9A84C;text-decoration:none;font-weight:700;">← 성경 읽기로 돌아가기</a>
+      <a href="../index.html" style="color:#d4a017;text-decoration:none;font-weight:700;">← 성경 읽기로 돌아가기</a>
     </p>
   </div>
 

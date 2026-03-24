@@ -32,7 +32,8 @@ const BOOKS = [
 
 // ===== 번역본 메타 =====
 const TRANS_META = {
-  KRV:  {name:'Korean (KRV)', flag:'🇰🇷', rtl:false, cls:''},
+  KRV:  {name:'한국어 개역한글 (KRV)', flag:'🇰🇷', rtl:false, cls:''},
+  RNKSV:{name:'한국어 개역개정 (RNKSV)', flag:'🇰🇷', rtl:false, cls:''},
   KJV:  {name:'English (KJV)', flag:'🇺🇸', rtl:false, cls:''},
   NIV:  {name:'English (NIV)', flag:'🇺🇸', rtl:false, cls:''},
   NASB: {name:'English (NASB)', flag:'🇺🇸', rtl:false, cls:''},
@@ -144,9 +145,9 @@ function detectUserLang() {
   const lang = navigator.language || navigator.userLanguage || 'en';
   if (lang.startsWith('ko')) {
     State.uiLang = 'ko';
-    State.leftTrans = 'KRV';
+    State.leftTrans = 'RNKSV';
     State.rightTrans = 'KJV';
-    document.getElementById('leftTrans').value = 'KRV';
+    document.getElementById('leftTrans').value = 'RNKSV';
     document.getElementById('rightTrans').value = 'KJV';
     document.getElementById('uiLangFlag').textContent = '🇰🇷';
     document.getElementById('uiLangName').textContent = '한국어';

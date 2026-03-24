@@ -10,42 +10,200 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8675368228460145" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="../css/style.css">
 <style>
+/* ===== Topics Page — Global Navy/White Theme ===== */
 *{box-sizing:border-box;}
-.page-wrap{display:grid;grid-template-columns:160px 1fr 160px;max-width:1400px;margin:0 auto;min-height:80vh;}
-.side-ad{padding:20px 8px;position:sticky;top:70px;height:fit-content;text-align:center;}
-.topics-main{padding:0 20px;}
 
-.topics-hero{background:#1A1208;border-bottom:1px solid rgba(201,168,76,0.4);padding:44px 24px;text-align:center;}
-.topics-hero h1{font-family:'Playfair Display',serif;color:#C9A84C;font-size:34px;margin-bottom:10px;font-weight:700;}
-.topics-hero p{color:rgba(255,255,255,0.5);font-size:14px;}
+/* 폰트 추가 */
+body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #f8fafc; color: #1e293b; }
 
-.category-tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:28px 0 24px;}
-.cat-btn{background:#F5EFE5;border:1px solid rgba(201,168,76,0.25);color:#6B5735;padding:9px 18px;border-radius:24px;font-size:13px;cursor:pointer;transition:all 0.2s;font-family:'Noto Sans KR',sans-serif;}
-.cat-btn:hover{background:rgba(201,168,76,0.15);border-color:#C9A84C;color:#2D1F08;}
-.cat-btn.active{background:#C9A84C;color:#1A1208;border-color:#C9A84C;font-weight:700;}
+/* 레이아웃 */
+.page-wrap {
+  display: flex;
+  flex-direction: row;
+  min-height: 80vh;
+  width: 100%;
+}
+.side-ad {
+  width: 160px;
+  min-width: 160px;
+  flex-shrink: 0;
+  padding: 16px 8px;
+  position: sticky;
+  top: 56px;
+  height: calc(100vh - 56px);
+  background: white;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+}
+.side-ad-right {
+  width: 160px;
+  min-width: 160px;
+  flex-shrink: 0;
+  padding: 16px 8px;
+  position: sticky;
+  top: 56px;
+  height: calc(100vh - 56px);
+  background: white;
+  border-left: 1px solid #e2e8f0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+}
+.topics-main { flex: 1; min-width: 0; padding: 0 24px 48px; }
 
-.section-title-wrap{margin-bottom:22px;padding-bottom:12px;border-bottom:2px solid rgba(201,168,76,0.2);}
-.section-title{font-family:'Playfair Display',serif;font-size:24px;color:#2D1F08;font-weight:700;}
-.section-count{font-size:12px;color:#9E855A;margin-top:4px;}
+/* 히어로 — 네이비 */
+.topics-hero {
+  background: #1a3a5c;
+  border-bottom: 3px solid #d4a017;
+  padding: 44px 24px;
+  text-align: center;
+  margin: 0 -24px;
+}
+.topics-hero h1 {
+  font-family: 'Georgia', 'Playfair Display', serif;
+  color: #d4a017;
+  font-size: 32px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.topics-hero p { color: rgba(255,255,255,0.55); font-size: 14px; }
 
-.verse-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:36px;}
-.v-card{background:white;border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:22px 20px 18px;cursor:pointer;transition:all 0.2s;position:relative;border-left:3px solid transparent;display:flex;flex-direction:column;min-height:150px;}
-.v-card:hover{border-color:rgba(201,168,76,0.4);border-left-color:#C9A84C;box-shadow:0 4px 16px rgba(0,0,0,0.08);transform:translateY(-1px);}
-.v-card-text{font-family:'Playfair Display',serif;font-size:15px;color:#2D1F08;line-height:1.75;font-style:italic;margin-bottom:14px;flex:1;}
-.v-card-ref{font-size:12px;color:#C9A84C;font-weight:600;}
-.v-card-actions{position:absolute;top:12px;right:12px;display:flex;gap:5px;opacity:0;transition:opacity 0.2s;}
-.v-card:hover .v-card-actions{opacity:1;}
-.v-action-btn{background:#F5EFE5;border:1px solid rgba(201,168,76,0.3);border-radius:5px;padding:4px 8px;font-size:10px;cursor:pointer;color:#6B5735;font-family:'Noto Sans KR',sans-serif;transition:all 0.15s;}
-.v-action-btn:hover{background:#C9A84C;color:#1A1208;}
+/* 카테고리 탭 — 네이비 스타일 */
+.category-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding: 24px 0;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 24px;
+}
+.cat-btn {
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+}
+.cat-btn:hover {
+  background: #1a3a5c;
+  color: white;
+  border-color: #1a3a5c;
+}
+.cat-btn.active {
+  background: #1a3a5c;
+  color: #d4a017;
+  border-color: #1a3a5c;
+  font-weight: 700;
+}
 
-.mid-ad{margin:24px 0;text-align:center;}
+/* 섹션 타이틀 */
+.section-title-wrap {
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #1a3a5c;
+}
+.section-title {
+  font-family: 'Georgia', serif;
+  font-size: 22px;
+  color: #1a3a5c;
+  font-weight: 700;
+}
+.section-count { font-size: 12px; color: #64748b; margin-top: 4px; }
 
-.toast{position:fixed;bottom:-80px;left:50%;transform:translateX(-50%);background:#1A1208;color:#C9A84C;padding:10px 22px;border-radius:24px;font-size:13px;border:1px solid rgba(201,168,76,0.4);transition:bottom 0.3s;z-index:9999;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;}
-.toast.show{bottom:30px;}
+/* 구절 카드 그리드 */
+.verse-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.v-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  border-left: 3px solid transparent;
+  display: flex;
+  flex-direction: column;
+  min-height: 140px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.v-card:hover {
+  border-color: #1a3a5c;
+  border-left-color: #d4a017;
+  box-shadow: 0 4px 16px rgba(26,58,92,0.12);
+  transform: translateY(-2px);
+}
+.v-card-text {
+  font-family: 'Georgia', serif;
+  font-size: 14.5px;
+  color: #1e293b;
+  line-height: 1.75;
+  font-style: italic;
+  margin-bottom: 12px;
+  flex: 1;
+}
+.v-card-ref {
+  font-size: 12px;
+  color: #1a3a5c;
+  font-weight: 700;
+}
+.v-card-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.v-card:hover .v-card-actions { opacity: 1; }
+.v-action-btn {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 10px;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.15s;
+}
+.v-action-btn:hover { background: #1a3a5c; color: white; border-color: #1a3a5c; }
 
-@media(max-width:1100px){.page-wrap{grid-template-columns:130px 1fr 130px;}}
-@media(max-width:860px){.page-wrap{grid-template-columns:1fr;}.side-ad{display:none;}.verse-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:560px){.verse-grid{grid-template-columns:1fr;}}
+.mid-ad { margin: 24px 0; text-align: center; }
+
+.toast {
+  position: fixed;
+  bottom: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a3a5c;
+  color: #d4a017;
+  padding: 10px 22px;
+  border-radius: 24px;
+  font-size: 13px;
+  border: 1px solid rgba(212,160,23,0.4);
+  transition: bottom 0.3s;
+  z-index: 9999;
+  white-space: nowrap;
+}
+.toast.show { bottom: 30px; }
+
+@media(max-width:1100px){ .side-ad, .side-ad-right { width: 120px; min-width: 120px; } }
+@media(max-width:860px){ .side-ad, .side-ad-right { display: none; } .verse-grid { grid-template-columns: repeat(2,1fr); } }
+@media(max-width:560px){ .verse-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -76,7 +234,7 @@
 </div>
 
 <!-- 히어로 -->
-<div class="topics-hero">
+<div class="topics-hero" style="margin:0 -24px;">
   <h1>✦ 주제별 말씀 모음</h1>
   <p>삶의 모든 순간에 필요한 성경 구절을 주제별로 찾아보세요</p>
 </div>
@@ -120,7 +278,7 @@
   </main>
 
   <!-- 우측 광고 -->
-  <aside class="side-ad">
+  <aside class="side-ad side-ad-right">
     <ins class="adsbygoogle"
          style="display:block;width:150px;min-height:500px;"
          data-ad-client="ca-pub-8675368228460145"

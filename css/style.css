@@ -198,9 +198,10 @@ body {
 .main-layout {
   display: flex;
   flex-direction: row;
-  min-height: calc(100vh - 160px);
+  height: calc(100vh - 112px);
   width: 100%;
   position: relative;
+  overflow: hidden;
 }
 
 /* ===== LEFT AD SIDEBAR ===== */
@@ -250,10 +251,13 @@ body {
   flex: 1;
   min-width: 0;
   overflow: hidden;
+  height: 100%;
 }
 .bible-panel {
   min-width: 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .bible-panel {
@@ -273,8 +277,9 @@ body {
   align-items: center;
   justify-content: space-between;
   position: sticky;
-  top: 112px;
+  top: 0;
   z-index: 10;
+  flex-shrink: 0;
 }
 .panel-lang-name {
   font-size: 14px;
@@ -292,10 +297,9 @@ body {
 /* ===== VERSE AREA ===== */
 .verse-area {
   padding: 16px 20px;
-  overflow-y: auto;
   min-width: 0;
-  height: calc(100vh - 230px);
-  overflow-y: scroll;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .verse-row {
@@ -372,8 +376,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
-  bottom: 0;
+  flex-shrink: 0;
 }
 .ch-nav-btn {
   background: var(--navy);
