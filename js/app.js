@@ -39,8 +39,9 @@ const TRANS_META = {
   NASB: {name:'English (NASB)', flag:'🇺🇸', rtl:false, cls:''},
   CUV:  {name:'Chinese (CUV)', flag:'🇨🇳', rtl:false, cls:''},
   SYNOD:{name:'Russian (Synodal)', flag:'🇷🇺', rtl:false, cls:''},
-  LXXE: {name:'Greek LXX', flag:'🏛️', rtl:false, cls:'greek'},
-  TR:   {name:'Greek NT (TR)', flag:'🏛️', rtl:false, cls:'greek'},
+  LXX:  {name:'Greek LXX (Septuagint)', flag:'🏛️', rtl:false, cls:'greek'},
+  SBLGNT:{name:'Greek NT (SBLGNT)', flag:'🏛️', rtl:false, cls:'greek'},
+  WHNU: {name:'Greek NT (Westcott-Hort)', flag:'🏛️', rtl:false, cls:'greek'},
   WLC:  {name:'Hebrew OT (WLC)', flag:'✡️', rtl:true, cls:'hebrew'},
 };
 
