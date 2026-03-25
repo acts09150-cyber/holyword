@@ -76,10 +76,51 @@ function cleanText(raw) {
     .trim();
 }
 
+
+// ===== 로컬 한국어 개역개정 JSON 로더 =====
+// bible/ko/{BOOK_ID}/{CHAPTER}.json 에서 로드
+// 없으면 Bolls.life API 폴백
+const BOOK_ID_BY_NUM = [
+  'GEN','EXO','LEV','NUM','DEU','JOS','JDG','RUT','1SA','2SA',
+  '1KI','2KI','1CH','2CH','EZR','NEH','EST','JOB','PSA','PRO',
+  'ECC','SNG','ISA','JER','LAM','EZK','DAN','HOS','JOL','AMO',
+  'OBA','JON','MIC','NAH','HAB','ZEP','HAG','ZEC','MAL',
+  'MAT','MRK','LUK','JHN','ACT','ROM','1CO','2CO','GAL','EPH',
+  'PHP','COL','1TH','2TH','1TI','2TI','TIT','PHM','HEB','JAS',
+  '1PE','2PE','1JN','2JN','3JN','JUD','REV'
+];
+
+async function fetchLocalKorean(bookNum, chapter) {
+  const bookId = BOOK_ID_BY_NUM[bookNum - 1];
+  if (!bookId) return null;
+  try {
+    const url = `bible/ko/${bookId}/${chapter}.json`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data.v || !Array.isArray(data.v)) return null;
+    return data.v.map((text, i) => ({ number: i + 1, text }));
+  } catch(e) {
+    return null;
+  }
+}
+
 // ===== Bolls.life API =====
 async function fetchChapter(trans, bookNum, chapter) {
   const key = `${trans}_${bookNum}_${chapter}`;
   if (cache.has(key)) return cache.get(key);
+
+  // 한국어 번역본은 로컬 JSON 먼저 시도
+  if (trans === 'RNKSV' || trans === 'KRV') {
+    const local = await fetchLocalKorean(bookNum, chapter);
+    if (local && local.length > 0) {
+      cache.set(key, local);
+      return local;
+    }
+    // 로컬에 없으면 Bolls.life KRV로 폴백
+    const fallbackKey = `KRV_${bookNum}_${chapter}`;
+    if (cache.has(fallbackKey)) return cache.get(fallbackKey);
+  }
 
   const url = `https://bolls.life/get-text/${trans}/${bookNum}/${chapter}/`;
   try {
