@@ -10,185 +10,213 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8675368228460145" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="../css/style.css">
 <style>
-body { background: #f8fafc; font-family: "Inter","Noto Sans KR",sans-serif; }
+/* ===== Search Page — Global Navy/White Theme ===== */
+* { box-sizing: border-box; }
+body { background: #f8fafc; font-family: 'Inter','Noto Sans KR',sans-serif; margin:0; }
+
+/* 히어로 — AI기도문과 동일한 네이비 */
 .search-hero {
-  background: var(--dark);
-  border-bottom: 1px solid var(--border-strong);
-  padding: 52px 32px 48px;
+  background: #1a3a5c;
+  border-bottom: 3px solid #d4a017;
+  padding: 52px 32px 44px;
   text-align: center;
 }
 .search-hero-title {
-  font-family: var(--font-serif);
-  color: var(--gold);
+  font-family: 'Georgia','Playfair Display',serif;
+  color: #d4a017;
   font-size: 34px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   font-weight: 700;
 }
 .search-hero-sub {
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.6);
   font-size: 14px;
   margin-bottom: 32px;
+  line-height: 1.6;
 }
+
+/* 검색창 — 명확하게 흰색 배경 */
 .search-box-wrap {
   display: flex;
   gap: 10px;
-  max-width: 600px;
+  max-width: 640px;
   margin: 0 auto;
 }
 .search-input-big {
   flex: 1;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid var(--border-strong);
+  background: white;
+  border: 2px solid white;
   border-radius: 8px;
-  color: white;
+  color: #1e293b;
   padding: 14px 18px;
   font-size: 16px;
-  font-family: var(--font-sans);
+  font-family: 'Inter','Noto Sans KR',sans-serif;
   outline: none;
   transition: border-color 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
-.search-input-big::placeholder { color: rgba(255,255,255,0.3); }
-.search-input-big:focus { border-color: var(--gold); }
+.search-input-big::placeholder { color: #94a3b8; }
+.search-input-big:focus {
+  border-color: #d4a017;
+  box-shadow: 0 2px 12px rgba(212,160,23,0.3);
+}
 .search-btn-big {
-  background: var(--gold);
-  color: var(--dark);
+  background: #d4a017;
+  color: #1a3a5c;
   border: none;
   padding: 14px 28px;
   border-radius: 8px;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  font-family: var(--font-sans);
+  font-family: 'Inter','Noto Sans KR',sans-serif;
   transition: all 0.2s;
   white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
-.search-btn-big:hover { background: var(--gold-dark); }
+.search-btn-big:hover { background: #b8860b; color: white; }
 
-.search-page { max-width: 900px; margin: 0 auto; padding: 40px 24px 60px; }
+/* 빠른 검색 칩 — 히어로 안에 표시 */
+.quick-chips-hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+  justify-content: center;
+}
+.quick-chip-hero {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.85);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter','Noto Sans KR',sans-serif;
+}
+.quick-chip-hero:hover, .quick-chip-hero.active {
+  background: #d4a017;
+  color: #1a3a5c;
+  border-color: #d4a017;
+  font-weight: 700;
+}
 
+/* 메인 콘텐츠 영역 */
+.search-page { max-width: 900px; margin: 0 auto; padding: 36px 24px 60px; }
+
+/* 기존 quick-chips (본문 내) */
 .quick-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 36px;
+  margin-bottom: 28px;
   justify-content: center;
 }
 .quick-chip {
-  background: var(--cream2);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  padding: 7px 16px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  padding: 6px 14px;
   border-radius: 20px;
   font-size: 13px;
   cursor: pointer;
-  transition: all 0.2s;
-  font-family: var(--font-sans);
+  transition: all 0.15s;
+  font-family: 'Inter','Noto Sans KR',sans-serif;
 }
 .quick-chip:hover, .quick-chip.active {
-  background: var(--gold);
-  color: var(--dark);
-  border-color: var(--gold);
+  background: #1a3a5c;
+  color: #d4a017;
+  border-color: #1a3a5c;
   font-weight: 600;
 }
 
-.results-area { min-height: 300px; }
+/* 결과 영역 */
+.results-area { min-height: 200px; }
 .results-header {
   font-size: 13px;
-  color: var(--text-muted);
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
+  color: #64748b;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
 }
-.results-header strong { color: var(--gold); }
+.results-header strong { color: #1a3a5c; }
 
 .result-card {
   background: white;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 20px 24px;
-  margin-bottom: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin-bottom: 10px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
   position: relative;
   border-left: 3px solid transparent;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 .result-card:hover {
-  border-color: var(--border-strong);
-  border-left-color: var(--gold);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  border-color: #1a3a5c;
+  border-left-color: #d4a017;
+  box-shadow: 0 4px 14px rgba(26,58,92,0.1);
 }
 .result-verse {
-  font-family: var(--font-serif);
-  font-size: 17px;
-  color: var(--text-primary);
+  font-family: 'Georgia',serif;
+  font-size: 16px;
+  color: #1e293b;
   line-height: 1.75;
   font-style: italic;
   margin-bottom: 10px;
 }
 .result-verse mark {
-  background: rgba(26,58,92,0.15);
-  color: var(--gold-dark);
+  background: rgba(212,160,23,0.2);
+  color: #92600a;
   border-radius: 2px;
   padding: 0 2px;
 }
-.result-ref {
-  font-size: 12px;
-  color: var(--gold);
-  font-weight: 600;
-}
+.result-ref { font-size: 12px; color: #1a3a5c; font-weight: 700; }
 .result-actions {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  display: flex;
-  gap: 6px;
-  opacity: 0;
-  transition: opacity 0.2s;
+  position: absolute; top: 14px; right: 14px;
+  display: flex; gap: 5px; opacity: 0; transition: opacity 0.2s;
 }
 .result-card:hover .result-actions { opacity: 1; }
 .result-action-btn {
-  background: var(--cream2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 5px 10px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  padding: 4px 8px;
   font-size: 11px;
   cursor: pointer;
-  color: var(--text-secondary);
+  color: #64748b;
   transition: all 0.15s;
-  font-family: var(--font-sans);
 }
-.result-action-btn:hover { background: var(--gold); color: var(--dark); }
+.result-action-btn:hover { background: #1a3a5c; color: white; }
 
-.no-results {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-muted);
-}
-.no-results-icon { font-size: 48px; margin-bottom: 16px; }
-.no-results-text { font-size: 15px; margin-bottom: 8px; color: var(--text-secondary); }
-.no-results-sub { font-size: 13px; }
+.no-results { text-align:center; padding:60px 20px; color:#94a3b8; }
+.no-results-icon { font-size:48px; margin-bottom:16px; }
+.no-results-text { font-size:15px; margin-bottom:8px; color:#64748b; }
 
-.loading-search {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-muted);
-}
+.loading-search { text-align:center; padding:60px 20px; color:#94a3b8; }
 
 .ad-search {
-  background: var(--ad-bg, #f8fafc);
-  border: 1px solid rgba(26,58,92,0.15);
-  border-radius: var(--radius-md);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
   padding: 10px;
   text-align: center;
-  margin: 28px 0;
+  margin: 24px 0;
 }
 .ad-search .ad-label {
-  font-size: 9px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-bottom: 6px;
+  font-size: 9px; color: #94a3b8;
+  text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;
 }
+
+.toast {
+  position:fixed; bottom:-80px; left:50%; transform:translateX(-50%);
+  background:#1a3a5c; color:#d4a017; padding:10px 22px; border-radius:24px;
+  font-size:13px; border:1px solid rgba(212,160,23,0.4);
+  transition:bottom 0.3s; z-index:9999; white-space:nowrap;
+}
+.toast.show { bottom:28px; }
 </style>
 </head>
 <body>
@@ -231,28 +259,28 @@ body { background: #f8fafc; font-family: "Inter","Noto Sans KR",sans-serif; }
       onkeydown="if(event.key==='Enter') doSearch()">
     <button class="search-btn-big" onclick="doSearch()">검색</button>
   </div>
+  <!-- 빠른 검색 칩 — hero 안에 -->
+  <div class="quick-chips-hero" id="quickChips">
+    <button class="quick-chip-hero" onclick="quickSearch('사랑', this)">❤️ 사랑</button>
+    <button class="quick-chip-hero" onclick="quickSearch('믿음', this)">⭐ 믿음</button>
+    <button class="quick-chip-hero" onclick="quickSearch('위로', this)">💜 위로</button>
+    <button class="quick-chip-hero" onclick="quickSearch('감사', this)">🙏 감사</button>
+    <button class="quick-chip-hero" onclick="quickSearch('소망', this)">🌅 소망</button>
+    <button class="quick-chip-hero" onclick="quickSearch('기도', this)">🕊️ 기도</button>
+    <button class="quick-chip-hero" onclick="quickSearch('평안', this)">🕊️ 평안</button>
+    <button class="quick-chip-hero" onclick="quickSearch('용기', this)">💪 용기</button>
+    <button class="quick-chip-hero" onclick="quickSearch('지혜', this)">📖 지혜</button>
+    <button class="quick-chip-hero" onclick="quickSearch('치유', this)">💊 치유</button>
+    <button class="quick-chip-hero" onclick="quickSearch('결혼', this)">💍 결혼</button>
+    <button class="quick-chip-hero" onclick="quickSearch('하나님', this)">✨ 하나님</button>
+    <button class="quick-chip-hero" onclick="quickSearch('예수', this)">✝️ 예수</button>
+    <button class="quick-chip-hero" onclick="quickSearch('성령', this)">🕊️ 성령</button>
+  </div>
 </div>
 
 <div class="search-page">
 
   <!-- 빠른 검색 키워드 -->
-  <div class="quick-chips" id="quickChips">
-    <button class="quick-chip" onclick="quickSearch('사랑', this)">❤️ 사랑</button>
-    <button class="quick-chip" onclick="quickSearch('믿음', this)">⭐ 믿음</button>
-    <button class="quick-chip" onclick="quickSearch('위로', this)">🤍 위로</button>
-    <button class="quick-chip" onclick="quickSearch('감사', this)">🙏 감사</button>
-    <button class="quick-chip" onclick="quickSearch('소망', this)">🌅 소망</button>
-    <button class="quick-chip" onclick="quickSearch('기도', this)">🙌 기도</button>
-    <button class="quick-chip" onclick="quickSearch('평안', this)">☮️ 평안</button>
-    <button class="quick-chip" onclick="quickSearch('용기', this)">💪 용기</button>
-    <button class="quick-chip" onclick="quickSearch('지혜', this)">📚 지혜</button>
-    <button class="quick-chip" onclick="quickSearch('치유', this)">💊 치유</button>
-    <button class="quick-chip" onclick="quickSearch('결혼', this)">💍 결혼</button>
-    <button class="quick-chip" onclick="quickSearch('하나님', this)">✝️ 하나님</button>
-    <button class="quick-chip" onclick="quickSearch('예수', this)">✨ 예수</button>
-    <button class="quick-chip" onclick="quickSearch('성령', this)">🕊️ 성령</button>
-  </div>
-
   <!-- 인아티클 광고 -->
   <div class="ad-search">
     <div class="ad-label">광고</div>
