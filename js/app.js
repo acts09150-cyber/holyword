@@ -32,17 +32,17 @@ const BOOKS = [
 
 // ===== 번역본 메타 =====
 const TRANS_META = {
-  KRV:  {name:'한국어 개역한글 (KRV)', flag:'🇰🇷', rtl:false, cls:''},
-  RNKSV:{name:'한국어 개역개정 (RNKSV)', flag:'🇰🇷', rtl:false, cls:''},
-  KJV:  {name:'English (KJV)', flag:'🇺🇸', rtl:false, cls:''},
-  NIV:  {name:'English (NIV)', flag:'🇺🇸', rtl:false, cls:''},
-  NASB: {name:'English (NASB)', flag:'🇺🇸', rtl:false, cls:''},
-  CUV:  {name:'Chinese (CUV)', flag:'🇨🇳', rtl:false, cls:''},
-  SYNOD:{name:'Russian (Synodal)', flag:'🇷🇺', rtl:false, cls:''},
-  LXX:  {name:'Greek LXX (Septuagint)', flag:'🏛️', rtl:false, cls:'greek'},
-  SBLGNT:{name:'Greek NT (SBLGNT)', flag:'🏛️', rtl:false, cls:'greek'},
-  WHNU: {name:'Greek NT (Westcott-Hort)', flag:'🏛️', rtl:false, cls:'greek'},
-  WLC:  {name:'Hebrew OT (WLC)', flag:'✡️', rtl:true, cls:'hebrew'},
+  RNKSV:{name:'한국어 개역개정', flag:'🇰🇷', rtl:false, cls:'', ntOnly:false},
+  KRV:  {name:'한국어 개역한글', flag:'🇰🇷', rtl:false, cls:'', ntOnly:false},
+  KJV:  {name:'English KJV',   flag:'🇺🇸', rtl:false, cls:'', ntOnly:false},
+  NIV:  {name:'English NIV',   flag:'🇺🇸', rtl:false, cls:'', ntOnly:false},
+  NASB: {name:'English NASB',  flag:'🇺🇸', rtl:false, cls:'', ntOnly:false},
+  CUV:  {name:'中文 和合本',    flag:'🇨🇳', rtl:false, cls:'', ntOnly:false},
+  SYNOD:{name:'Русский',        flag:'🇷🇺', rtl:false, cls:'', ntOnly:false},
+  // ※ TR/WH = Bolls.life 공식 헬라어 신약 코드 (신약만 지원)
+  TR:   {name:'헬라어 Textus Receptus (신약)', flag:'🏛️', rtl:false, cls:'greek', ntOnly:true},
+  WH:   {name:'헬라어 Westcott-Hort (신약)',   flag:'🏛️', rtl:false, cls:'greek', ntOnly:true},
+  WLC:  {name:'히브리어 WLC (구약)',            flag:'✡️', rtl:true,  cls:'hebrew', ntOnly:false},
 };
 
 // ===== 상태 =====
@@ -238,6 +238,20 @@ function nextChapter() {
 
 function setLeftTrans(t) { document.getElementById('leftTrans').value = t; State.leftTrans = t; loadBoth(); }
 
+// ===== NT 전용 번역본 구약 접근 방지 =====
+const NT_START_BOOK_IDX = 39; // 마태복음=인덱스39 (0-based)
+
+function isNTOnly(trans) {
+  return TRANS_META[trans]?.ntOnly === true;
+}
+
+function checkNTWarning(trans, bookIdx) {
+  if (isNTOnly(trans) && bookIdx < NT_START_BOOK_IDX) {
+    return true; // 구약에서 NT-only 번역본 선택됨
+  }
+  return false;
+}
+
 // ===== 양쪽 동시 로드 =====
 async function loadBoth() {
   State.leftTrans = document.getElementById('leftTrans').value;
@@ -259,14 +273,24 @@ async function loadBoth() {
   document.getElementById('leftDir').textContent = lm.rtl ? 'RTL' : 'LTR';
   document.getElementById('rightDir').textContent = rm.rtl ? 'RTL' : 'LTR';
 
+  // NT-only 번역본 구약 접근 시 경고 표시
+  const leftNTWarn = checkNTWarning(State.leftTrans, State.bookIdx);
+  const rightNTWarn = checkNTWarning(State.rightTrans, State.bookIdx);
+
   // 로딩 표시
   showLoading('leftVerses'); showLoading('rightVerses');
 
+  // NT-only 번역본이 구약 선택된 경우 처리
+  const leftFetch = leftNTWarn
+    ? Promise.resolve([{number:1, text:'⚠️ 헬라어 신약(TR/WH)은 신약성경(마태복음~요한계시록)만 지원합니다. 신약 책을 선택해 주세요.'}])
+    : fetchChapter(State.leftTrans, bookNum, State.chapter);
+
+  const rightFetch = rightNTWarn
+    ? Promise.resolve([{number:1, text:'⚠️ Greek NT (TR/WH) supports only New Testament books (Matthew-Revelation). Please select a NT book.'}])
+    : fetchChapter(State.rightTrans, bookNum, State.chapter);
+
   // 병렬 로드
-  const [lv, rv] = await Promise.all([
-    fetchChapter(State.leftTrans, bookNum, State.chapter),
-    fetchChapter(State.rightTrans, bookNum, State.chapter)
-  ]);
+  const [lv, rv] = await Promise.all([leftFetch, rightFetch]);
 
   renderVerses('leftVerses', lv, State.leftTrans, book, lm);
   renderVerses('rightVerses', rv, State.rightTrans, book, rm);
