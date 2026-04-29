@@ -64,6 +64,23 @@ const I18N = {
         share:'공유', copy:'복사', pinterest:'핀' },
 };
 
+const NAV_I18N = {
+  en: {
+    reader: '📖 Bible Reader',
+    topics: '🏷️ Topics',
+    daily: '☀️ Daily Verse',
+    search: '🔍 Search',
+    prayer: '🙏 AI Prayer'
+  },
+  ko: {
+    reader: '📖 성경 읽기',
+    topics: '🏷️ 주제별 말씀',
+    daily: '☀️ 오늘의 말씀',
+    search: '🔍 구절 검색',
+    prayer: '🙏 AI 기도문'
+  }
+};
+
 // ===== 캐시 =====
 const cache = new Map();
 
@@ -225,11 +242,31 @@ async function fetchChapter(trans, bookNum, chapter) {
 
 // ===== UI 초기화 =====
 function init() {
+  applySavedDarkMode();
   buildBookSelect();
   buildChapterSelect();
   detectUserLang();
   parseURL();
   loadBoth();
+}
+
+function applySavedDarkMode() {
+  const savedMode = localStorage.getItem('holyword-theme');
+  const isDark = savedMode === 'dark';
+  document.body.classList.toggle('dark-mode', isDark);
+  updateDarkModeButtonText(isDark);
+}
+
+function updateDarkModeButtonText(isDark) {
+  const btn = document.getElementById('darkModeBtn');
+  if (!btn) return;
+  btn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+}
+
+function toggleDarkMode() {
+  const isDark = document.body.classList.toggle('dark-mode');
+  localStorage.setItem('holyword-theme', isDark ? 'dark' : 'light');
+  updateDarkModeButtonText(isDark);
 }
 
 function buildBookSelect() {
@@ -257,6 +294,23 @@ function buildChapterSelect() {
 }
 
 function detectUserLang() {
+  const savedLang = localStorage.getItem('holyword-ui-lang');
+  if (savedLang === 'ko' || savedLang === 'en') {
+    setUiLang(savedLang);
+    if (savedLang === 'ko') {
+      State.leftTrans = 'RNKSV';
+      State.rightTrans = 'KJV';
+      document.getElementById('leftTrans').value = 'RNKSV';
+      document.getElementById('rightTrans').value = 'KJV';
+    } else {
+      State.leftTrans = 'KJV';
+      State.rightTrans = 'KRV';
+      document.getElementById('leftTrans').value = 'KJV';
+      document.getElementById('rightTrans').value = 'KRV';
+    }
+    return;
+  }
+
   const lang = navigator.language || navigator.userLanguage || 'en';
   if (lang.startsWith('ko')) {
     State.uiLang = 'ko';
@@ -267,13 +321,25 @@ function detectUserLang() {
     document.getElementById('uiLangFlag').textContent = '🇰🇷';
     document.getElementById('uiLangName').textContent = '한국어';
     document.documentElement.lang = 'ko';
+    localStorage.setItem('holyword-ui-lang', 'ko');
+    applyNavLanguage('ko');
   } else {
     // 영미권 기본: 영어 왼쪽
     State.leftTrans = 'KJV';
     State.rightTrans = 'KRV';
     document.getElementById('leftTrans').value = 'KJV';
     document.getElementById('rightTrans').value = 'KRV';
+    localStorage.setItem('holyword-ui-lang', 'en');
+    applyNavLanguage('en');
   }
+}
+
+function applyNavLanguage(lang) {
+  const labels = NAV_I18N[lang] || NAV_I18N.en;
+  document.querySelectorAll('[data-nav-key]').forEach(el => {
+    const key = el.getAttribute('data-nav-key');
+    if (labels[key]) el.textContent = labels[key];
+  });
 }
 
 function parseURL() {
@@ -284,6 +350,7 @@ function parseURL() {
   if (p.get('rt'))   { State.rightTrans = p.get('rt'); document.getElementById('rightTrans').value = State.rightTrans; }
   buildChapterSelect();
   document.getElementById('chapterSelect').value = State.chapter;
+  updateChapterNavLinks();
 }
 
 // ===== 이벤트 핸들러 =====
@@ -291,25 +358,72 @@ function onBookChange() {
   State.bookIdx = parseInt(document.getElementById('bookSelect').value);
   State.chapter = 1;
   buildChapterSelect();
-  loadBoth();
+  document.getElementById('chapterSelect').value = State.chapter;
+  updateChapterNavLinks();
 }
 
 function onChapterChange() {
   State.chapter = parseInt(document.getElementById('chapterSelect').value);
-  loadBoth();
+  updateChapterNavLinks();
+}
+
+function onTranslationChange() {
+  State.leftTrans = document.getElementById('leftTrans').value;
+  State.rightTrans = document.getElementById('rightTrans').value;
+  updateChapterNavLinks();
 }
 
 function prevChapter() {
-  if (State.chapter > 1) { State.chapter--; document.getElementById('chapterSelect').value = State.chapter; loadBoth(); }
+  if (State.chapter > 1) { State.chapter--; document.getElementById('chapterSelect').value = State.chapter; navigateChapterPage(); }
   else toast('First chapter');
 }
 
 function nextChapter() {
-  if (State.chapter < BOOKS[State.bookIdx].ch) { State.chapter++; document.getElementById('chapterSelect').value = State.chapter; loadBoth(); }
+  if (State.chapter < BOOKS[State.bookIdx].ch) { State.chapter++; document.getElementById('chapterSelect').value = State.chapter; navigateChapterPage(); }
   else toast('Last chapter');
 }
 
 function setLeftTrans(t) { document.getElementById('leftTrans').value = t; State.leftTrans = t; loadBoth(); }
+
+function navigateChapterPage() {
+  const url = new URL(location.href);
+  url.searchParams.set('book', State.bookIdx);
+  url.searchParams.set('ch', State.chapter);
+  url.searchParams.set('lt', document.getElementById('leftTrans').value);
+  url.searchParams.set('rt', document.getElementById('rightTrans').value);
+  // Hard navigation helps AdSense detect a real page transition (vignette opportunity).
+  location.href = url.toString();
+}
+
+function buildChapterUrl(chapter) {
+  const url = new URL(location.href);
+  url.searchParams.set('book', State.bookIdx);
+  url.searchParams.set('ch', chapter);
+  url.searchParams.set('lt', document.getElementById('leftTrans').value);
+  url.searchParams.set('rt', document.getElementById('rightTrans').value);
+  return url.toString();
+}
+
+function updateChapterNavLinks() {
+  const prev = document.getElementById('prevChapterLink');
+  const next = document.getElementById('nextChapterLink');
+  const go = document.getElementById('chapterGoLink');
+  const apply = document.getElementById('translationApplyLink');
+  if (!prev || !next) return;
+
+  const maxChapter = BOOKS[State.bookIdx].ch;
+  const prevChapterNum = Math.max(1, State.chapter - 1);
+  const nextChapterNum = Math.min(maxChapter, State.chapter + 1);
+
+  prev.href = buildChapterUrl(prevChapterNum);
+  next.href = buildChapterUrl(nextChapterNum);
+  if (go) go.href = buildChapterUrl(State.chapter);
+  if (apply) apply.href = buildChapterUrl(State.chapter);
+  prev.style.pointerEvents = State.chapter <= 1 ? 'none' : 'auto';
+  next.style.pointerEvents = State.chapter >= maxChapter ? 'none' : 'auto';
+  prev.style.opacity = State.chapter <= 1 ? '0.5' : '1';
+  next.style.opacity = State.chapter >= maxChapter ? '0.5' : '1';
+}
 
 // ===== NT 전용 번역본 구약 접근 방지 =====
 const NT_START_BOOK_IDX = 39; // 마태복음=인덱스39 (0-based)
@@ -367,6 +481,7 @@ async function loadBoth() {
   renderVerses('leftVerses', lv, State.leftTrans, book, lm);
   renderVerses('rightVerses', rv, State.rightTrans, book, rm);
   updateURL();
+  updateChapterNavLinks();
   await updateChapterSeoMeta(book, bookNum, State.chapter);
   window.scrollTo({top:0, behavior:'smooth'});
 }
@@ -590,6 +705,8 @@ function setUiLang(lang) {
   document.getElementById('uiLangName').textContent = names[lang] || 'English';
   document.getElementById('langDropdown').classList.remove('open');
   document.documentElement.lang = lang === 'ko' ? 'ko' : 'en';
+  localStorage.setItem('holyword-ui-lang', lang);
+  applyNavLanguage(lang);
   toast(lang === 'ko' ? '한국어 모드' : 'English mode');
 }
 

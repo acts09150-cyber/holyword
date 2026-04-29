@@ -24,6 +24,17 @@
 .cat-btn:hover{background:rgba(201,168,76,0.15);border-color:#C9A84C;color:#2D1F08;}
 .cat-btn.active{background:#C9A84C;color:#1A1208;border-color:#C9A84C;font-weight:700;}
 
+.custom-search-wrap{max-width:920px;margin:0 auto 20px;padding:0 24px;}
+.custom-search-box{background:#fff;border:1px solid rgba(201,168,76,0.25);border-radius:14px;padding:16px;display:flex;gap:10px;align-items:center;box-shadow:0 4px 12px rgba(0,0,0,0.04);}
+.custom-search-input{flex:1;border:1px solid rgba(201,168,76,0.35);border-radius:10px;padding:12px 14px;font-size:14px;outline:none;color:#2D1F08;background:#FBF7F0;}
+.custom-search-input:focus{border-color:#C9A84C;background:#fff;}
+.custom-search-btn{border:none;background:#1A1208;color:#C9A84C;border:1px solid #C9A84C;border-radius:10px;padding:11px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.custom-search-btn:hover{background:#C9A84C;color:#1A1208;}
+.custom-search-helper{font-size:12px;color:#9E855A;margin-top:8px;padding-left:2px;}
+.search-loading{display:flex;flex-direction:column;align-items:center;gap:10px;padding:26px 0;color:#9E855A;}
+.search-spinner{width:28px;height:28px;border:3px solid rgba(201,168,76,0.25);border-top-color:#C9A84C;border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
 .section-title-wrap{margin-bottom:22px;padding-bottom:12px;border-bottom:2px solid rgba(201,168,76,0.2);}
 .section-title{font-family:'Playfair Display',serif;font-size:24px;color:#2D1F08;font-weight:700;}
 .section-count{font-size:12px;color:#9E855A;margin-top:4px;}
@@ -101,6 +112,13 @@
     <button class="cat-btn" data-topic="예수" onclick="switchTopic(this)">✨ 예수</button>
     <button class="cat-btn" data-topic="성령" onclick="switchTopic(this)">🕊️ 성령</button>
   </div>
+</div>
+<div class="custom-search-wrap">
+  <div class="custom-search-box">
+    <input id="customKeywordInput" class="custom-search-input" type="text" placeholder="원하는 단어를 입력해 보세요. 예: 재물, 친구, 인내" />
+    <button class="custom-search-btn" onclick="runCustomKeywordSearch()">🔎 검색</button>
+  </div>
+  <div class="custom-search-helper">직접 입력한 단어로 말씀 카드를 찾아드려요. (엔터로도 검색 가능)</div>
 </div>
 
 <!-- 3단 레이아웃: 좌광고 + 본문 + 우광고 -->
@@ -326,6 +344,7 @@ const TOPICS = {
 };
 
 let currentTopic='위로';
+let searchPool=null;
 
 function switchTopic(btn){
   document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
@@ -373,6 +392,87 @@ function renderTopic(topic){
   try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}
 }
 
+function getSearchPool(){
+  if(searchPool) return searchPool;
+  searchPool=[];
+  Object.keys(TOPICS).forEach(topicName=>{
+    const topic=TOPICS[topicName];
+    topic.verses.forEach(item=>{
+      searchPool.push({
+        v:item.v,
+        r:item.r,
+        topic:topicName
+      });
+    });
+  });
+  return searchPool;
+}
+
+function showSearchLoading(){
+  const el=document.getElementById('topicContent');
+  el.innerHTML=`
+    <div class="search-loading">
+      <div class="search-spinner"></div>
+      <div>말씀을 찾고 있습니다...</div>
+    </div>`;
+}
+
+function runCustomKeywordSearch(){
+  const input=document.getElementById('customKeywordInput');
+  const query=(input?.value||'').trim();
+  if(!query){
+    showToast('검색어를 입력해 주세요.');
+    return;
+  }
+
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  showSearchLoading();
+
+  setTimeout(()=>{
+    const q=query.toLowerCase();
+    const results=getSearchPool().filter(item=>
+      item.v.toLowerCase().includes(q) ||
+      item.r.toLowerCase().includes(q) ||
+      item.topic.toLowerCase().includes(q)
+    );
+    renderCustomSearchResults(query, results);
+  }, 120);
+}
+
+function renderCustomSearchResults(query, results){
+  const el=document.getElementById('topicContent');
+  if(results.length===0){
+    el.innerHTML=`
+      <div style="text-align:center;padding:28px 18px;border:1px solid rgba(201,168,76,0.2);border-radius:12px;background:#fff;">
+        <div style="font-size:34px;margin-bottom:8px;">🔎</div>
+        <div style="font-size:15px;color:#2D1F08;font-weight:600;">검색하신 단어가 포함된 구절을 찾지 못했어요. 다른 단어로 검색해 보세요!</div>
+      </div>`;
+    return;
+  }
+
+  let html=`
+    <div style="margin-bottom:22px;padding-bottom:12px;border-bottom:2px solid rgba(201,168,76,0.2);">
+      <div style="font-family:'Playfair Display',serif;font-size:24px;color:#2D1F08;font-weight:700;">🔎 "${query}" 검색 결과</div>
+      <div style="font-size:12px;color:#9E855A;margin-top:4px;">${results.length}개 구절</div>
+    </div>
+    <div class="verse-grid">`;
+
+  results.forEach(item=>{
+    const sv=item.v.replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+    const sr=item.r.replace(/'/g,'&#39;');
+    html+=`<div class="v-card">
+      <div class="v-card-actions">
+        <button class="v-action-btn" onclick="copyCard(event,'${sv}','${sr}')">📋 복사</button>
+        <button class="v-action-btn" onclick="goRead(event,'${sr}')">📖 읽기</button>
+      </div>
+      <div class="v-card-text">"${item.v}"</div>
+      <div class="v-card-ref">${item.r} · ${item.topic}</div>
+    </div>`;
+  });
+  html+='</div>';
+  el.innerHTML=html;
+}
+
 function copyCard(e,verse,ref){
   e.stopPropagation();
   const v=verse.replace(/&#39;/g,"'").replace(/&quot;/g,'"');
@@ -405,6 +505,11 @@ if(tp&&TOPICS[tp]){
   });
 }
 renderTopic(currentTopic);
+
+document.getElementById('customKeywordInput')?.addEventListener('keydown',e=>{
+  if(e.key==='Enter') runCustomKeywordSearch();
+});
 </script>
+<script src="js/theme.js"></script>
 </body>
 </html>

@@ -48,6 +48,13 @@ body {
   z-index: 1000;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
+.header-inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
 .logo {
   display: flex;
   align-items: center;
@@ -71,6 +78,11 @@ body {
 .nav-link:hover, .nav-link.active { color: white; background: rgba(255,255,255,0.12); }
 
 /* Lang picker */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .lang-picker { position: relative; }
 .lang-current {
   background: rgba(255,255,255,0.1);
@@ -86,6 +98,19 @@ body {
   white-space: nowrap;
 }
 .lang-current:hover { background: rgba(255,255,255,0.18); }
+.dark-mode-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #f8fafc;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 86px;
+  white-space: nowrap;
+}
+.dark-mode-btn:hover { background: rgba(255,255,255,0.2); }
 .lang-dropdown {
   display: none;
   position: absolute;
@@ -537,6 +562,7 @@ body {
   .controls-bar { gap: 8px; }
   .ctrl-select { min-width: 140px; }
   .header-nav { display: none; }
+  .dark-mode-btn { min-width: 76px; font-size: 11px; }
 }
 
 /* ===== 패널 구분선 강화 ===== */
@@ -558,4 +584,85 @@ body {
 /* 사이드바 AD 라벨 */
 .ad-sidebar, .ad-sidebar-right {
   background: #f8fafc;
+}
+
+/* ===== DARK MODE ===== */
+body.dark-mode {
+  background: #1f232b;
+  color: #e6ebf2;
+}
+body.dark-mode .ad-top-bar,
+body.dark-mode .bible-panel,
+body.dark-mode .chapter-nav,
+body.dark-mode .panel-header,
+body.dark-mode .modal-box,
+body.dark-mode .verse-row,
+body.dark-mode .ad-sidebar,
+body.dark-mode .ad-sidebar-right {
+  background: #262b35;
+  border-color: #3b4250;
+}
+body.dark-mode .v-text,
+body.dark-mode .panel-lang-name,
+body.dark-mode .ch-nav-info,
+body.dark-mode .modal-title,
+body.dark-mode .lang-dropdown button {
+  color: #e6ebf2;
+}
+body.dark-mode .verse-row:hover {
+  background: #303744;
+}
+body.dark-mode .verse-row.highlighted {
+  background: #3b3322;
+  border-left-color: #f0c040;
+}
+body.dark-mode .v-action-btn,
+body.dark-mode .modal-close-btn {
+  background: #2e3440;
+  border-color: #4b5565;
+  color: #d9e0ea;
+}
+body.dark-mode .lang-dropdown {
+  background: #2b313d;
+  border-color: #4b5565;
+}
+body.dark-mode .lang-dropdown button:hover,
+body.dark-mode .modal-close-btn:hover {
+  background: #3b4250;
+}
+body.dark-mode .topics-main,
+body.dark-mode .daily-main,
+body.dark-mode .search-page,
+body.dark-mode .prayer-main {
+  background: #1f232b;
+  color: #e6ebf2;
+}
+body.dark-mode .week-card,
+body.dark-mode .v-card,
+body.dark-mode .result-card,
+body.dark-mode .q-section,
+body.dark-mode .p-section,
+body.dark-mode .newsletter-section,
+body.dark-mode .prayer-amen {
+  background: #262b35;
+  border-color: #3b4250;
+}
+body.dark-mode .wc-text,
+body.dark-mode .v-card-text,
+body.dark-mode .result-verse,
+body.dark-mode .q-title,
+body.dark-mode .q-label,
+body.dark-mode .p-text,
+body.dark-mode .section-title,
+body.dark-mode .section-hd h2,
+body.dark-mode .nl-title {
+  color: #e6ebf2;
+}
+body.dark-mode .search-input-big,
+body.dark-mode .q-select,
+body.dark-mode .q-input,
+body.dark-mode .q-textarea {
+  background: #2e3440;
+  color: #e6ebf2;
+  border-color: #4b5565;
 }

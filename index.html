@@ -10,6 +10,9 @@
 <meta name="keywords" content="Bible online free, KJV Bible, NIV Bible, Korean Bible KRV, Chinese Bible CUV, parallel Bible, read Bible online, scripture, holy bible, free bible study">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://bible2.kingdom2025.com">
+<link rel="alternate" hreflang="ko" href="https://bible2.kingdom2025.com/?lang=ko">
+<link rel="alternate" hreflang="en" href="https://bible2.kingdom2025.com/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://bible2.kingdom2025.com">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -62,21 +65,24 @@
     <span class="logo-sub">Bible</span>
   </a>
   <nav class="header-nav">
-    <a href="index.html" class="nav-link active">📖 Bible Reader</a>
-    <a href="pages/topics.html" class="nav-link">🏷️ Topics</a>
-    <a href="pages/daily.html" class="nav-link">☀️ Daily Verse</a>
-    <a href="pages/search.html" class="nav-link">🔍 Search</a>
-    <a href="pages/prayer.html" class="nav-link">🙏 AI Prayer</a>
+    <a href="index.html" class="nav-link active" data-nav-key="reader">📖 Bible Reader</a>
+    <a href="pages/topics.html" class="nav-link" data-nav-key="topics">🏷️ Topics</a>
+    <a href="pages/daily.html" class="nav-link" data-nav-key="daily">☀️ Daily Verse</a>
+    <a href="pages/search.html" class="nav-link" data-nav-key="search">🔍 Search</a>
+    <a href="pages/prayer.html" class="nav-link" data-nav-key="prayer">🙏 AI Prayer</a>
   </nav>
-  <div class="lang-picker">
-    <button class="lang-current" onclick="toggleLangMenu()" aria-label="Select language">
-      <span id="uiLangFlag">🇺🇸</span>
-      <span id="uiLangName">English</span>
-      <span>▾</span>
-    </button>
-    <div class="lang-dropdown" id="langDropdown">
-      <button onclick="setUiLang('en')">🇺🇸 English <span class="lang-badge">Interface</span></button>
-      <button onclick="setUiLang('ko')">🇰🇷 한국어 <span class="lang-badge">인터페이스</span></button>
+  <div class="header-actions">
+    <button id="darkModeBtn" class="dark-mode-btn" onclick="toggleDarkMode()" aria-label="Toggle dark mode">🌙 Dark</button>
+    <div class="lang-picker">
+      <button class="lang-current" onclick="toggleLangMenu()" aria-label="Select language">
+        <span id="uiLangFlag">🇺🇸</span>
+        <span id="uiLangName">English</span>
+        <span>▾</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <button onclick="setUiLang('en')">🇺🇸 English <span class="lang-badge">Interface</span></button>
+        <button onclick="setUiLang('ko')">🇰🇷 한국어 <span class="lang-badge">인터페이스</span></button>
+      </div>
     </div>
   </div>
 </header>
@@ -105,8 +111,12 @@
     <select class="ctrl-select" id="chapterSelect" onchange="onChapterChange()"></select>
   </div>
   <div class="ctrl-group">
+    <span class="ctrl-label">Move</span>
+    <a id="chapterGoLink" class="ch-nav-btn" href="#">Go</a>
+  </div>
+  <div class="ctrl-group">
     <span class="ctrl-label" data-i18n="left">Left Column</span>
-        <select class="ctrl-select" id="leftTrans" onchange="loadBoth()">
+        <select class="ctrl-select" id="leftTrans" onchange="onTranslationChange()">
       <option value="RNKSV" selected>🇰🇷 한국어 개역개정</option>
       <option value="KRV">🇰🇷 한국어 개역한글</option>
       <option value="KJV">🇺🇸 English – KJV</option>
@@ -121,7 +131,7 @@
   </div>
   <div class="ctrl-group">
     <span class="ctrl-label" data-i18n="right">Right Column</span>
-        <select class="ctrl-select" id="rightTrans" onchange="loadBoth()">
+        <select class="ctrl-select" id="rightTrans" onchange="onTranslationChange()">
       <option value="KJV" selected>🇺🇸 English – KJV</option>
       <option value="NIV">🇺🇸 English – NIV</option>
       <option value="NASB">🇺🇸 English – NASB</option>
@@ -133,6 +143,10 @@
       <option value="WH">🏛️ 헬라어 – WH (신약만)</option>
       <option value="WLC">✡️ 히브리어 – WLC (구약만)</option>
     </select>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">Trans</span>
+    <a id="translationApplyLink" class="ch-nav-btn" href="#">Apply</a>
   </div>
   <div class="ctrl-info" id="ctrlInfo">
     <strong id="ctrlBookChap">Genesis · Chapter 1</strong><br>
@@ -172,9 +186,9 @@
         </div>
       </div>
       <div class="chapter-nav">
-        <button class="ch-nav-btn" onclick="prevChapter()">← Prev</button>
+        <a id="prevChapterLink" class="ch-nav-btn" href="#">← Prev</a>
         <span class="ch-nav-info" id="chNavInfo">1 / 50</span>
-        <button class="ch-nav-btn" onclick="nextChapter()">Next →</button>
+        <a id="nextChapterLink" class="ch-nav-btn" href="#">Next →</a>
       </div>
     </div>
 
