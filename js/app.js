@@ -77,6 +77,79 @@ function cleanText(raw) {
     .trim();
 }
 
+const SITE_BASE_URL = 'https://bible2.kingdom2025.com';
+const OG_IMAGE_URL = `${SITE_BASE_URL}/public/images/og-image.png`;
+const DEFAULT_SEO_TITLE = 'Holyword - 매일 만나는 생명의 말씀';
+const DEFAULT_SEO_DESCRIPTION = '창세기부터 요한계시록까지, 개역개정 성경을 어디서나 편하게 읽으세요.';
+
+function trimForDescription(text, max = 150) {
+  if (!text) return `${DEFAULT_SEO_DESCRIPTION}...`;
+  const flat = cleanText(text);
+  if (flat.length <= max) return `${flat}...`;
+  return `${flat.slice(0, max)}...`;
+}
+
+function ensureMeta(selector, attr, value) {
+  let el = document.querySelector(selector);
+  if (!el) {
+    el = document.createElement('meta');
+    el.setAttribute(attr, value);
+    document.head.appendChild(el);
+  }
+  return el;
+}
+
+function setMeta(nameOrProp, content, isProperty = false) {
+  const attr = isProperty ? 'property' : 'name';
+  const selector = `meta[${attr}="${nameOrProp}"]`;
+  ensureMeta(selector, attr, nameOrProp).setAttribute('content', content);
+}
+
+function setCanonical(url) {
+  let link = document.querySelector('link[rel="canonical"]');
+  if (!link) {
+    link = document.createElement('link');
+    link.setAttribute('rel', 'canonical');
+    document.head.appendChild(link);
+  }
+  link.setAttribute('href', url);
+}
+
+function getShareUrl() {
+  return `${SITE_BASE_URL}${location.pathname}${location.search}`;
+}
+
+function applySeoMeta(title, description, url) {
+  document.title = title;
+  setMeta('description', description);
+  setMeta('og:type', 'website', true);
+  setMeta('og:title', title, true);
+  setMeta('og:description', description, true);
+  setMeta('og:url', url, true);
+  setMeta('og:image', OG_IMAGE_URL, true);
+  setMeta('twitter:card', 'summary_large_image');
+  setMeta('twitter:title', title);
+  setMeta('twitter:description', description);
+  setMeta('twitter:image', OG_IMAGE_URL);
+  setCanonical(url);
+}
+
+function applyDefaultSeoMeta() {
+  applySeoMeta(DEFAULT_SEO_TITLE, DEFAULT_SEO_DESCRIPTION, getShareUrl());
+}
+
+async function updateChapterSeoMeta(book, bookNum, chapter) {
+  try {
+    const verses = await fetchChapter('RNKSV', bookNum, chapter);
+    const firstVerse = verses?.[0]?.text || DEFAULT_SEO_DESCRIPTION;
+    const title = `${book.n} ${chapter}장 - Holyword`;
+    const description = trimForDescription(firstVerse, 150);
+    applySeoMeta(title, description, getShareUrl());
+  } catch (e) {
+    applyDefaultSeoMeta();
+  }
+}
+
 
 // ===== 로컬 한국어 개역개정 JSON 로더 =====
 // bible/ko/{BOOK_ID}/{CHAPTER}.json 에서 로드
@@ -264,7 +337,6 @@ async function loadBoth() {
   document.getElementById('ctrlBookChap').textContent = `${book.e} · Chapter ${State.chapter}`;
   document.getElementById('ctrlTransInfo').textContent = `${TRANS_META[State.leftTrans]?.name} ↔ ${TRANS_META[State.rightTrans]?.name}`;
   document.getElementById('chNavInfo').textContent = `${State.chapter} / ${book.ch}`;
-  document.title = `${book.e} ${State.chapter} (${State.leftTrans}/${State.rightTrans}) | HolyWord Bible`;
 
   // 패널 헤더
   const lm = TRANS_META[State.leftTrans]||{}, rm = TRANS_META[State.rightTrans]||{};
@@ -295,6 +367,7 @@ async function loadBoth() {
   renderVerses('leftVerses', lv, State.leftTrans, book, lm);
   renderVerses('rightVerses', rv, State.rightTrans, book, rm);
   updateURL();
+  await updateChapterSeoMeta(book, bookNum, State.chapter);
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -460,7 +533,7 @@ function renderCard() {
   ctx.fillStyle = s.sub;
   ctx.font = '20px Inter, Arial';
   ctx.textAlign = 'center';
-  ctx.fillText('holyword.kr  |  bible2.kingdom2025.com', W/2, H-70);
+  ctx.fillText('bible2.kingdom2025.com', W/2, H-70);
 }
 
 function downloadCard() {
@@ -475,8 +548,8 @@ function downloadCard() {
 function shareTo(platform) {
   const canvas = document.getElementById('shareCanvas');
   const imgUrl = canvas.toDataURL('image/png');
-  const text = encodeURIComponent(`"${_shareVerse}" — ${_shareRef} | holyword.kr`);
-  const siteUrl = encodeURIComponent('https://holyword.kr');
+  const text = encodeURIComponent(`"${_shareVerse}" — ${_shareRef} | ${SITE_BASE_URL}`);
+  const siteUrl = encodeURIComponent(SITE_BASE_URL);
 
   switch(platform) {
     case 'facebook':
@@ -497,15 +570,15 @@ function shareTo(platform) {
 
 function pinVerse(e, verse, ref) {
   if (e) e.stopPropagation();
-  const desc = encodeURIComponent(`"${verse}" — ${ref} | Read more at holyword.kr`);
-  const media = encodeURIComponent('https://holyword.kr/og-image.jpg');
-  const url = encodeURIComponent('https://holyword.kr');
+  const desc = encodeURIComponent(`"${verse}" — ${ref} | Read more at ${SITE_BASE_URL}`);
+  const media = encodeURIComponent(OG_IMAGE_URL);
+  const url = encodeURIComponent(SITE_BASE_URL);
   window.open(`https://pinterest.com/pin/create/button/?url=${url}&media=${media}&description=${desc}`, '_blank', 'width=750,height=550');
 }
 
 function copyVerse(e, verse, ref) {
   if (e) e.stopPropagation();
-  navigator.clipboard.writeText(`"${verse}" — ${ref}\n\nhttps://holyword.kr`).then(() => toast('Copied! ✓'));
+  navigator.clipboard.writeText(`"${verse}" — ${ref}\n\n${SITE_BASE_URL}`).then(() => toast('Copied! ✓'));
 }
 
 // ===== UI 언어 =====
